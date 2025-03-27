@@ -1,0 +1,13 @@
+.Events {}
+
+
+.searching{
+    background-color: #F1F1F1;
+}
+
+.parent {
+    position: absolute;
+    bottom: 20px;
+    width: 100%; 
+    padding: 0 25px;
+}

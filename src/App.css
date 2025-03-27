@@ -1,0 +1,119 @@
+body{
+  list-style: none;
+  
+}
+
+.mainColor {
+  color : #4B0082
+}
+
+.bg-main{
+  background-color: #4B0082;
+}
+
+.bg-sec{
+  background-color: #4c008256;
+}
+
+.crsr{
+  cursor: pointer;
+}
+
+@media (min-width: 992px) { 
+  .vh-75 {
+    height: 58vh;
+  }
+}
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 58vh;
+}
+.content {
+  flex: 1;
+}
+.myFooter {
+  width: 100%;
+}
+
+.paragraph{
+  font-size: clamp(16px, 2vw, 32px);
+  color: #B0B0B0;
+}
+
+.silder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.active.indi{
+  width: 20px !important;
+  height: 20px !important;
+  border: 1px solid #4B0082 !important;
+  border-radius: 50%;
+  background-color: #4B0082 !important;
+}
+
+.indi {
+  width: 20px !important;
+  height: 20px !important;
+  background-color: gray !important;
+  border-radius: 50%;
+}
+.carousel-indicators {
+  position: absolute;
+  bottom: -70px;
+  left: 35%;
+  transform: translateX(-50%);
+}
+
+.w-input {
+  width: 900px; 
+}
+
+@media (max-width: 1200px) { 
+  .w-input { width: 680px; } 
+}
+
+@media (max-width: 768px) { 
+  .w-input { width: 450px; }
+}
+
+.w-myBtn {
+  width: 120px; 
+}
+
+@media (max-width: 1200px) { 
+  .w-myBtn { width: 100px; } 
+}
+
+@media (max-width: 768px) { 
+  .w-myBtn{ width: 150px; }
+}
+
+.w-Drop {
+  width: 230px; 
+}
+
+@media (max-width: 1200px) { 
+  .w-Drop { width: 120px; } 
+}
+
+@media (max-width: 768px) { 
+  .w-Drop{ width: 200px; }
+}
+.w-40{
+  width: 45%;
+}
+
+.lft{
+  right: 0px !important;
+  bottom: -20px !important;
+}
