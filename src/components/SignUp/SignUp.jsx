@@ -67,31 +67,31 @@ export default function SignUp() {
         <div className="col-lg-6 bg-body-tertiary rounded-3 py-3">
           <form onSubmit={formik.handleSubmit}>
           <label htmlFor="name" className='mt-3'>Name :</label>
-          <input onBlur={formik.handleBlur}  type="text" name='name' id='name' placeholder='Enter your name.' className='w-75 form-control mt-3' onChange={formik.handleChange} value={formik.values.name} />
+          <input onBlur={formik.handleBlur}  type="text" name='name' id='name' placeholder='Enter your name.' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.name} />
           {formik.errors.name && formik.touched.name ? <div className=" text-danger w-75 " role="alert">{formik.errors.name}</div> :null}
 
 
           <label htmlFor="Email" className='mt-3'>Email :</label>
-          <input onBlur={formik.handleBlur}  type="email" name='email' id='email' placeholder='Enter your email.' className='w-75 form-control mt-3' onChange={formik.handleChange} value={formik.values.email} />
-          {formik.errors.email && formik.touched.email ? <div className="text-danger  w-75" role="alert">{formik.errors.email}</div> :null}
+          <input onBlur={formik.handleBlur}  type="email" name='email' id='email' placeholder='Enter your email.' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.email} />
+          {formik.errors.email && formik.touched.email ? <div className="text-danger  w-100" role="alert">{formik.errors.email}</div> :null}
 
 
           <label htmlFor="Phone" className='mt-3'>Phone No. :</label>
-          <input onBlur={formik.handleBlur}  type="tel" name='phone' id='Phone' placeholder='Enter your phone Number .' className='w-75 form-control mt-3' onChange={formik.handleChange} value={formik.values.phone} />
+          <input onBlur={formik.handleBlur}  type="tel" name='phone' id='Phone' placeholder='Enter your phone Number .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.phone} />
           {formik.errors.phone&& formik.touched.phone ? <div className="text-danger  w-75" role="alert">{formik.errors.phone}</div> :null}
 
 
           <label htmlFor="password" className='mt-3'>Password :</label>
-          <input onBlur={formik.handleBlur}  type="password" name='password' id='password' placeholder='Enter your password .' className='w-75 form-control mt-3' onChange={formik.handleChange} value={formik.values.password} />
+          <input onBlur={formik.handleBlur}  type="password" name='password' id='password' placeholder='Enter your password .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.password} />
           {formik.errors.password && formik.touched.password ? <div className="text-danger  w-75" role="alert">{formik.errors.password}</div> :null}
 
 
           <label htmlFor="rePassword" className='mt-3'>Confrim Password :</label>
-          <input onBlur={formik.handleBlur}  type="password" name='rePassword' id='rePassword' placeholder='Enter your Repassword .' className='w-75 form-control mt-3' onChange={formik.handleChange} value={formik.values.rePassword} />
+          <input onBlur={formik.handleBlur}  type="password" name='rePassword' id='rePassword' placeholder='Enter your Repassword .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.rePassword} />
           {formik.errors.rePassword && formik.touched.rePassword ? <div className="text-danger  w-75" role="alert">{formik.errors.rePassword}</div> :null}
 
 
-          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main text-white w-75 py-2 rounded-2 mt-4'>Register</button>
+          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main text-white w-100 py-2 rounded-2 mt-4'>Register</button>
           </form>
         </div>
       </div>

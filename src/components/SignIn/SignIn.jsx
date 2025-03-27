@@ -49,13 +49,13 @@ export default function SignIn() {
           <form onSubmit={formik.handleSubmit}>
 
           <label htmlFor="Email" className='mt-3'>Email :</label>
-          <input onBlur={formik.handleBlur}  type="email" name='email' id='email' placeholder='Enter your email.' className='w-75 form-control mt-3' onChange={formik.handleChange} value={formik.values.email} />
+          <input onBlur={formik.handleBlur}  type="email" name='email' id='email' placeholder='Enter your email.' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.email} />
           {formik.errors.email && formik.touched.email ? <div className="text-danger  w-75" role="alert">{formik.errors.email}</div> :null}
 
           <label htmlFor="password" className='mt-3'>Password :</label>
-          <input onBlur={formik.handleBlur}  type="password" name='password' id='password' placeholder='Enter your password .' className='w-75 form-control mt-3' onChange={formik.handleChange} value={formik.values.password} />
-          {formik.errors.password && formik.touched.password ? <div className="text-danger  w-75" role="alert">{formik.errors.password}</div> :null}
-          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main text-white w-75 py-2 rounded-2 mt-4'>Register</button>
+          <input onBlur={formik.handleBlur}  type="password" name='password' id='password' placeholder='Enter your password .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.password} />
+          {formik.errors.password && formik.touched.password ? <div className="text-danger  w-100" role="alert">{formik.errors.password}</div> :null}
+          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main text-white w-100 py-2 rounded-2 mt-4'>Register</button>
           </form>
         </div>
       </div>
