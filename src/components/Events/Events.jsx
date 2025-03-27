@@ -30,9 +30,9 @@ export default function Events() {
 
 <div className="row">
 <div className="col-lg-4 col-md-6 my-4 ">
-    <div className="card position-relative dark:tw-bg-gray-900" style={{ height: "600px" }}>
-      <img src={siwa} className="card-img-top w-100" style={{ height: "360px" }} />
-      <div className="card-body position-relative">
+<div class="card dark:tw-bg-gray-900" style={{height:'620px'}}>
+<img src={siwa} className="card-img-top w-100" style={{ height: "360px" }} />
+<div className="card-body tw-flex tw-flex-col tw-flex-grow tw-overflow-hidden">
         <h5 className="card-title mainColor">Siwa Oasis</h5>
         <p className="card-text dark:tw-text-white">
           Experience golden dunes, refreshing springs, and unforgettable sunsets in a trip full of adventure, relaxation, and fellowship! ✨🚙
@@ -43,7 +43,7 @@ export default function Events() {
               <span className="tw-text-gray-500  dark:tw-text-white my-2">21/09/2025</span>
             </div>
             <div className="card-btn">
-              <button className="bg-main text-white px-5 py-2 rounded-3">More Info!</button>
+            <button className="bg-main text-white tw-w-full tw-px-7  py-2 rounded-3">More Info!</button>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function Events() {
     </div>
   </div>
   <div className="col-lg-4 col-md-6 my-4">
-  <div class="card dark:tw-bg-gray-900" style={{height:'600px'}}>
+  <div class="card dark:tw-bg-gray-900" style={{height:'620px'}}>
   <img src={der} class="card-img-top w-100"  style={{height:'360px'}}/>
   <div class="card-body position-relative">
     <h5 class="card-title mainColor">Syrian Monastery</h5>
@@ -62,7 +62,7 @@ export default function Events() {
         <span className='tw-text-gray-500  dark:tw-text-white my-2'>12/07/2025</span>
       </div>
       <div className="card-btn">
-        <button className='bg-main text-white px-5 py-2 rounded-3'>More Info!</button>
+      <button className="bg-main text-white tw-w-full tw-px-7  py-2 rounded-3">More Info!</button>
       </div>
     </div>
     </div>
@@ -70,7 +70,7 @@ export default function Events() {
 </div>
   </div>
   <div className="col-lg-4 col-md-6  my-4">
-  <div class="card dark:tw-bg-gray-900"style={{height:'600px'}} >
+  <div class="card dark:tw-bg-gray-900"style={{height:'620px'}} >
   <img src={maria} class="card-img-top w-100"style={{height:'360px'}} />
   <div class="card-body position-relative">
     <h5 class="card-title mainColor">St. Maria Resort – Fun & Faith!</h5>
@@ -81,7 +81,7 @@ export default function Events() {
         <span className='tw-text-gray-500  dark:tw-text-whitemy-2'>14/06/2025</span>
       </div>
       <div className="card-btn">
-        <button className='bg-main text-white px-5 py-2 rounded-3'>More Info!</button>
+      <button className="bg-main text-white tw-w-full tw-px-7  py-2 rounded-3">More Info!</button>
       </div>
     </div>
     </div>
