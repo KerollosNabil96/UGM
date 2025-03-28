@@ -11,3 +11,9 @@
     height: 220px;
     resize: none;
 }
+
+.absolute{
+    position: absolute;
+    bottom: -20px;
+    right: 0px;
+}

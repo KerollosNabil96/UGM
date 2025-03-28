@@ -74,46 +74,83 @@ html, body {
   transform: translateX(-50%);
 }
 
+
+
 .w-input {
-  width: 900px; 
+  width: 100%; 
+  max-width: 900px; 
 }
+@media (max-width: 1400px) { 
+  .w-input { width: 600px; } 
+}
+
 
 @media (max-width: 1200px) { 
-  .w-input { width: 680px; } 
+  .w-input { width: 100%; } 
 }
 
+
 @media (max-width: 768px) { 
-  .w-input { width: 450px; }
+  .w-input { width: 100%;} 
 }
 
 .w-myBtn {
-  width: 120px; 
+  width: 120px;
+  max-width: 120px; 
 }
 
 @media (max-width: 1200px) { 
-  .w-myBtn { width: 100px; } 
+  .w-myBtn { width: 100%; max-width: 140px; margin-right: 30px; } 
+}
+
+@media (max-width: 992px) { 
+  .w-myBtn{ width: 100%; max-width: 150px; margin-right: 5px;} 
 }
 
 @media (max-width: 768px) { 
-  .w-myBtn{ width: 150px; }
+  .w-myBtn{ width: 100%; max-width: 150px; margin-right: 0px;} 
 }
 
 .w-Drop {
-  width: 230px; 
+  width: 200px;
+  max-width: 250px; 
 }
 
 @media (max-width: 1200px) { 
-  .w-Drop { width: 120px; } 
+  .w-Drop { width: auto; max-width: 2000px; } 
 }
 
 @media (max-width: 768px) { 
-  .w-Drop{ width: 200px; }
-}
-.w-40{
-  width: 45%;
+  .w-Drop { width: 100%; max-width: 200px; } 
 }
 
-.lft{
-  right: 0px !important;
-  bottom: -20px !important;
+.d-Myflex {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: space-between;
+}
+
+.myt-4 {
+  margin: 1rem; 
+}
+
+@media (max-width: 768px) {
+  .d-Myflex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+
+.text-white {
+  color: white;
+}
+
+.rounded-2 {
+  border-radius: 8px;
+}
+
+.pyt-3 {
+  padding: 1rem;
 }

@@ -8,6 +8,7 @@ import Contact from './components/Contact/Contact'
 import SignIn from './components/SignIn/SignIn'
 import SignUp from './components/SignUp/SignUp'
 import NotFound from './components/NotFound/NotFound'
+import AnimatedCircle  from './components/AnimatedCircle/AnimatedCircle'
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';

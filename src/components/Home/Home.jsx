@@ -5,6 +5,8 @@ import secImage  from '../../assets/2.jpg'
 import thirdImage from '../../assets/3.jpg'
 import Events from '../Events/Events'
 import { darkModeContext } from '../../Context/DarkModeContext';
+import { motion } from 'framer-motion';
+
 
 
 export default function Home() {
@@ -12,10 +14,16 @@ export default function Home() {
 
   return <>
       <div className={`${darkMode? 'tw-dark' : ''}` }>
+          
       <div className="container-fluid dark:tw-bg-gray-800" >
+      <motion.div
+              initial={{ opacity: 0, x: -100 }} 
+              animate={{ opacity: 1, x: 0 }}     
+              transition={{ duration: 1 }}       
+            >
       <div className="container">
     <div className="row"> 
-      <h1 className='fs-1 mainColor mt-5 fw-bolder'>Welcome to the UGM<br/> family</h1>
+      <h1 className='fs-1 mainColor mt-5 fw-bolder dark:tw-text-indigo-600'>Welcome to the UGM<br/> family</h1>
       <p className='paragraph  dark:tw-text-white'>Grow together in love and faith – Join our spiritual and church activities <br/> and be part of the service family!</p>
       <div className="silder  my-4 rounded-5" style={{ width: "100%", height: "300px" }}>
 
@@ -50,9 +58,11 @@ export default function Home() {
   </button>
 </div>
 </div>
-<Events/>
     </div>
   </div>
+  <Events/>
+  </motion.div>
+
         </div>
 </div>
 

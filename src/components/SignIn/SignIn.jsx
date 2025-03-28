@@ -3,6 +3,8 @@ import styles from './SignIn.module.css';
 import { Formik ,useFormik} from 'formik';
 import {darkModeContext} from '../../Context/DarkModeContext'
 import signUpImage from '../../assets/92765ddf95236aa0d03442a27590c405.png';
+import { motion } from 'framer-motion';
+
 export default function SignIn() {
   let {darkMode  } = useContext(darkModeContext)
   const validate = values => {
@@ -34,14 +36,18 @@ export default function SignIn() {
 
   return <>
   <div className={`${darkMode? 'tw-dark' : ''}`}>
-
+  <motion.div
+      initial={{ opacity: 0, x: -100 }} 
+      animate={{ opacity: 1, x: 0 }}     
+      transition={{ duration: 1 }}       
+    >
     
     <div className="container my-5 justify-content-between  d-flex align-items-center ">
       <div className="row w-75 mx-auto"  >
         <div className="col-lg-6 bg-body-tertiary ">
         <div className={`${styles['bg-image']}`}>
         <div className={`${styles['layer']}`}>
-              <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center h-100'>UGM Family</p>
+              <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100'>UGM Family</p>
             </div>
             </div>
         </div>
@@ -55,13 +61,14 @@ export default function SignIn() {
           <label htmlFor="password" className='mt-3'>Password :</label>
           <input onBlur={formik.handleBlur}  type="password" name='password' id='password' placeholder='Enter your password .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.password} />
           {formik.errors.password && formik.touched.password ? <div className="text-danger  w-100" role="alert">{formik.errors.password}</div> :null}
-          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main text-white w-100 py-2 rounded-2 mt-4'>Register</button>
+          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4'>Register</button>
           </form>
         </div>
       </div>
     </div>
 
 
+      </motion.div>
 
   </div>
    

@@ -2,6 +2,8 @@ import React from 'react'
 import styles from './SignUp.module.css';
 import { Formik ,useFormik} from 'formik';
 import signUpImage from '../../assets/92765ddf95236aa0d03442a27590c405.png';
+import { motion } from 'framer-motion';
+
 export default function SignUp() {
   const validate = values => {
     const errors = {};
@@ -52,11 +54,16 @@ export default function SignUp() {
   })
   return <>
     <div className="container my-5  ">
+    <motion.div
+      initial={{ opacity: 0, x: -100 }} // يبدأ العنصر من الشمال (x: -100)
+      animate={{ opacity: 1, x: 0 }}     // يصل إلى المكان الأصلي (x: 0)
+      transition={{ duration: 1 }}       // الانتقال يستمر لمدة ثانية واحدة
+    >
       <div className="row w-75 mx-auto"  >
         <div className="col-lg-6 bg-body-tertiary">
         <div className={`${styles['bg-image']}`}>
         <div className={`${styles['layer']}`}>
-              <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center h-100'>UGM Family</p>
+              <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100'>UGM Family</p>
             </div>
             </div>
 
@@ -91,10 +98,11 @@ export default function SignUp() {
           {formik.errors.rePassword && formik.touched.rePassword ? <div className="text-danger  w-75" role="alert">{formik.errors.rePassword}</div> :null}
 
 
-          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main text-white w-100 py-2 rounded-2 mt-4'>Register</button>
+          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4'>Register</button>
           </form>
         </div>
       </div>
+      </motion.div>
     </div>
     </>
 }
