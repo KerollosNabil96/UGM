@@ -50,8 +50,10 @@ export default function SignUp() {
       userName: '',
       password : '', 
       rePassword : '',
-    },onSubmit : ()=>{ 
+    },onSubmit : (values)=>{ 
       // post data to api
+
+      console.log(values)
     },validate
     
   })
@@ -104,7 +106,7 @@ export default function SignUp() {
           {formik.errors.rePassword && formik.touched.rePassword ? <div className="text-danger  w-75" role="alert">{formik.errors.rePassword}</div> :null}
 
 
-          <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4'>Register</button>
+          <button type='submit' disabled={!(formik.dirty && formik.isValid)} className='bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4'>Register</button>
           </form>
         </div>
       </div>

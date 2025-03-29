@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       fontSize: {
         'responsive': 'clamp(12px, 5vw, 2rem)', 
+        'responsive2': 'clamp(14px, 2vw, 1rem)', 
       }
     },
   },

@@ -38,6 +38,9 @@ export default function Navbar() {
               <li className="nav-item">
                 <Link className="nav-link active text-white" aria-current="page" to="contact">Contact</Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link active text-white" aria-current="page" to="servantInfo">Servant Info</Link>
+              </li>
             </ul>
 
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">

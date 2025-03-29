@@ -5,6 +5,7 @@ import Kahoot from './components/Kahoot/Kahoot'
 import Memories from './components/Memories/Memories'
 import Events from './components/Events/Events'
 import Contact from './components/Contact/Contact'
+import ServantInfo from './components/ServantInfo/ServantInfo'
 import SignIn from './components/SignIn/SignIn'
 import SignUp from './components/SignUp/SignUp'
 import NotFound from './components/NotFound/NotFound'
@@ -27,6 +28,7 @@ function App() {
       {path:'Memories'  , element: <Memories/>},
       {path:'events'  , element: <Events/>},
       {path:'contact'  , element: <Contact/>},
+      {path:'servantInfo'  , element: <ServantInfo/>},
       {path: 'signin', element: <SignIn />},
       {path: 'signup' , element:<SignUp/>},
       { path : "*" , element :<NotFound/>}
