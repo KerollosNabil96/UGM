@@ -22,11 +22,11 @@ export default function Contact() {
         <p className='tw-text-gray-500 dark:tw-text-white text-center fs-2 mt-2'>Have a question or want to get involved? Reach out to us — we’re here for you!</p>
         <div className={`${styles.shad} , my-4 col-sm-12 p-5 rounded-4 dark:tw-bg-gray-900`}>
         <div className={`${styles.child} , p-4 rounded-4 `}>
-          <div><span className='h2'>📅 Meeting Time:</span> <span className='fs-2 ms-2'>Friday at 4:00 PM</span></div>
+          <div><span className='tw-text-responsive fw-bold'>📅 Meeting Time:</span> <span className='tw-text-responsive ms-2'>Friday at 4:00 PM</span></div>
           <div className='py-3'>
-          <span className='h2 py-3'>📍 Location:</span> <span className='fs-2 ms-2 '> Virgin Mary & St. George Church,Gabriel, Alexandria, Egypt</span></div>
-          <div className='py-3'><span className='h2 py-3'>📞 Phone:</span> <span className='fs-2 ms-2 '> (+20)1201047167</span></div>
-            <div><span className='h2 py-3'>✉️ Email:</span> <span className='fs-2 ms-2 '> ugm@gmail.com</span><br/></div>
+          <span className='tw-text-responsive fw-bold py-3'>📍 Location:</span> <span className='tw-text-responsive ms-2 '> Virgin Mary & St. George Church,Gabriel, Alexandria, Egypt</span></div>
+          <div className='py-3'><span className='tw-text-responsive fw-bold py-3'>📞 Phone:</span> <span className='tw-text-responsive ms-2 '> (+20)1201047167</span></div>
+            <div><span className='tw-text-responsive fw-bold py-3'>✉️ Email:</span> <span className='tw-text-responsive ms-2 '> ugm@gmail.com</span><br/></div>
           </div>
           <form className='position-relative'>
           <div className="parent d-flex gap-3 justify-content-between mt-5">

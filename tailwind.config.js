@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontSize: {
+        'responsive': 'clamp(12px, 5vw, 2rem)', 
+      }
+    },
   },
   plugins: [],
   corePlugins: {
