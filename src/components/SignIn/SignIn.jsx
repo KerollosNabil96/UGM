@@ -36,6 +36,8 @@ export default function SignIn() {
 
   return <>
   <div className={`${darkMode? 'tw-dark' : ''}`}>
+  <div className="container-fluid dark:tw-bg-gray-800 py-5" >
+
   <motion.div
       initial={{ opacity: 0, x: -100 }} 
       animate={{ opacity: 1, x: 0 }}     
@@ -44,21 +46,21 @@ export default function SignIn() {
     
     <div className="container my-5 justify-content-between  d-flex align-items-center ">
       <div className="row w-75 mx-auto"  >
-        <div className="col-lg-6 bg-body-tertiary ">
+        <div className="col-lg-6 ps-1  tw-bg-gray-100 dark:tw-bg-gray-900 ">
         <div className={`${styles['bg-image']}`}>
         <div className={`${styles['layer']}`}>
               <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100'>UGM Family</p>
             </div>
             </div>
         </div>
-        <div className="col-lg-6 bg-body-tertiary rounded-3 py-3">
+        <div className="col-lg-6 tw-bg-gray-100 dark:tw-bg-gray-900 rounded-3 py-3">
           <form onSubmit={formik.handleSubmit}>
 
-          <label htmlFor="Email" className='mt-3'>Email :</label>
+          <label htmlFor="Email" className='mt-3 dark:tw-text-white'>Email :</label>
           <input onBlur={formik.handleBlur}  type="email" name='email' id='email' placeholder='Enter your email.' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.email} />
           {formik.errors.email && formik.touched.email ? <div className="text-danger  w-75" role="alert">{formik.errors.email}</div> :null}
 
-          <label htmlFor="password" className='mt-3'>Password :</label>
+          <label htmlFor="password" className='mt-3 dark:tw-text-white'>Password :</label>
           <input onBlur={formik.handleBlur}  type="password" name='password' id='password' placeholder='Enter your password .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.password} />
           {formik.errors.password && formik.touched.password ? <div className="text-danger  w-100" role="alert">{formik.errors.password}</div> :null}
           <button type='submit' disabled={(formik.dirty && formik.isValid)} className='bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4'>Register</button>
@@ -69,7 +71,7 @@ export default function SignIn() {
 
 
       </motion.div>
-
+</div>
   </div>
    
   

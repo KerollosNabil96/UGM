@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styles from './SignUp.module.css';
 import { Formik ,useFormik} from 'formik';
 import signUpImage from '../../assets/92765ddf95236aa0d03442a27590c405.png';
+import {darkModeContext} from '../../Context/DarkModeContext'
 import { motion } from 'framer-motion';
 
 export default function SignUp() {
+  let {darkMode  } = useContext(darkModeContext)
+
   const validate = values => {
     const errors = {};
     if (!values.name) {
@@ -53,14 +56,17 @@ export default function SignUp() {
     
   })
   return <>
+    <div className={`${darkMode? 'tw-dark' : ''}`}>
+    <div className="container-fluid dark:tw-bg-gray-800 py-4" >
+
     <div className="container my-5  ">
     <motion.div
-      initial={{ opacity: 0, x: -100 }} // يبدأ العنصر من الشمال (x: -100)
-      animate={{ opacity: 1, x: 0 }}     // يصل إلى المكان الأصلي (x: 0)
-      transition={{ duration: 1 }}       // الانتقال يستمر لمدة ثانية واحدة
+      initial={{ opacity: 0, x: -100 }} 
+      animate={{ opacity: 1, x: 0 }}     
+      transition={{ duration: 1 }}      
     >
       <div className="row w-75 mx-auto"  >
-        <div className="col-lg-6 bg-body-tertiary">
+        <div className="col-lg-6 ps-1 tw-bg-gray-100 dark:tw-bg-gray-900">
         <div className={`${styles['bg-image']}`}>
         <div className={`${styles['layer']}`}>
               <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100'>UGM Family</p>
@@ -71,29 +77,29 @@ export default function SignUp() {
           
           
         </div>
-        <div className="col-lg-6 bg-body-tertiary rounded-3 py-3">
+        <div className="col-lg-6 tw-bg-gray-100 dark:tw-bg-gray-900 rounded-3 py-3">
           <form onSubmit={formik.handleSubmit}>
-          <label htmlFor="name" className='mt-3'>Name :</label>
+          <label htmlFor="name" className='mt-3 dark:tw-text-white'>Name :</label>
           <input onBlur={formik.handleBlur}  type="text" name='name' id='name' placeholder='Enter your name.' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.name} />
           {formik.errors.name && formik.touched.name ? <div className=" text-danger w-75 " role="alert">{formik.errors.name}</div> :null}
 
 
-          <label htmlFor="Email" className='mt-3'>Email :</label>
+          <label htmlFor="Email" className='mt-3 dark:tw-text-white'>Email :</label>
           <input onBlur={formik.handleBlur}  type="email" name='email' id='email' placeholder='Enter your email.' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.email} />
           {formik.errors.email && formik.touched.email ? <div className="text-danger  w-100" role="alert">{formik.errors.email}</div> :null}
 
 
-          <label htmlFor="Phone" className='mt-3'>Phone No. :</label>
+          <label htmlFor="Phone" className='mt-3 dark:tw-text-white'>Phone No. :</label>
           <input onBlur={formik.handleBlur}  type="tel" name='phone' id='Phone' placeholder='Enter your phone Number .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.phone} />
           {formik.errors.phone&& formik.touched.phone ? <div className="text-danger  w-75" role="alert">{formik.errors.phone}</div> :null}
 
 
-          <label htmlFor="password" className='mt-3'>Password :</label>
+          <label htmlFor="password" className='mt-3 dark:tw-text-white'>Password :</label>
           <input onBlur={formik.handleBlur}  type="password" name='password' id='password' placeholder='Enter your password .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.password} />
           {formik.errors.password && formik.touched.password ? <div className="text-danger  w-75" role="alert">{formik.errors.password}</div> :null}
 
 
-          <label htmlFor="rePassword" className='mt-3'>Confrim Password :</label>
+          <label htmlFor="rePassword" className='mt-3 dark:tw-text-white'>Confrim Password :</label>
           <input onBlur={formik.handleBlur}  type="password" name='rePassword' id='rePassword' placeholder='Enter your Repassword .' className='w-100 form-control mt-3' onChange={formik.handleChange} value={formik.values.rePassword} />
           {formik.errors.rePassword && formik.touched.rePassword ? <div className="text-danger  w-75" role="alert">{formik.errors.rePassword}</div> :null}
 
@@ -103,6 +109,8 @@ export default function SignUp() {
         </div>
       </div>
       </motion.div>
+    </div>
+    </div>
     </div>
     </>
 }

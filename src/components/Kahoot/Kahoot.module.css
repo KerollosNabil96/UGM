@@ -10,3 +10,10 @@
     font-weight: 700;
     text-align: center;
   }
+  .myButton{
+    transition: all 0.5s;
+  }
+
+  .myButton:hover{
+    background-color : #4c0082ea !important;
+}

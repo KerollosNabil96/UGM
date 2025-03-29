@@ -24,7 +24,7 @@ export default function Kahoot() {
     <div className={`${styles.shad} , my-5 col-sm-12 p-5 rounded-4 bg-main dark:tw-bg-gray-900`}>
     <div className="pin tw-bg-white dark:tw-bg-gray-800  py-5 mx-auto tw-p-5 rounded-3 tw-w-full md:tw-w-[600px]">
     <input type="text" placeholder='Game Pin'className={` ${styles.input} , p-4 w-100 dark:tw-bg-gray-900`} />
-        <button className='bg-main  w-100 text-white fs-2 fw-bolder rounded-3 dark:tw-bg-indigo-600 py-3 mt-5 form-control'>Submit</button>
+        <button className={` ${styles.myButton}  , bg-main  w-100 text-white fs-2 fw-bolder rounded-3 dark:tw-bg-indigo-600 py-3 mt-5 form-control`}>Submit</button>
       </div>
         </div>
 

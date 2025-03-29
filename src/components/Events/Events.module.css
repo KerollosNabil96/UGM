@@ -12,6 +12,10 @@
     padding-right: 25px;
 }
 
+.myButton{
+    transition: all 0.5s;
+}
+
 .myButton:hover{
-    background-color : #4c0082aa !important;
+    background-color : #4c0082ea !important;
 }
