@@ -32,7 +32,7 @@ export default function Events() {
     <option value="Events">Events</option>
     <option value="Trip">Trip</option>
   </select>
-  <button className='bg-main dark:tw-bg-indigo-600 btn text-white w-myBtn py-3'>Search</button>
+  <button className={` ${styles.myButton} , bg-main dark:tw-bg-indigo-600 btn text-white w-myBtn py-3`}>Search</button>
 </div>
 
 

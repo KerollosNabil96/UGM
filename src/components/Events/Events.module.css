@@ -11,3 +11,7 @@
     width: 100%; 
     padding-right: 25px;
 }
+
+.myButton:hover{
+    background-color : #4c0082aa !important;
+}
