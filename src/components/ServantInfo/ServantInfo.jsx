@@ -610,7 +610,7 @@ export default function ServantInfo() {
                     className="bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
                     disabled={!(formik.dirty && formik.isValid) || formik.isSubmitting}
                   >
-                    {formik.isSubmitting ? 'Submitting...' : 'Register'}
+                    {formik.isSubmitting ? 'Submitting...' : 'Submit'}
                   </button>
                 </div>
               </form>
