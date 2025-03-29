@@ -7,8 +7,10 @@ import { Outlet } from 'react-router-dom';
 export default function Layout() {
   return <>
     <Navbar/>
-    <AnimatedCircle />
-    <Outlet></Outlet>
+    <div className="tw-hidden lg:tw-block">
+      <AnimatedCircle />
+    </div>
+        <Outlet></Outlet>
     <Footer/>
     </>
 }
