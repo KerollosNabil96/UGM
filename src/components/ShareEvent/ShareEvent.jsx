@@ -20,6 +20,7 @@ export default function VenueForm() {
   const formik = useFormik({
     initialValues: {
       eventName: "",
+      category: "",
       address: "",
       price: "",
       phone: "",
@@ -29,6 +30,9 @@ export default function VenueForm() {
       fullDescription: "",
     },
     validationSchema: Yup.object({
+      category: Yup.string()
+        .required("Category is required")
+        .oneOf(["event", "trip"], "Invalid category"),
       eventName: Yup.string().required("Event name is required"),
       address: Yup.string().required("Address is required"),
       price: Yup.number()
@@ -172,6 +176,25 @@ export default function VenueForm() {
                 <div className="tw-text-red-500 tw-text-sm tw-mt-1">{formik.errors.eventName}</div>
               )}
             </div>
+
+              {/* Category */}
+              <div>
+                <select
+                  name="category"
+                  className={`tw-w-full tw-p-3 rounded-3 tw-text-gray-600 tw-bg-white dark:tw-text-white dark:tw-bg-gray-800 tw-border ${formik.touched.category && formik.errors.category ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.category}
+                >
+                  <option value="" >Select Category</option>
+                  <option value="event">Event</option>
+                  <option value="trip">Trip</option>
+
+                </select>
+                {formik.touched.category && formik.errors.category && (
+                  <div className="tw-text-red-500 tw-text-sm tw-mt-1">{formik.errors.category}</div>
+                )}
+              </div>
 
             {/* Address */}
             <div>
