@@ -10,6 +10,7 @@ import SignIn from './components/SignIn/SignIn'
 import SignUp from './components/SignUp/SignUp'
 import NotFound from './components/NotFound/NotFound'
 import AnimatedCircle  from './components/AnimatedCircle/AnimatedCircle'
+import ShareEvent  from './components/ShareEvent/ShareEvent'
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,6 +30,7 @@ function App() {
       {path:'events'  , element: <Events/>},
       {path:'contact'  , element: <Contact/>},
       {path:'servantInfo'  , element: <ServantInfo/>},
+      {path:'share-Event'  , element: <ShareEvent/>},
       {path: 'signin', element: <SignIn />},
       {path: 'signup' , element:<SignUp/>},
       { path : "*" , element :<NotFound/>}
