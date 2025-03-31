@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { motion } from "motion/react"
 import "leaflet/dist/leaflet.css";
 import styles from "./ShareEvent.module.css";
 import { darkModeContext } from '../../Context/DarkModeContext';
@@ -14,7 +15,6 @@ export default function VenueForm() {
   const [images, setImages] = useState(Array(3).fill(null));
   const [imageFiles, setImageFiles] = useState(Array(3).fill(null));
   const [addressSource, setAddressSource] = useState('manual');
-
   const phoneRegExp = /^01[0125][0-9]{8}$/;
 
   const formik = useFormik({
@@ -142,6 +142,11 @@ export default function VenueForm() {
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
       <div className="container-fluid dark:tw-bg-gray-800 py-4">
+      <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}     
+                transition={{ duration: 1 }}  
+              >
         <h1 className="text-center mainColor dark:tw-text-indigo-600 mt-2 fw-bolder">
           Share your event
         </h1>
@@ -158,7 +163,7 @@ export default function VenueForm() {
                 type="text"
                 name="eventName"
                 placeholder="Event name"
-                className={`tw-w-full tw-p-3 tw-rounded tw-bg-white dark:tw-text-white dark:tw-bg-gray-800 tw-border ${formik.touched.eventName && formik.errors.eventName ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                className={`tw-w-full tw-p-3 rounded-3 tw-bg-white dark:tw-text-white dark:tw-bg-gray-800 tw-border ${formik.touched.eventName && formik.errors.eventName ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.eventName}
@@ -170,12 +175,12 @@ export default function VenueForm() {
 
             {/* Address */}
             <div>
-              <div className="tw-flex tw-items-center tw-bg-white dark:tw-bg-gray-800 tw-rounded tw-border tw-border-gray-300 dark:tw-border-gray-600">
+              <div className="tw-flex tw-items-center tw-bg-white dark:tw-bg-gray-800 rounded-3 tw-border tw-border-gray-300 dark:tw-border-gray-600">
                 <input
                   type="text"
                   name="address"
                   placeholder="Address"
-                  className="tw-flex-1 tw-p-3 dark:tw-text-white  tw-bg-transparent"
+                  className="tw-flex-1 tw-p-3 dark:tw-text-white rounded-3  tw-bg-transparent"
                   onChange={handleAddressChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.address}
@@ -215,7 +220,7 @@ export default function VenueForm() {
               <textarea
                 name="shortDescription"
                 placeholder="Short description (will appear in the card) - Max 50 characters"
-                className={`tw-w-full tw-p-3 dark:tw-text-white tw-rounded tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.shortDescription && formik.errors.shortDescription ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"} tw-resize-none`}
+                className={`tw-w-full tw-p-3 dark:tw-text-white  rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.shortDescription && formik.errors.shortDescription ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"} tw-resize-none`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.shortDescription}
@@ -241,7 +246,7 @@ export default function VenueForm() {
               <textarea
                 name="fullDescription"
                 placeholder="Full description - Write as much as you want"
-                className={`tw-w-full tw-p-3 dark:tw-text-white tw-rounded tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.fullDescription && formik.errors.fullDescription ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"} tw-resize-none`}
+                className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.fullDescription && formik.errors.fullDescription ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"} tw-resize-none`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.fullDescription}
@@ -267,7 +272,7 @@ export default function VenueForm() {
                 type="number"
                 name="price"
                 placeholder="Price (EGP)"
-                className={`tw-w-full tw-p-3 dark:tw-text-white tw-rounded tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.price && formik.errors.price ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.price && formik.errors.price ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.price}
@@ -284,7 +289,7 @@ export default function VenueForm() {
                 type="text"
                 name="phone"
                 placeholder="Phone number (01XXXXXXXXX)"
-                className={`tw-w-full tw-p-3 dark:tw-text-white tw-rounded tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.phone && formik.errors.phone ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.phone && formik.errors.phone ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.phone}
@@ -300,7 +305,7 @@ export default function VenueForm() {
                 type="text"
                 name="responsiblePerson"
                 placeholder="Responsible person name"
-                className={`tw-w-full tw-p-3 dark:tw-text-white tw-rounded tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.responsiblePerson && formik.errors.responsiblePerson ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.responsiblePerson && formik.errors.responsiblePerson ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.responsiblePerson}
@@ -315,7 +320,7 @@ export default function VenueForm() {
               <input
                 type="date"
                 name="date"
-                className={`tw-w-full dark:tw-text-white tw-p-3 tw-rounded tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.date && formik.errors.date ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                className={`tw-w-full dark:tw-text-white tw-p-3 rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.date && formik.errors.date ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.date}
@@ -328,13 +333,13 @@ export default function VenueForm() {
             {/* Event Images */}
             <div className="tw-space-y-3 tw-pt-2">
               {[0, 1, 2].map((index) => (
-                <div key={index} className="tw-bg-white dark:tw-bg-gray-800 tw-rounded tw-p-4 tw-text-center tw-border tw-border-gray-300 dark:tw-border-gray-600">
+                <div key={index} className="tw-bg-white dark:tw-bg-gray-800 rounded-3 tw-p-4 tw-text-center tw-border tw-border-gray-300 dark:tw-border-gray-600">
                   {images[index] ? (
                     <>
                       <img 
                         src={images[index]} 
                         alt={`Event ${index + 1}`} 
-                        className="tw-w-full tw-h-24 tw-object-cover tw-rounded tw-mb-2" 
+                        className="tw-w-full tw-h-24 tw-object-cover rounded-3 tw-mb-2" 
                       />
                       {formik.touched.images?.[index] && formik.errors.images?.[index] && (
                         <div className="tw-text-red-500 tw-text-sm">{formik.errors.images[index]}</div>
@@ -344,8 +349,8 @@ export default function VenueForm() {
                     <>
                       <p className="tw-mb-2 tw-text-gray-500 dark:tw-text-gray-300">
                         {index === 0 ? "Upload first event image" : 
-                         index === 1 ? "Upload second event image" : 
-                         "Upload third event image"}
+                        index === 1 ? "Upload second event image" : 
+                        "Upload third event image"}
                       </p>
                       {formik.touched.images?.[index] && formik.errors.images?.[index] && (
                         <div className="tw-text-red-500 tw-text-sm">{formik.errors.images[index]}</div>
@@ -361,7 +366,7 @@ export default function VenueForm() {
                   />
                   <label 
                     htmlFor={`eventImage${index}`} 
-                    className={`tw-inline-block dark:tw-bg-indigo-600 tw-px-4 tw-py-2 bg-main tw-rounded tw-cursor-pointer ${images[index] ? "tw-bg-gray-200 hover:tw-bg-gray-300" : "tw-bg-blue-500 hover:tw-bg-blue-600"} tw-transition tw-text-white`}
+                    className={`tw-inline-block dark:tw-bg-indigo-600 tw-px-4 tw-py-2 bg-main rounded-3 tw-cursor-pointer ${images[index] ? "tw-bg-gray-200 hover:tw-bg-gray-300" : "tw-bg-blue-500 hover:tw-bg-blue-600"} tw-transition tw-text-white`}
                   >
                     {images[index] ? "Change Image" : "Select Image"}
                   </label>
@@ -375,7 +380,7 @@ export default function VenueForm() {
             {/* Submit Button */}
             <button
               type="submit"
-              className={`tw-w-full tw-mt-6 tw-p-3 bg-main dark:tw-bg-indigo-600 tw-rounded tw-font-bold tw-transition tw-text-white ${!allImagesUploaded ? 'tw-opacity-50 tw-cursor-not-allowed' : ''}`}
+              className={`tw-w-full tw-mt-6 tw-p-3 bg-main dark:tw-bg-indigo-600 rounded-3 tw-font-bold tw-transition tw-text-white ${!allImagesUploaded ? 'tw-opacity-50 tw-cursor-not-allowed' : ''}`}
               disabled={!allImagesUploaded || formik.isSubmitting}
             >
               {formik.isSubmitting ? "Submitting..." : "Submit"}
@@ -429,7 +434,10 @@ export default function VenueForm() {
             </div>
           )}
         </div>
+        </motion.div>
       </div>
     </div>
   );
 }
+
+
