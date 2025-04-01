@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import {darkModeContext} from '../../Context/DarkModeContext'
 import Layout from '../Layout/Layout';
 import { Link } from 'react-router-dom';
+import { style } from 'motion/react-m';
+import styles from './Navbar.module.css';
+
 
 export default function Navbar() {
 
@@ -46,7 +49,7 @@ export default function Navbar() {
               </li>
             </ul>
 
-            <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+            <ul className="navbar-nav ms-auto mb-2 mb-lg-0 position-relative">
             <i onClick={() => toggleDarkMode()} className={darkMode === true ? 'fa-solid fa-sun crsr text-white fs-3 d-flex me-lg-3 cursor-pointer align-items-center' : 'fa-solid crsr fa-moon text-white fs-3 d-flex me-lg-3 cursor-pointer align-items-center'}/> 
                 <li className="nav-item">
                 <Link className="nav-link text-white" aria-current="page" to="signin">SignIn</Link>
@@ -54,9 +57,15 @@ export default function Navbar() {
               <li className="nav-item">
                 <Link className="nav-link text-white" aria-current="page" to="signup">SignUp</Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" aria-current="page">SignOut</Link>
+              <li className="nav-item ">
+                <Link className="nav-link text-white" aria-current="page">Username</Link>
               </li>
+              {/* <div className={`${styles.shad}  tw-left-0 tw-top-10 p-4`}>
+                <ul className='d-flex flex-column'> 
+                <li className='border border-1 bg-main btn px-5 text-white tw-w-[160px]'>Profile</li>
+                  <li className='border border-1 bg-main btn px-5 text-white tw-w-[160px]'>Settings</li>
+                </ul>
+                </div> */}
             </ul>
           </div>
         </div>

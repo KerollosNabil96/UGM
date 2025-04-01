@@ -535,7 +535,7 @@ export default function ServantInfo() {
                       name="cohort"
                       id="cohort"
                       className={`py-2 border border-2 rounded-2 ${
-                        formik.errors.cohort && formik.touched.cohort ? 'is-invalid' : ''
+                      formik.errors.cohort && formik.touched.cohort ? 'is-invalid' : ''
                       }`}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -546,11 +546,11 @@ export default function ServantInfo() {
                       <option value="2nd_University">2nd Year University</option>
                       <option value="3rd_University">3rd Year University</option>
                       <option value="4th_University">4th Year University</option>
-                      <option value="Graduate_1">1st Year Graduate</option>
-                      <option value="Graduate_2">2nd Year Graduate</option>
-                      <option value="Graduate_3">3rd Year Graduate</option>
-                      <option value="Graduate_4">4th Year Graduate</option>
-                      <option value="Graduate_5">5th Year Graduate</option>
+                      <option value="1_Graduate">1st Year Graduate</option>
+                      <option value="2_Graduate">2nd Year Graduate</option>
+                      <option value="3_Graduate">3rd Year Graduate</option>
+                      <option value="4_Graduate">4th Year Graduate</option>
+                      <option value="5_Graduate">5th Year Graduate</option>
                     </select>
                     {formik.errors.cohort && formik.touched.cohort && (
                       <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
