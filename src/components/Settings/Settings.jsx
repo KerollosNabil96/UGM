@@ -1,7 +1,387 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styles from './Settings.module.css';
+import { useFormik } from 'formik';
+import { darkModeContext } from '../../Context/DarkModeContext';
+import { motion } from 'framer-motion';
+
 export default function Settings() {
+      const { darkMode } = useContext(darkModeContext);
+
+   const daysOfWeek = [
+     'Saturday',
+     'Sunday',
+     'Monday',
+     'Tuesday',
+     'Wednesday',
+     'Thursday',
+     'Friday'
+   ];
+ 
+   const validate = (values) => {
+     let errors = {};
+      if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+       errors.email = 'Invalid email address';
+     }
+
+     
+
+      if (values.mobileNumber1 && !/^01[0125][0-9]{8}$/.test(values.mobileNumber1)) {
+       errors.mobileNumber1 = 'Invalid mobile number';
+     }
+
+     if (values.mobileNumber2 && !/^01[0125][0-9]{8}$/.test(values.mobileNumber2)) {
+       errors.mobileNumber2 = 'Invalid mobile number';
+     }
+ 
+     if (values.landline && !/^(02|03)\d{7}$/.test(values.landline)) {
+       errors.landline = 'Invalid landline number';
+     }
+
+
+     return errors;
+   };
+
+   const onSubmit = (values) => {
+     console.log('Form submitted with values:', values);
+   };
+ 
+   const formik = useFormik({
+     initialValues: {
+       firstName: '',//no
+       secName: '',//no
+       familyName: '',//no
+       email: '',//yes
+       Address: '',//yes
+       Address2: '',//yes
+       mobileNumber1: '',//yes
+       mobileNumber2: '',//yes
+       landline: '',//yes
+       church: '',//yes
+       college: '',//yes
+       governorateOfBirth: '',//no
+       maritalStatus: '',//yes
+       cohort: '',//yes
+       priestName: '',//yes
+       birthDay: '',//no
+       birthMonth: '',//no
+       birthYear: '',//no
+       profession: '',//yes
+       dayOff: [],
+       isExpatriate: false //no
+     },
+     validate,
+     onSubmit
+   });
+
+   const validate2 = (values2)=>{
+    const errors2 = {}
+if(!values2.oldPassword){
+  errors2.oldPassword = 'Old Password is required';
+}
+
+if(!values2.newPassword){
+  errors2.newPassword = 'New Password is required';
+}else if (  values2.newPassword && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(values2.newPassword)) {
+      errors2.newPassword = 'New password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character';
+    }
+
+    if(!values2.rePassword){
+      errors2.rePassword = 'Repassword is required';
+    } else if(values2.newPassword !== values2.rePassword){
+      errors2.rePassword = 'Password and repassword must be the same';
+    }
+    return errors2
+
+   }
+
+   const formik2 = useFormik({
+    initialValues:{
+      oldPassword : '',
+      newPassword : '',
+      rePassword:''
+    }, validate : validate2 ,
+    onSubmit : (values2)=>{
+      console.log(values2)
+    }
+   }
+  )
   return <>
-    <div>Settings</div>
+
+<div className={`${darkMode? 'tw-dark' : ''} ` }>
+          
+          <div className="container-fluid dark:tw-bg-gray-800" >
+          <motion.div
+        initial={{ opacity: 0, x: -100 }} 
+        animate={{ opacity: 1, x: 0 }}     
+        transition={{ duration: 1 }}       
+      >
+
+<div className="container  py-3">
+  <h1 className='text-center  mainColor dark:tw-text-indigo-600 mt-2 fw-bolder'>Settings</h1>
+  <p className='text-center mb-4  fs-4 tw-text-gray-600 dark:tw-text-white text-sm'>In this section, you can edit your personal information and update your password.</p>
+  <div className={`${styles.shad}  py-5 row  w-100 mx-auto rounded-4 p-3 my-4`}>
+    <h2 className='mb-4 mainColor dark:tw-text-indigo-600 '>Profile Information :</h2>
+    <div className={`profInfo ${styles.shad} dark:tw-bg-gray-900 p-4 mx-auto  w-75 tw-bg-gray-300 rounded-2 `}>
+      <form onSubmit={formik.handleSubmit}>
+
+
+
+
+
+<div className="parent md:tw-flex  gap-2">
+<div className="Emailchild w-100">
+<input type="text" placeholder='Update Email' id='email' name='email' onChange={formik.handleChange} value={formik.values.email}  onBlur={formik.handleBlur}  className='form-control w-100 mt-3 py-2'   />
+{formik.errors.email && formik.touched.email && formik.values.email !== '' && (
+    <div className="text-danger w-100" role="alert">
+      {formik.errors.email}
+    </div>
+  )}
+</div>
+<div className="Church-child w-100">
+<input type="text" id='church' name='church' placeholder='Update Church'className='form-control w-100 mt-3 py-2' onChange={formik.handleChange} value={formik.values.church}  onBlur={formik.handleBlur} />
+      
+
+</div>
+</div>
+
+
+<div className="parent md:tw-flex  gap-2">
+<div className="collegechild w-100">
+<input type="text" placeholder='Update college or Institute' id='college' name='college'onChange={formik.handleChange} value={formik.values.college}  onBlur={formik.handleBlur}  className='form-control w-100 mt-3 py-2'   />
+{formik.errors.college && formik.touched.college && (
+                      <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                        {formik.errors.college}
+                      </div>
+                    )}
+</div>
+<div className="priestName-child w-100">
+<input type="text" id='priestName' name='priestName' placeholder='Update priest name'className='form-control py-2 w-100 mt-3' onChange={formik.handleChange} value={formik.values.priestName}  onBlur={formik.handleBlur} />
+{formik.errors.priestName && formik.touched.priestName && (
+                    <div className="text-danger w-100" role="alert">
+                      {formik.errors.priestName}
+                    </div>
+                  )}
+
+</div>
+</div>
+
+
+<div className="parent md:tw-flex  gap-2">
+<div className="Addresschild w-100">
+<input type="text" placeholder='Update Address 1' id='Address' name='Address'onChange={formik.handleChange} value={formik.values.Address}  onBlur={formik.handleBlur}  className='form-control w-100 mt-3'   />
+{formik.errors.Address && formik.touched.Address && (
+                    <div className="text-danger w-100" role="alert">
+                      {formik.errors.Address}
+                    </div>
+                  )}
+</div>
+<div className="Address2-child w-100">
+<input type="text" id='Address2' name='Address2' placeholder='Update Address 2 (if available)'className='form-control w-100 mt-3' onChange={formik.handleChange} value={formik.values.Address2}  onBlur={formik.handleBlur} />
+
+</div>
+</div>
+
+
+
+
+<div className="parent md:tw-flex  gap-2">
+<div className="mobileNumber1child w-100">
+<input type="text" placeholder='Update mobile number 1' id='mobileNumber1' name='mobileNumber1'onChange={formik.handleChange} value={formik.values.mobileNumber1}  onBlur={formik.handleBlur}  className='form-control w-100 mt-3 py-2 '   />
+{formik.errors.mobileNumber1 && formik.touched.mobileNumber1 && formik.values.email !== '' && (
+                    <div className="text-danger w-100" role="alert">
+                      {formik.errors.mobileNumber1}
+                    </div>
+                  )}
+</div>
+<div className="mobileNumber2-child w-100">
+<input type="text" id='mobileNumber2' name='mobileNumber2' placeholder='Update mobile number 2 (if available)'className='form-control w-100 mt-3 py-2' onChange={formik.handleChange} value={formik.values.mobileNumber2}  onBlur={formik.handleBlur} />
+
+</div>
+</div>
+
+
+
+<div className="parent md:tw-flex  gap-2">
+
+<div className="cohort w-100">
+<select
+                      name="cohort"
+                      id="cohort"
+                      className={`py-2 border border-2 rounded-2 mt-3  w-100 ${
+                      formik.errors.cohort && formik.touched.cohort ? 'is-invalid' : ''
+                      }`}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.cohort}
+                    >
+                      <option value="">Select cohort</option>
+                      <option value="1st_University">1st Year University</option>
+                      <option value="2nd_University">2nd Year University</option>
+                      <option value="3rd_University">3rd Year University</option>
+                      <option value="4th_University">4th Year University</option>
+                      <option value="1_Graduate">1st Year Graduate</option>
+                      <option value="2_Graduate">2nd Year Graduate</option>
+                      <option value="3_Graduate">3rd Year Graduate</option>
+                      <option value="4_Graduate">4th Year Graduate</option>
+                      <option value="5_Graduate">5th Year Graduate</option>
+                    </select>
+                    {formik.errors.cohort && formik.touched.cohort && (
+                      <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                        {formik.errors.cohort}
+                      </div>
+                    )}
+</div>
+<div className="maritalStatus-child w-100">
+<select
+                      name="maritalStatus"
+                      id="maritalStatus"
+                      className={`py-2 border border-2 rounded-2 w-100 mt-3 ${
+                        formik.errors.maritalStatus && formik.touched.maritalStatus ? 'is-invalid' : ''
+                      }`}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.maritalStatus}
+                    >
+                      <option value="">Select status</option>
+                      <option value="Single">Single</option>
+                      <option value="Engaged">Engaged</option>
+                      <option value="Married">Married</option>
+                    </select>
+                    {formik.errors.maritalStatus && formik.touched.maritalStatus && (
+                      <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                        {formik.errors.maritalStatus}
+                      </div>
+                    )}
+
+</div>
+</div>
+
+
+
+<div className="parent md:tw-flex  gap-2">
+<div className="landline w-100">
+<input type="text" placeholder='Update landline' id='landline' name='landline'onChange={formik.handleChange} value={formik.values.landline}  onBlur={formik.handleBlur}  className='form-control w-100 mt-3 py-2'   />
+{formik.errors.landline && formik.touched.landline && (
+                    <div className="text-danger w-100" role="alert">
+                      {formik.errors.landline}
+                    </div>
+                  )}
+</div>
+<div className="profession-child w-100">
+<input type="text" id='profession' name='profession' placeholder='Update profession (if available)'className='form-control w-100 mt-3 py-2' onChange={formik.handleChange} value={formik.values.profession}  onBlur={formik.handleBlur} />
+
+</div>
+</div>
+
+<div className="parent">
+{formik.values.profession && (
+                  <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[100%] mt-3">
+                    <label htmlFor="dayOff" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
+                      Day off (Press Ctrl and select):
+                    </label>
+                    <select
+                      name="dayOff"
+                      id="dayOff"
+                      multiple
+                      size={5}
+                      className="tw-form-control tw-mt-1 py-2 border border-2 rounded-2"
+                      onChange={(e) => {
+                        const selectedOptions = Array.from(e.target.selectedOptions).map(option => option.value);
+                        formik.setFieldValue('dayOff', selectedOptions);
+                      }}
+                      value={formik.values.dayOff || []}
+                    >
+                      {daysOfWeek.map((day, index) => (
+                        <option key={index} value={day}>{day}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+</div>
+<div className="parent">
+
+
+  
+<div className="my-4">
+<button
+  type="submit"
+  className="bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
+  disabled={!formik.dirty}
+>
+  {formik.isSubmitting ? 'Updating...' : 'Update'}
+</button>
+      </div>
+</div>
+
+
+
+
+
+      </form>
+
+
+
+      
+    </div>
+    <h2 className='my-4 mainColor dark:tw-text-indigo-600 '>Update Password :</h2>
+
+
+<div className={`profInfo ${styles.shad} dark:tw-bg-gray-900 mx-auto p-4 w-75 tw-bg-gray-300 rounded-2 `}>
+  <form onSubmit={formik2.handleSubmit}>
+
+
+
+  <div className="parent md:tw-flex  gap-2">
+<div className="oldchild w-100">
+<input type="password" placeholder='Enter old Password' id='oldPassword' name='oldPassword' onChange={formik2.handleChange} value={formik2.values.oldPassword}  onBlur={formik2.handleBlur}  className='form-control w-100 mt-3 py-2'   />
+{formik2.errors.oldPassword && formik2.touched.oldPassword && formik2.values.oldPassword !== '' && (
+    <div className="text-danger w-100" role="alert">
+      {formik2.errors.oldPassword}
+    </div>
+  )}
+</div>
+<div className="New-password w-100">
+<input type="password" placeholder='Enter new Password' id='newPassword' name='newPassword' onChange={formik2.handleChange} value={formik2.values.newPassword}  onBlur={formik2.handleBlur}  className='form-control w-100 mt-3 py-2'   />
+{formik2.errors.newPassword && formik2.touched.newPassword && formik2.values.newPassword !== '' && (
+    <div className="text-danger w-100" role="alert">
+      {formik2.errors.newPassword}
+    </div>
+  )}
+
+</div>
+</div>
+
+
+<div className="parent md:tw-flex  gap-2">
+<div className="rePassword w-100">
+<input type="password" placeholder='Enter Repassword' id='rePassword' name='rePassword' onChange={formik2.handleChange} value={formik2.values.rePassword}  onBlur={formik2.handleBlur}  className='form-control w-100 mt-3 py-2'   />
+{formik2.errors.rePassword && formik2.touched.rePassword && formik2.values.rePassword !== '' && (
+    <div className="text-danger w-100" role="alert">
+      {formik2.errors.rePassword}
+    </div>
+  )}
+            <button type='submit' disabled={!(formik2.dirty && formik2.isValid)} className='bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4'>Update Password</button>
+
+</div>
+
+</div>
+
+
+
+
+
+</form>
+</div>
+  
+    </div>
+
+
+  </div>
+  </motion.div>
+</div>
+</div>
+
+
+    
     </>
 }

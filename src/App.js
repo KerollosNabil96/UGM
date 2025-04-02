@@ -9,6 +9,8 @@ import ServantInfo from './components/ServantInfo/ServantInfo'
 import SignIn from './components/SignIn/SignIn'
 import SignUp from './components/SignUp/SignUp'
 import NotFound from './components/NotFound/NotFound'
+import Settings from './components/Settings/Settings'
+import Profile from './components/Profile/Profile'
 import AnimatedCircle  from './components/AnimatedCircle/AnimatedCircle'
 import ShareEvent  from './components/ShareEvent/ShareEvent'
 import './App.css';
@@ -31,6 +33,8 @@ function App() {
       {path:'contact'  , element: <Contact/>},
       {path:'servantInfo'  , element: <ServantInfo/>},
       {path:'share-Event'  , element: <ShareEvent/>},
+      {path:'settings'  , element: <Settings/>},
+      {path:'profile'  , element: <Profile/>},
       {path: 'signin', element: <SignIn />},
       {path: 'signup' , element:<SignUp/>},
       { path : "*" , element :<NotFound/>}

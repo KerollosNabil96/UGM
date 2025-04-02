@@ -12,7 +12,8 @@ export default function Navbar() {
 
 
   return <>
-    <div className={`${darkMode? 'tw-dark' : ''}`}>
+    <div className={`${darkMode? 'tw-dark' : ''} ]
+     `}>
       <nav className="navbar navbar-expand-lg bg-main dark:tw-bg-gray-900 transition-colors duration-300">
         <div className="container-fluid">
           <Link className="navbar-brand text-white tw-dark:text-blue-800 fw-bolder" to="#">
@@ -57,15 +58,22 @@ export default function Navbar() {
               <li className="nav-item">
                 <Link className="nav-link text-white" aria-current="page" to="signup">SignUp</Link>
               </li>
-              <li className="nav-item ">
-                <Link className="nav-link text-white" aria-current="page">Username</Link>
-              </li>
-              {/* <div className={`${styles.shad}  tw-left-0 tw-top-10 p-4`}>
-                <ul className='d-flex flex-column'> 
-                <li className='border border-1 bg-main btn px-5 text-white tw-w-[160px]'>Profile</li>
-                  <li className='border border-1 bg-main btn px-5 text-white tw-w-[160px]'>Settings</li>
-                </ul>
-                </div> */}
+              <li className="nav-item dropdown">
+  <button 
+    type="button" 
+    className="btn bg-main dark:tw-bg-gray-900 text-white border border-1 dropdown-toggle" 
+    data-bs-toggle="dropdown" 
+    aria-expanded="false"
+  >
+    Username
+  </button>
+  <ul className="dropdown-menu dropdown-menu-end ps-3 dark:tw-bg-gray-800">
+  <li><Link className='dropdown-item dark:tw-text-white' to={'profile'}><i class="fa-solid fa-user me-2 dark:tw-text-white"></i> Profile</Link></li>
+    <li><Link className='dropdown-item dark:tw-text-white' to={'settings'}><i class="fa-solid fa-gear me-2 dark:tw-text-white"></i> Settings</Link></li>
+    <li><Link className='dropdown-item dark:tw-text-white' to={'/'}><i class="fa-solid fa-right-from-bracket  me-2 dark:tw-text-white"></i> Logout</Link></li>
+  </ul>
+</li>
+              
             </ul>
           </div>
         </div>
