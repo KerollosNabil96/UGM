@@ -16,10 +16,13 @@ import ShareEvent  from './components/ShareEvent/ShareEvent'
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Offline } from "react-detect-offline";
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import DarkModeProvider from './Context/DarkModeContext'
 
 import { Children } from 'react';
+import { text } from 'motion/react-m'
+import { color } from 'motion/react'
 
 function App() {
 
@@ -42,6 +45,9 @@ function App() {
   ]);
   return <>
   <DarkModeProvider>
+  <Offline>
+  <div className="offlineDiv">You are offline!</div>
+</Offline>
   <RouterProvider router={router}></RouterProvider>
   </DarkModeProvider>
   

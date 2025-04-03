@@ -141,6 +141,21 @@ html, body {
   }
 }
 
+.offlineDiv {
+  color: white;
+  width: 200px;
+  background-color: red;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 100;
+}
+
 
 
 .text-white {

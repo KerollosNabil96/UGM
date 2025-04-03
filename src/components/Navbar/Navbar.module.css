@@ -23,6 +23,9 @@
     animation: move 0.5s forwards;
 }
 
+
+
+
 @keyframes move {
     0% {
       width: 0; 
