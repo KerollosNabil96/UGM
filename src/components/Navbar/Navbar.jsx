@@ -48,6 +48,10 @@ export default function Navbar() {
                 <NavLink className={({isActive})=>(isActive?`${styles.line} nav-link active text-white `:'nav-link active text-white')}  aria-current="page" to="servantInfo">Servant Info</NavLink>
               </li>
               <li className="nav-item">
+                <NavLink className={({isActive})=>(isActive?`${styles.line} nav-link active text-white `:'nav-link active text-white')}  aria-current="page" to="ServantList">Servant List</NavLink>
+              </li>
+              
+              <li className="nav-item">
                 <NavLink className={({isActive})=>(isActive?`${styles.line} nav-link active text-white `:'nav-link active text-white')}  aria-current="page" to="share-event">Share event</NavLink>
               </li>
             </ul>

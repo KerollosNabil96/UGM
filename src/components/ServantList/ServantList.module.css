@@ -1,0 +1,20 @@
+.ServantList {}
+
+.searching{
+    background-color: #F1F1F1;
+}
+
+.parent {
+    position: absolute;
+    bottom: 10px;
+    width: 100%; 
+    padding-right: 25px;
+}
+
+.myButton{
+    transition: all 0.5s;
+}
+
+.myButton:hover{
+    background-color : #4c0082ea !important;
+}

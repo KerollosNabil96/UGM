@@ -1,0 +1,28 @@
+{
+  "servants": [
+    {
+      "id": "84eb",
+      "firstName": "Felopater",
+      "secName": "nabil",
+      "familyName": "amin",
+      "email": "FelopaterNabil@gmail.com",
+      "Address": "sedi beshr",
+      "Address2": "",
+      "mobileNumber1": "01211772068",
+      "mobileNumber2": "",
+      "landline": "035288206",
+      "church": "Ghobrial - SediBeshr",
+      "college": "science",
+      "governorateOfBirth": "alex",
+      "maritalStatus": "Single",
+      "cohort": "3rd_University",
+      "priestName": "fr Rouis Morkos",
+      "birthDay": "12",
+      "birthMonth": "6",
+      "birthYear": "2003",
+      "profession": "",
+      "dayOff": [],
+      "isExpatriate": true
+    }
+  ]
+}

@@ -1,13 +1,18 @@
 
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './ServantInfo.module.css';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { useFormik } from 'formik';
 import { motion } from "motion/react"
+import axios, { Axios } from 'axios';
+import { div } from 'motion/react-client';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 
 export default function ServantInfo() {
   let { darkMode } = useContext(darkModeContext);
+  const [isSubmitted, setisSubmitted] = useState(false)
 
   const daysOfWeek = [
     'Saturday',
@@ -95,8 +100,21 @@ export default function ServantInfo() {
     return errors;
   };
 
-  const onSubmit = (values, { setSubmitting }) => {
-    console.log('Form submitted with values:', values);
+  const onSubmit = async (values, { setSubmitting }) => {
+
+let response= await axios.post('http://localhost:3001/servants' , values)
+
+console.log(response.status===201)
+
+if(response.status===201){
+  setisSubmitted(true)
+    toast.success('Data submitted successfully!', {
+      duration: 4000,
+      position: 'top-center',
+    });
+  formik.resetForm()
+}
+    
     setSubmitting(false);
   };
 
@@ -132,6 +150,16 @@ export default function ServantInfo() {
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
       <div className="container-fluid dark:tw-bg-gray-800 py-4">
         <div className="container my-5">
+        <Toaster
+      toastOptions={{
+        className: '',
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+      }}
+    />
           <motion.div
                 initial={{ opacity: 0, x: -100 }}
                 animate={{ opacity: 1, x: 0 }}     

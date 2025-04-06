@@ -6,6 +6,8 @@ import Memories from './components/Memories/Memories'
 import Events from './components/Events/Events'
 import Contact from './components/Contact/Contact'
 import ServantInfo from './components/ServantInfo/ServantInfo'
+import ServantList from './components/ServantList/ServantList'
+import ServantDetails from './components/ServantDetails/ServantDetails'
 import SignIn from './components/SignIn/SignIn'
 import SignUp from './components/SignUp/SignUp'
 import NotFound from './components/NotFound/NotFound'
@@ -35,6 +37,8 @@ function App() {
       {path:'events'  , element: <Events/>},
       {path:'contact'  , element: <Contact/>},
       {path:'servantInfo'  , element: <ServantInfo/>},
+      {path:'ServantList'  , element: <ServantList/>},
+      {path:'ServantList/ServantDetails/:id'  , element: <ServantDetails/>},
       {path:'share-Event'  , element: <ShareEvent/>},
       {path:'settings'  , element: <Settings/>},
       {path:'profile'  , element: <Profile/>},
