@@ -1,0 +1,25 @@
+.Dashboard {}
+
+.sideHidden {
+    display: block;
+  }
+  
+  @media (max-width: 992px) {
+    .sideHidden {
+      display: none;
+    }
+  }
+
+  .secNav {
+    display: none;
+  }
+  
+  @media (max-width: 992px) {
+    .secNav {
+      display: block;
+    }
+  }
+
+  .paddingLeft {
+    padding-left: 0px !important;
+  }

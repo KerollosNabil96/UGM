@@ -1,0 +1,15 @@
+.Users {}
+
+.shad{
+    box-shadow: 5px 5px 10px 2px rgba(128, 128, 128, 0.618);
+    background-color: white;
+}
+.popupWidth {
+    width: 25%; 
+  }
+  
+  @media (max-width: 768px) {
+    .popupWidth {
+      width: 90%;
+    }
+  }

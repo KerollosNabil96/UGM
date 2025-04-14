@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styles from './ServantList.module.css';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { motion } from "motion/react"
+import { darkModeContext } from '../../Context/DarkModeContext';
+
 
 export default function ServantList() {
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCohort, setSelectedCohort] = useState('')
+    let { darkMode } = useContext(darkModeContext);
 
   let getData = async () => {
     let { data } = await axios.get('http://localhost:3001/servants')
@@ -72,6 +76,9 @@ export default function ServantList() {
 
   return (
     <>
+        <div className={`${darkMode ? 'tw-dark' : ''}`}>
+          <div className="container-fluid dark:tw-bg-gray-800 py-4">
+    
       <div className="container" style={{ minHeight: '80vh' }}>
         <div className="row">
           <Toaster
@@ -84,6 +91,11 @@ export default function ServantList() {
               },
             }}
           />
+           <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}     
+                transition={{ duration: 1 }}  
+              >
 
           <h1 className='text-center  mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>Servant List</h1>
           <p className="text-center mb-4  fs-4 tw-text-gray-600 dark:tw-text-white text-sm">
@@ -158,7 +170,10 @@ export default function ServantList() {
               </div>
             )}
           </div>
+          </motion.div>
         </div>
+      </div>
+      </div>
       </div>
     </>
   )

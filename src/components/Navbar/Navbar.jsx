@@ -17,7 +17,7 @@ export default function Navbar() {
      `}>
       <nav className="navbar navbar-expand-lg bg-main dark:tw-bg-gray-900 transition-colors duration-300">
         <div className="container-fluid">
-          <NavLink  className="navbar-brand text-white tw-dark:text-blue-800 fw-bolder" to="#">
+          <NavLink  className="navbar-brand text-white tw-dark:text-blue-800 fw-bolder" to="/">
             UGM
           </NavLink>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,9 +74,10 @@ export default function Navbar() {
     Username
   </button>
   <ul className="dropdown-menu dropdown-menu-end ps-3 dark:tw-bg-gray-800">
+  <li><NavLink className='dropdown-item dark:tw-text-white' to={'dashboard'}><i class="fa-solid fa-bars me-2 dark:tw-text-white"></i> Dashboard</NavLink></li>
   <li><NavLink className='dropdown-item dark:tw-text-white' to={'profile'}><i class="fa-solid fa-user me-2 dark:tw-text-white"></i> Profile</NavLink></li>
     <li><NavLink className='dropdown-item dark:tw-text-white' to={'settings'}><i class="fa-solid fa-gear me-2 dark:tw-text-white"></i> Settings</NavLink></li>
-    <li><NavLink className='dropdown-item dark:tw-text-white' to={'/'}><i class="fa-solid fa-right-from-bracket  me-2 dark:tw-text-white"></i> Logout</NavLink></li>
+    <li ><NavLink className='dropdown-item dark:tw-text-white text-danger' to={'/'}><i class="fa-solid fa-right-from-bracket  me-2 dark:tw-text-white text-danger"></i> Logout</NavLink></li>
   </ul>
 </li>
             </ul>

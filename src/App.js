@@ -4,6 +4,9 @@ import About from './components/About/About'
 import Kahoot from './components/Kahoot/Kahoot'
 import Memories from './components/Memories/Memories'
 import Events from './components/Events/Events'
+import Dashboard from './components/Dashboard/Dashboard'
+import Users from './components/Users/Users'
+import UpdateReq from './components/UpdateReq/UpdateReq'
 import Contact from './components/Contact/Contact'
 import ServantInfo from './components/ServantInfo/ServantInfo'
 import ServantList from './components/ServantList/ServantList'
@@ -36,6 +39,10 @@ function App() {
       {path:'Memories'  , element: <Memories/>},
       {path:'events'  , element: <Events/>},
       {path:'contact'  , element: <Contact/>},
+      {path:'dashboard'  , element: <Dashboard/> , children : [
+        {index:true   , element: <Users/>},
+        {path:'update-request'  , element: <UpdateReq/>},
+      ]} ,
       {path:'servantInfo'  , element: <ServantInfo/>},
       {path:'ServantList'  , element: <ServantList/>},
       {path:'ServantList/ServantDetails/:id'  , element: <ServantDetails/>},

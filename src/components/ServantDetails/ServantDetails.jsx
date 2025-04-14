@@ -5,8 +5,10 @@ import toast, { Toaster } from 'react-hot-toast';
 import React, { useContext, useEffect, useState } from 'react';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { motion } from "motion/react"
 
 export default function ServantDetails() {
+  
   let location = useLocation();
   let navigate = useNavigate();
   let { darkMode } = useContext(darkModeContext);
@@ -168,8 +170,16 @@ export default function ServantDetails() {
   return (
     <>
       <Toaster />
+      <div className={`${darkMode ? 'tw-dark' : ''}`}>
+          <div className="container-fluid dark:tw-bg-gray-800 py-4">
+
       <div className="container">
         <div className="row">
+          <motion.div
+                          initial={{ opacity: 0, x: -100 }}
+                          animate={{ opacity: 1, x: 0 }}     
+                          transition={{ duration: 1 }}  
+                        >
           <h1 className='text-center mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>Servant Details</h1>
           <div className={`${styles.shad} col-12 tw-bg-gray-100 dark:tw-bg-gray-900 px-4 rounded-4`}>
             <button className='my-3' onClick={goBack}><i class="fa-solid fa-arrow-left" ></i></button>
@@ -642,7 +652,7 @@ export default function ServantDetails() {
               <div className="my-4">
                 <button
                   type="submit"
-                  className="bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
+                  className="bg-main mb-3 dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
                   disabled={formik.isSubmitting}
                 >
                   {formik.isSubmitting ? 'Updating...' : 'Update'}
@@ -650,7 +660,10 @@ export default function ServantDetails() {
               </div>
             </form>
           </div>
+          </motion.div>
         </div>
+      </div>
+      </div>
       </div>
     </>
   );
