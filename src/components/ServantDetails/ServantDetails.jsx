@@ -5,15 +5,19 @@ import toast, { Toaster } from 'react-hot-toast';
 import React, { useContext, useEffect, useState } from 'react';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion } from "motion/react"
+import { motion , AnimatePresence} from "motion/react"
+import { form, span } from 'motion/react-client';
 
 export default function ServantDetails() {
+
   
   let location = useLocation();
   let navigate = useNavigate();
   let { darkMode } = useContext(darkModeContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [initialData, setInitialData] = useState(null);
+const [hidden, sethidden] = useState(false)
+  const [update, setupdate] = useState(false)
 
   const daysOfWeek = [
     'Saturday',
@@ -167,6 +171,15 @@ export default function ServantDetails() {
     navigate(-1)
    }
 
+   const InfoItem = ({ label, value }) => (
+    <div className="col-12 col-md-6">
+      <div className="tw-bg-gray-100 dark:tw-bg-gray-700 tw-rounded-md tw-p-3 tw-shadow-sm">
+        <span className="tw-font-semibold">{label}:</span>
+        <span className="tw-ml-2">{value}</span>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <Toaster />
@@ -181,485 +194,561 @@ export default function ServantDetails() {
                           transition={{ duration: 1 }}  
                         >
           <h1 className='text-center mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>Servant Details</h1>
-          <div className={`${styles.shad} col-12 tw-bg-gray-100 dark:tw-bg-gray-900 px-4 rounded-4`}>
-            <button className='my-3' onClick={goBack}><i class="fa-solid fa-arrow-left" ></i></button>
-            <form onSubmit={formik.handleSubmit} noValidate>
-              {/* Names Section */}
-              <div className="names tw-flex tw-flex-col md:tw-flex-row tw-gap-3">
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
-                  <label htmlFor="firstName" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    First Name:
-                  </label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    id="firstName"
-                    placeholder="Enter first name"
-                    className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
-                      formik.errors.firstName && formik.touched.firstName ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.firstName}
-                  />
-                  {formik.errors.firstName && formik.touched.firstName && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.firstName}
-                    </div>
-                  )}
-                </div>
+          <div className="container my-4">
 
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
-                  <label htmlFor="secName" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Second Name:
-                  </label>
-                  <input
-                    type="text"
-                    name="secName"
-                    id="secName"
-                    placeholder="Enter second name"
-                    className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
-                      formik.errors.secName && formik.touched.secName ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.secName}
-                  />
-                  {formik.errors.secName && formik.touched.secName && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.secName}
-                    </div>
-                  )}
-                </div>
 
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[34%]">
-                  <label htmlFor="familyName" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Family Name:
-                  </label>
-                  <input
-                    type="text"
-                    name="familyName"
-                    id="familyName"
-                    placeholder="Enter family name"
-                    className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
-                      formik.errors.familyName && formik.touched.familyName ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.familyName}
-                  />
-                  {formik.errors.familyName && formik.touched.familyName && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.familyName}
-                    </div>
-                  )}
-                </div>
+
+
+          <AnimatePresence mode="wait">
+  {!update ? (
+    <motion.div
+      key="details"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+      className={`${styles.shad} tw-bg-white dark:tw-bg-gray-800 tw-shadow-md tw-rounded-xl tw-p-6 tw-text-gray-800 dark:tw-text-white tw-space-y-6`}
+    >
+       <button className='tw-my-1' onClick={()=>{goBack()}}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+      
+      <h2 className="tw-text-3xl tw-font-bold tw-text-center tw-text-indigo-600 dark:tw-text-indigo-400">
+        {formik.values.firstName} {formik.values.secName} {formik.values.familyName}
+      </h2>
+
+      <div className="row g-4">
+        
+        <InfoItem label="Email" value={formik.values.email} />
+        <InfoItem
+          label="Birthdate"
+          value={`${formik.values.birthDay}/${formik.values.birthMonth}/${formik.values.birthYear}`}
+        />
+        <InfoItem label="Address 1" value={formik.values.Address} />
+        {formik.values.Address2 && <InfoItem label="Address 2" value={formik.values.Address2} />}
+        <InfoItem label="Is expatriate?" value={formik.values.isExpatriate ? 'Yes' : 'No'} />
+        <InfoItem label="Mobile 1" value={formik.values.mobileNumber1} />
+        {formik.values.mobileNumber2 && <InfoItem label="Mobile 2" value={formik.values.mobileNumber2} />}
+        {formik.values.landline && <InfoItem label="Landline" value={formik.values.landline} />}
+        <InfoItem label="Church" value={formik.values.church} />
+        <InfoItem label="Priest Name" value={formik.values.priestName} />
+        <InfoItem label="College / Institute" value={formik.values.college} />
+        <InfoItem label="Governorate of birth" value={formik.values.governorateOfBirth} />
+        <InfoItem label="Marital Status" value={formik.values.maritalStatus} />
+        <InfoItem label="Cohort" value={formik.values.cohort} />
+        {formik.values.profession && <InfoItem label="Profession" value={formik.values.profession} />}
+        {formik.values.profession && (
+          <InfoItem label="Days off" value={formik.values.dayOff.join(' - ')} />
+        )}
+
+        <button
+          type="button"
+          className="bg-main mb-3 dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
+          onClick={() => setupdate(true)}
+        >
+          Update
+        </button>
+      </div>
+    </motion.div>
+  ) : (
+    <motion.div
+      key="form"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+      className={`${styles.shad} tw-bg-gray-100 dark:tw-bg-gray-900 tw-px-4 tw-rounded-xl tw-shadow-md`}
+    >
+      <button className='tw-my-3' onClick={()=>setupdate(false)}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+      
+      <form onSubmit={formik.handleSubmit}>
+               {/* Names Section */}
+               <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-4">
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
+            <label htmlFor="firstName" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              First Name:
+            </label>
+            <input
+              type="text"
+              name="firstName"
+              id="firstName"
+              placeholder="Enter first name"
+              className={`tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg ${
+                formik.errors.firstName && formik.touched.firstName ? 'tw-border-red-500' : 'tw-border-gray-300'
+              } tw-px-3 tw-bg-white dark:tw-bg-gray-800`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.firstName}
+            />
+            {formik.errors.firstName && formik.touched.firstName && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.firstName}
               </div>
+            )}
+          </div>
 
-              {/* Birthdate Section */}
-              <p className='fw-bold mt-3 tw-text-responsive2 dark:tw-text-white'>Birthdate:</p>
-              <div className='dateOfBirth w-100 mt-3 tw-flex tw-flex-col md:tw-flex-row'>
-                <div className="tw-w-full md:tw-w-[30%]">
-                  <label htmlFor="birthDay" className="tw-text-responsive2 dark:tw-text-white">Select Day:</label>
-                  <select 
-                    name="birthDay" 
-                    id="birthDay" 
-                    className='tw-px-2 ms-2'
-                    onChange={formik.handleChange}
-                    value={formik.values.birthDay}
-                  >
-                    {[...Array(31)].map((_, index) => (
-                      <option key={index} value={index + 1}>{index + 1}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="tw-w-full md:tw-mt-0 tw-mt-3 md:tw-w-[30%]">
-                  <label htmlFor="birthMonth" className="tw-text-responsive2 dark:tw-text-white">Select Month:</label>
-                  <select 
-                    name="birthMonth" 
-                    id="birthMonth" 
-                    className='tw-px-2 ms-2'
-                    onChange={formik.handleChange}
-                    value={formik.values.birthMonth}
-                  >
-                    {[...Array(12)].map((_, index) => (
-                      <option key={index} value={index + 1}>{index + 1}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="tw-w-full md:tw-mt-0 tw-mt-3 md:tw-w-[30%]">
-                  <label htmlFor="birthYear" className="tw-text-responsive2 dark:tw-text-white">Select Year:</label>
-                  <select 
-                    name="birthYear" 
-                    id="birthYear" 
-                    className='tw-px-2 ms-2'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.birthYear}
-                  >
-                    {[...Array(60)].map((_, index) => {
-                      const year = new Date().getFullYear() - index;
-                      return <option key={index} value={year}>{year}</option>;
-                    })}
-                  </select>
-                  {formik.errors.birthYear && formik.touched.birthYear && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.birthYear}
-                    </div>
-                  )}
-                </div>
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
+            <label htmlFor="secName" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Second Name:
+            </label>
+            <input
+              type="text"
+              name="secName"
+              id="secName"
+              placeholder="Enter second name"
+              className={`tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg ${
+                formik.errors.secName && formik.touched.secName ? 'tw-border-red-500' : 'tw-border-gray-300'
+              } tw-px-3 tw-bg-white dark:tw-bg-gray-800`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.secName}
+            />
+            {formik.errors.secName && formik.touched.secName && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.secName}
               </div>
+            )}
+          </div>
 
-              {/* Email Section */}
-              <div className="email my-3 w-100">
-                <label htmlFor="email" className='fw-bold tw-text-responsive2 dark:tw-text-white'>Email:</label>
-                <input 
-                  type="text"  
-                  className='w-100 py-2 mt-2 border border-2 rounded-2' 
-                  name='email' 
-                  id='email' 
-                  onChange={formik.handleChange} 
-                  value={formik.values.email}  
-                  onBlur={formik.handleBlur} 
-                />
-                {formik.errors.email && formik.touched.email && (
-                  <div className="text-danger w-100" role="alert">
-                    {formik.errors.email}
-                  </div>
-                )}
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[34%]">
+            <label htmlFor="familyName" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Family Name:
+            </label>
+            <input
+              type="text"
+              name="familyName"
+              id="familyName"
+              placeholder="Enter family name"
+              className={`tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg ${
+                formik.errors.familyName && formik.touched.familyName ? 'tw-border-red-500' : 'tw-border-gray-300'
+              } tw-px-3 tw-bg-white dark:tw-bg-gray-800`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.familyName}
+            />
+            {formik.errors.familyName && formik.touched.familyName && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.familyName}
               </div>
+            )}
+          </div>
+        </div>
 
-              {/* Address Section */}
-              <div className="Address tw-text-responsive2 my-3 w-100">
-                <label htmlFor="Address" className='fw-bold dark:tw-text-white'>Address:</label>
-                <input 
-                  type="text"  
-                  className='w-100 py-2 mt-2 border border-2 rounded-2' 
-                  name='Address' 
-                  id='Address' 
-                  onChange={formik.handleChange} 
-                  value={formik.values.Address}  
-                  onBlur={formik.handleBlur} 
-                />
-                {formik.errors.Address && formik.touched.Address && (
-                  <div className="text-danger w-100" role="alert">
-                    {formik.errors.Address}
-                  </div>
-                )}
-              </div>
-
-              <div className="Address2 tw-text-responsive2 my-3 w-100">
-                <label htmlFor="Address2" className='fw-bold dark:tw-text-white'>Address 2 (if available):</label>
-                <input 
-                  type="text"  
-                  className='w-100 py-2 mt-2 border border-2 rounded-2' 
-                  name='Address2' 
-                  id='Address2' 
-                  onChange={formik.handleChange} 
-                  value={formik.values.Address2}  
-                  onBlur={formik.handleBlur} 
-                />
-              </div>
-
-              {/* Expatriate Checkbox */}
-              <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[100%]">
-                <div className="tw-flex tw-items-center tw-mt-4">
-                  <label htmlFor="isExpatriate" className="tw-ml-2 dark:tw-text-white fw-bold me-2 tw-block tw-text-responsive2">
-                    Is expatriate?
-                  </label>
-                  <input
-                    type="checkbox"
-                    name="isExpatriate"
-                    id="isExpatriate"
-                    className="tw-h-4 tw-w-4 tw-text-blue-600 tw-rounded tw-border-gray-300 focus:tw-ring-blue-500"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    checked={formik.values.isExpatriate}
-                  />
-                </div>
-              </div>
-
-              {/* Contact Numbers Section */}
-              <div className="mobiles tw-flex tw-flex-col md:tw-flex-row tw-gap-3 mt-3">
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
-                  <label htmlFor="mobileNumber1" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Mobile number 1:
-                  </label>
-                  <input
-                    type="text"
-                    name="mobileNumber1"
-                    id="mobileNumber1"
-                    placeholder="Enter mobile number (1)"
-                    className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
-                      formik.errors.mobileNumber1 && formik.touched.mobileNumber1 ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.mobileNumber1}
-                  />
-                  {formik.errors.mobileNumber1 && formik.touched.mobileNumber1 && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.mobileNumber1}
-                    </div>
-                  )}
-                </div>
-
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
-                  <label htmlFor="mobileNumber2" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Mobile number 2 (if available):
-                  </label>
-                  <input
-                    type="text"
-                    name="mobileNumber2"
-                    id="mobileNumber2"
-                    placeholder="Enter mobile number (2)"
-                    className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
-                      formik.errors.mobileNumber2 && formik.touched.mobileNumber2 ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.mobileNumber2}
-                  />
-                  {formik.errors.mobileNumber2 && formik.touched.mobileNumber2 && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.mobileNumber2}
-                    </div>
-                  )}
-                </div>
-
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[34%]">
-                  <label htmlFor="landline" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Landline (if available):
-                  </label>
-                  <input
-                    type="text"
-                    name="landline"
-                    id="landline"
-                    placeholder="Enter landline number"
-                    className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
-                      formik.errors.landline && formik.touched.landline ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.landline}
-                  />
-                  {formik.errors.landline && formik.touched.landline && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.landline}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Church Section */}
-              <div className="church tw-text-responsive2 my-3 w-100">
-                <label htmlFor="church" className='fw-bold dark:tw-text-white'>Church:</label>
-                <input 
-                  type="text"  
-                  className='w-100 py-2 mt-2 border border-2 rounded-2' 
-                  name='church' 
-                  id='church' 
-                  onChange={formik.handleChange} 
-                  value={formik.values.church}  
-                  onBlur={formik.handleBlur} 
-                />
-                {formik.errors.church && formik.touched.church && (
-                  <div className="text-danger w-100" role="alert">
-                    {formik.errors.church}
-                  </div>
-                )}
-              </div>
-
-              {/* Priest Name */}
-              <div className="priestName tw-text-responsive2 my-3 w-100">
-                <label htmlFor="priestName" className='fw-bold dark:tw-text-white'>Priest Name:</label>
-                <input 
-                  type="text"  
-                  className='w-100 py-2 mt-2 border border-2 rounded-2' 
-                  name='priestName' 
-                  id='priestName' 
-                  onChange={formik.handleChange} 
-                  value={formik.values.priestName}  
-                  onBlur={formik.handleBlur} 
-                />
-                {formik.errors.priestName && formik.touched.priestName && (
-                  <div className="text-danger w-100" role="alert">
-                    {formik.errors.priestName}
-                  </div>
-                )}
-              </div>
-
-              {/* College and Governorate Section */}
-              <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-3">
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
-                  <label htmlFor="college" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    College or Institute:
-                  </label>
-                  <input
-                    type="text"
-                    name="college"
-                    id="college"
-                    placeholder="Enter the college"
-                    className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
-                      formik.errors.college && formik.touched.college ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.college}
-                  />
-                  {formik.errors.college && formik.touched.college && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.college}
-                    </div>
-                  )}
-                </div>
-
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
-                  <label htmlFor="governorateOfBirth" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Governorate of birth:
-                  </label>
-                  <input
-                    type="text"
-                    name="governorateOfBirth"
-                    id="governorateOfBirth"
-                    placeholder="Enter governorate of birth"
-                    className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
-                      formik.errors.governorateOfBirth && formik.touched.governorateOfBirth ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.governorateOfBirth}
-                  />
-                  {formik.errors.governorateOfBirth && formik.touched.governorateOfBirth && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.governorateOfBirth}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Marital Status and Cohort Section */}
-              <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-3 mt-3">
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
-                  <label htmlFor="maritalStatus" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Marital status:
-                  </label>
-                  <select
-                    name="maritalStatus"
-                    id="maritalStatus"
-                    className={`py-2 border border-2 rounded-2 ${
-                      formik.errors.maritalStatus && formik.touched.maritalStatus ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.maritalStatus}
-                  >
-                    <option value="">Select status</option>
-                    <option value="Single">Single</option>
-                    <option value="Engaged">Engaged</option>
-                    <option value="Married">Married</option>
-                  </select>
-                  {formik.errors.maritalStatus && formik.touched.maritalStatus && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.maritalStatus}
-                    </div>
-                  )}
-                </div>
-
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
-                  <label htmlFor="cohort" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Cohort:
-                  </label>
-                  <select
-                    name="cohort"
-                    id="cohort"
-                    className={`py-2 border border-2 rounded-2 ${
-                    formik.errors.cohort && formik.touched.cohort ? 'is-invalid' : ''
-                    }`}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.cohort}
-                  >
-                    <option value="">Select cohort</option>
-                    <option value="1st_University">1st Year University</option>
-                    <option value="2nd_University">2nd Year University</option>
-                    <option value="3rd_University">3rd Year University</option>
-                    <option value="4th_University">4th Year University</option>
-                    <option value="1_Graduate">1st Year Graduate</option>
-                    <option value="2_Graduate">2nd Year Graduate</option>
-                    <option value="3_Graduate">3rd Year Graduate</option>
-                    <option value="4_Graduate">4th Year Graduate</option>
-                    <option value="5_Graduate">5th Year Graduate</option>
-                  </select>
-                  {formik.errors.cohort && formik.touched.cohort && (
-                    <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
-                      {formik.errors.cohort}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Profession Section */}
-              <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-3 mt-3">
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
-                  <label htmlFor="profession" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Profession (if available):
-                  </label>
-                  <input
-                    type="text"
-                    name="profession"
-                    id="profession"
-                    placeholder="Enter profession"
-                    className="tw-form-control tw-mt-1 py-2 border border-2 rounded-2"
-                    onChange={formik.handleChange}
-                    value={formik.values.profession}
-                  />
-                </div>
-              </div>
-
-              {/* Day Off Section (Conditional) */}
-              {formik.values.profession && (
-                <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%] mt-3">
-                  <label htmlFor="dayOff" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                    Day off (Press Ctrl and select):
-                  </label>
-                  <select
-                    name="dayOff"
-                    id="dayOff"
-                    multiple
-                    size={5}
-                    className="tw-form-control tw-mt-1 py-2 border border-2 rounded-2"
-                    onChange={(e) => {
-                      const selectedOptions = Array.from(e.target.selectedOptions).map(option => option.value);
-                      formik.setFieldValue('dayOff', selectedOptions);
-                    }}
-                    value={formik.values.dayOff}
-                  >
-                    {daysOfWeek.map((day, index) => (
-                      <option 
-                        key={index} 
-                        value={day}
-                        selected={formik.values.dayOff?.includes(day)}
-                      >
-                        {day}
-                      </option>
-                    ))}
-                  </select>
+        {/* Birthdate Section */}
+        <div className="tw-w-full">
+          <p className='tw-font-bold tw-mt-3 tw-text-lg dark:tw-text-white'>Birthdate:</p>
+          <div className='tw-w-full tw-mt-3 tw-flex tw-flex-col md:tw-flex-row tw-gap-4'>
+            <div className="tw-w-full md:tw-w-[30%]">
+              <label htmlFor="birthDay" className="tw-text-lg dark:tw-text-white">Day:</label>
+              <select 
+                name="birthDay" 
+                id="birthDay" 
+                className='tw-px-3 tw-py-2 tw-border dark:tw-text-white  tw-border-2 tw-rounded-lg tw-bg-white dark:tw-bg-gray-800 tw-w-full'
+                onChange={formik.handleChange}
+                value={formik.values.birthDay}
+              >
+                {[...Array(31)].map((_, index) => (
+                  <option key={index} value={index + 1}>{index + 1}</option>
+                ))}
+              </select>
+            </div>
+            <div className="tw-w-full md:tw-w-[30%]">
+              <label htmlFor="birthMonth" className="tw-text-lg dark:tw-text-white">Month:</label>
+              <select 
+                name="birthMonth" 
+                id="birthMonth" 
+                className='tw-px-3 tw-py-2 dark:tw-text-white  tw-border tw-border-2 tw-rounded-lg tw-bg-white dark:tw-bg-gray-800 tw-w-full'
+                onChange={formik.handleChange}
+                value={formik.values.birthMonth}
+              >
+                {[...Array(12)].map((_, index) => (
+                  <option key={index} value={index + 1}>{index + 1}</option>
+                ))}
+              </select>
+            </div>
+            <div className="tw-w-full md:tw-w-[30%]">
+              <label htmlFor="birthYear" className="tw-text-lg dark:tw-text-white">Year:</label>
+              <select 
+                name="birthYear" 
+                id="birthYear" 
+                className='tw-px-3 tw-py-2 dark:tw-text-white  tw-border tw-border-2 tw-rounded-lg tw-bg-white dark:tw-bg-gray-800 tw-w-full'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.birthYear}
+              >
+                {[...Array(60)].map((_, index) => {
+                  const year = new Date().getFullYear() - index;
+                  return <option key={index} value={year}>{year}</option>;
+                })}
+              </select>
+              {formik.errors.birthYear && formik.touched.birthYear && (
+                <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                  {formik.errors.birthYear}
                 </div>
               )}
-
-              {/* Submit Button */}
-              <div className="my-4">
-                <button
-                  type="submit"
-                  className="bg-main mb-3 dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
-                  disabled={formik.isSubmitting}
-                >
-                  {formik.isSubmitting ? 'Updating...' : 'Update'}
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
+        </div>
+
+        {/* Email Section */}
+        <div className="tw-w-full">
+          <label htmlFor="email" className='tw-font-bold tw-text-lg dark:tw-text-white'>Email:</label>
+          <input 
+            type="text"  
+            className={`tw-w-full dark:tw-text-white  tw-py-2 tw-mt-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+              formik.errors.email && formik.touched.email ? 'tw-border-red-500' : 'tw-border-gray-300'
+            }`}
+            name='email' 
+            id='email' 
+            onChange={formik.handleChange} 
+            value={formik.values.email}  
+            onBlur={formik.handleBlur} 
+          />
+          {formik.errors.email && formik.touched.email && (
+            <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+              {formik.errors.email}
+            </div>
+          )}
+        </div>
+
+        {/* Address Section */}
+        <div className="tw-w-full">
+          <label htmlFor="Address" className='tw-font-bold tw-text-lg dark:tw-text-white'>Address:</label>
+          <input 
+            type="text"  
+            className={`tw-w-full dark:tw-text-white  tw-py-2 tw-mt-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+              formik.errors.Address && formik.touched.Address ? 'tw-border-red-500' : 'tw-border-gray-300'
+            }`}
+            name='Address' 
+            id='Address' 
+            onChange={formik.handleChange} 
+            value={formik.values.Address}  
+            onBlur={formik.handleBlur} 
+          />
+          {formik.errors.Address && formik.touched.Address && (
+            <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+              {formik.errors.Address}
+            </div>
+          )}
+        </div>
+
+        <div className="tw-w-full">
+          <label htmlFor="Address2" className='tw-font-bold tw-text-lg dark:tw-text-white'>Address 2 (if available):</label>
+          <input 
+            type="text"  
+            className='tw-w-full dark:tw-text-white  tw-py-2 tw-mt-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 tw-border-gray-300'
+            name='Address2' 
+            id='Address2' 
+            onChange={formik.handleChange} 
+            value={formik.values.Address2}  
+            onBlur={formik.handleBlur} 
+          />
+        </div>
+
+        {/* Expatriate Checkbox */}
+        <div className="tw-flex tw-items-center tw-mt-4">
+          <label htmlFor="isExpatriate" className="tw-ml-2 dark:tw-text-white tw-font-bold tw-me-2 tw-text-lg">
+            Is expatriate?
+          </label>
+          <input
+            type="checkbox"
+            name="isExpatriate"
+            id="isExpatriate"
+            className="tw-h-5 tw-w-5 tw-text-indigo-600 tw-rounded tw-border-gray-300 focus:tw-ring-indigo-500"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            checked={formik.values.isExpatriate}
+          />
+        </div>
+
+        {/* Contact Numbers Section */}
+        <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-4">
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
+            <label htmlFor="mobileNumber1" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Mobile number 1:
+            </label>
+            <input
+              type="text"
+              name="mobileNumber1"
+              id="mobileNumber1"
+              placeholder="Enter mobile number (1)"
+              className={`tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+                formik.errors.mobileNumber1 && formik.touched.mobileNumber1 ? 'tw-border-red-500' : 'tw-border-gray-300'
+              }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.mobileNumber1}
+            />
+            {formik.errors.mobileNumber1 && formik.touched.mobileNumber1 && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.mobileNumber1}
+              </div>
+            )}
+          </div>
+
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
+            <label htmlFor="mobileNumber2" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Mobile number 2 (if available):
+            </label>
+            <input
+              type="text"
+              name="mobileNumber2"
+              id="mobileNumber2"
+              placeholder="Enter mobile number (2)"
+              className={`tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+                formik.errors.mobileNumber2 && formik.touched.mobileNumber2 ? 'tw-border-red-500' : 'tw-border-gray-300'
+              }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.mobileNumber2}
+            />
+            {formik.errors.mobileNumber2 && formik.touched.mobileNumber2 && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.mobileNumber2}
+              </div>
+            )}
+          </div>
+
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[34%]">
+            <label htmlFor="landline" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Landline (if available):
+            </label>
+            <input
+              type="text"
+              name="landline"
+              id="landline"
+              placeholder="Enter landline number"
+              className={`tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+                formik.errors.landline && formik.touched.landline ? 'tw-border-red-500' : 'tw-border-gray-300'
+              }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.landline}
+            />
+            {formik.errors.landline && formik.touched.landline && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.landline}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Church Section */}
+        <div className="tw-w-full">
+          <label htmlFor="church" className='tw-font-bold tw-text-lg dark:tw-text-white'>Church:</label>
+          <input 
+            type="text"  
+            className={`tw-w-full dark:tw-text-white  tw-py-2 tw-mt-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+              formik.errors.church && formik.touched.church ? 'tw-border-red-500' : 'tw-border-gray-300'
+            }`}
+            name='church' 
+            id='church' 
+            onChange={formik.handleChange} 
+            value={formik.values.church}  
+            onBlur={formik.handleBlur} 
+          />
+          {formik.errors.church && formik.touched.church && (
+            <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+              {formik.errors.church}
+            </div>
+          )}
+        </div>
+
+        {/* Priest Name */}
+        <div className="tw-w-full">
+          <label htmlFor="priestName" className='tw-font-bold tw-text-lg dark:tw-text-white'>Priest Name:</label>
+          <input 
+            type="text"  
+            className={`tw-w-full tw-py-2 dark:tw-text-white  tw-mt-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+              formik.errors.priestName && formik.touched.priestName ? 'tw-border-red-500' : 'tw-border-gray-300'
+            }`}
+            name='priestName' 
+            id='priestName' 
+            onChange={formik.handleChange} 
+            value={formik.values.priestName}  
+            onBlur={formik.handleBlur} 
+          />
+          {formik.errors.priestName && formik.touched.priestName && (
+            <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+              {formik.errors.priestName}
+            </div>
+          )}
+        </div>
+
+        {/* College and Governorate Section */}
+        <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-4">
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
+            <label htmlFor="college" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              College or Institute:
+            </label>
+            <input
+              type="text"
+              name="college"
+              id="college"
+              placeholder="Enter the college"
+              className={`tw-form-control tw-mt-1 dark:tw-text-white  tw-py-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+                formik.errors.college && formik.touched.college ? 'tw-border-red-500' : 'tw-border-gray-300'
+              }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.college}
+            />
+            {formik.errors.college && formik.touched.college && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.college}
+              </div>
+            )}
+          </div>
+
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
+            <label htmlFor="governorateOfBirth" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Governorate of birth:
+            </label>
+            <input
+              type="text"
+              name="governorateOfBirth"
+              id="governorateOfBirth"
+              placeholder="Enter governorate of birth"
+              className={`tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+                formik.errors.governorateOfBirth && formik.touched.governorateOfBirth ? 'tw-border-red-500' : 'tw-border-gray-300'
+              }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.governorateOfBirth}
+            />
+            {formik.errors.governorateOfBirth && formik.touched.governorateOfBirth && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.governorateOfBirth}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Marital Status and Cohort Section */}
+        <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-4">
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
+            <label htmlFor="maritalStatus" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Marital status:
+            </label>
+            <select
+              name="maritalStatus"
+              id="maritalStatus"
+              className={`tw-py-2 tw-mt-1 tw-border dark:tw-text-white   tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+                formik.errors.maritalStatus && formik.touched.maritalStatus ? 'tw-border-red-500' : 'tw-border-gray-300'
+              }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.maritalStatus}
+            >
+              <option value="">Select status</option>
+              <option value="Single">Single</option>
+              <option value="Engaged">Engaged</option>
+              <option value="Married">Married</option>
+            </select>
+            {formik.errors.maritalStatus && formik.touched.maritalStatus && (
+              <div className="tw-text-red-500  tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.maritalStatus}
+              </div>
+            )}
+          </div>
+
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
+            <label htmlFor="cohort" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Cohort:
+            </label>
+            <select
+              name="cohort"
+              id="cohort"
+              className={`tw-py-2 dark:tw-text-white tw-mt-1 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 ${
+                formik.errors.cohort && formik.touched.cohort ? 'tw-border-red-500' : 'tw-border-gray-300'
+              }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.cohort}
+            >
+              <option value="">Select cohort</option>
+              <option value="1st_University">1st Year University</option>
+              <option value="2nd_University">2nd Year University</option>
+              <option value="3rd_University">3rd Year University</option>
+              <option value="4th_University">4th Year University</option>
+              <option value="1_Graduate">1st Year Graduate</option>
+              <option value="2_Graduate">2nd Year Graduate</option>
+              <option value="3_Graduate">3rd Year Graduate</option>
+              <option value="4_Graduate">4th Year Graduate</option>
+              <option value="5_Graduate">5th Year Graduate</option>
+            </select>
+            {formik.errors.cohort && formik.touched.cohort && (
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
+                {formik.errors.cohort}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Profession Section */}
+        <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-4">
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
+            <label htmlFor="profession" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Profession (if available):
+            </label>
+            <input
+              type="text"
+              name="profession"
+              id="profession"
+              placeholder="Enter profession"
+              className="tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 tw-border-gray-300"
+              onChange={formik.handleChange}
+              value={formik.values.profession}
+            />
+          </div>
+        </div>
+
+        {/* Day Off Section (Conditional) */}
+        {formik.values.profession && (
+          <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
+            <label htmlFor="dayOff" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
+              Day off (Press Ctrl and select):
+            </label>
+            <select
+              name="dayOff"
+              id="dayOff"
+              multiple
+              size={5}
+              className="tw-form-control dark:tw-text-white  tw-mt-1 tw-py-2 tw-border tw-border-2 tw-rounded-lg tw-px-3 tw-bg-white dark:tw-bg-gray-800 tw-border-gray-300"
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions).map(option => option.value);
+                formik.setFieldValue('dayOff', selectedOptions);
+              }}
+              value={formik.values.dayOff}
+            >
+              {daysOfWeek.map((day, index) => (
+                <option 
+                  key={index} 
+                  value={day}
+                  selected={formik.values.dayOff?.includes(day)}
+                >
+                  {day}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className="tw-bg-indigo-600 my-3 dark:tw-bg-indigo-700 bg-main tw-text-white tw-w-full tw-py-3 tw-rounded-xl tw-font-bold hover:tw-bg-indigo-700 dark:hover:tw-bg-indigo-800 tw-transition-colors"
+          disabled={formik.isSubmitting}
+          onClick={() => setupdate(false)}
+        >
+          {formik.isSubmitting ? 'Updating...' : 'Submit'}
+        </button>
+      </form>
+    </motion.div>
+  )}
+</AnimatePresence>
+</div>
           </motion.div>
         </div>
       </div>

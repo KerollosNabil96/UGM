@@ -7,6 +7,7 @@ import { motion } from "motion/react"
 import "leaflet/dist/leaflet.css";
 import styles from "./ShareEvent.module.css";
 import { darkModeContext } from '../../Context/DarkModeContext';
+import axios from "axios";
 
 export default function VenueForm() {
   let { darkMode } = useContext(darkModeContext);
@@ -53,12 +54,13 @@ export default function VenueForm() {
         .min(3, "You must upload all 3 images")
         .max(3, "You can't upload more than 3 images")
     }),
-    onSubmit: (values) => {
+    onSubmit:  async (values) => {
       const formData = {
         ...values,
         images: imageFiles.filter(img => img !== null),
       };
       console.log(formData);
+    let res = await axios.post(`http://localhost:3001/events` , values)
     },
   });
 

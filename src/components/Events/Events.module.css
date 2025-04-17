@@ -9,7 +9,14 @@
     position: absolute;
     bottom: 10px;
     width: 100%; 
+}
+
+.pad{
     padding-right: 25px;
+}
+
+.pad2{
+    padding-left: 25px;
 }
 
 .myButton{

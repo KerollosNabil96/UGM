@@ -24,6 +24,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Offline } from "react-detect-offline";
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import DarkModeProvider from './Context/DarkModeContext'
+import './i18n'; 
+import i18n from './i18n';
+ import { I18nextProvider } from 'react-i18next';
+
 
 import { Children } from 'react';
 import { text } from 'motion/react-m'
@@ -57,9 +61,12 @@ function App() {
   return <>
   <DarkModeProvider>
   <Offline>
-  <div className="offlineDiv">You are offline!</div>
+  <div className="fixed-bottom offlineDiv">You are offline!</div>
 </Offline>
+<I18nextProvider i18n={i18n}>
+
   <RouterProvider router={router}></RouterProvider>
+  </I18nextProvider>
   </DarkModeProvider>
   
   </>

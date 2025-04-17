@@ -11,7 +11,7 @@
       "mobileNumber1": "01229271686",
       "mobileNumber2": "",
       "landline": "",
-      "church": "Ghobiral",
+      "church": "Marygerges Sedibeshr",
       "college": "Science",
       "governorateOfBirth": "Alexandria",
       "maritalStatus": "Single",
@@ -20,9 +20,48 @@
       "birthDay": "16",
       "birthMonth": "3",
       "birthYear": "1997",
-      "profession": "",
-      "dayOff": [],
+      "profession": "Chemist",
+      "dayOff": [
+        "Saturday",
+        "Sunday"
+      ],
       "isExpatriate": false
+    }
+  ],
+  "events": [
+    {
+      "id": "bced",
+      "eventName": "Sain Maria ",
+      "category": "event",
+      "address": "33, Khalil Al Masry Street, Kafr Abdo, Alexandria, 21529, Egypt",
+      "price": 200,
+      "phone": "01229271686",
+      "responsiblePerson": "Rafayl Zaher",
+      "date": "2025-04-18",
+      "shortDescription": "Short des",
+      "fullDescription": "Long des",
+      "images": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "8901",
+      "eventName": "Sain Maria ",
+      "category": "event",
+      "address": "33, Khalil Al Masry Street, Kafr Abdo, Alexandria, 21529, Egypt",
+      "price": 200,
+      "phone": "01229271686",
+      "responsiblePerson": "Rafayl Zaher",
+      "date": "2025-04-18",
+      "shortDescription": "Short des",
+      "fullDescription": "Long des",
+      "images": [
+        {},
+        {},
+        {}
+      ]
     }
   ]
 }

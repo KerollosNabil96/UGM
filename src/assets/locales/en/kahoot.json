@@ -1,0 +1,13 @@
+{
+    "kahoot": {
+      "title": "Kahoot Game",
+      "description": {
+        "line1": "Join the Kahoot game and enjoy the competition and",
+        "line2": "challenge with your friends! 😊"
+      },
+      "form": {
+        "placeholder": "Game Pin",
+        "button": "Submit"
+      }
+    }
+  }

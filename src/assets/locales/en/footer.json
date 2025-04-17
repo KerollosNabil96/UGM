@@ -1,0 +1,41 @@
+{
+    "footer": {
+      "about": {
+        "title": "About UGM",
+"description": {
+    "part1": "UGM (Undergraduate and Graduate Meeting)",
+    "part2": "is a youth ministry at St. Mary & St. George Church,",
+    "part3": "Gabriel, Alexandria. We gather for spiritual growth,",
+    "part4": "fellowship, and enriching activities. Join us to connect, grow,",
+    "part5": "and share in faith! ✨🙏"
+  }
+      },
+      "quickLinks": {
+        "title": "Quick Links",
+        "links": {
+          "home": "Home",
+          "about": "About",
+          "events": "Events",
+          "kahoot": "Kahoot",
+          "memories": "Memories",
+          "contact": "Contact"
+        }
+      },
+      "services": {
+        "title": "Our Services",
+        "items": [
+          "Spiritual Meetings",
+          "Trips & Activities",
+          "Community Service"
+        ]
+      },
+      "contact": {
+        "title": "Contact Us",
+        "items": {
+          "email": "ugm@gmail.com",
+          "phone": "(+2)01229271686",
+          "address": "Gabriel, Alexandria"
+        }
+      }
+    }
+  }

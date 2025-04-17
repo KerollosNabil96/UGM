@@ -1,0 +1,29 @@
+{
+    "navbar": {
+      "brand": "UGM",
+      "links": {
+        "home": "Home",
+        "about": "About",
+        "events": "Events",
+        "kahoot": "Kahoot",
+        "memories": "Memories",
+        "contact": "Contact",
+        "servantInfo": "Servant Info",
+        "servantList": "Servant List",
+        "shareEvent": "Share Event",
+        "signIn": "SignIn",
+        "signUp": "SignUp"
+      },
+      "userDropdown": {
+        "username": "Username",
+        "dashboard": "Dashboard",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout"
+      },
+      "languageSwitch": {
+        "english": "EN",
+        "arabic": "AR"
+      }
+    }
+  }

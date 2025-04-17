@@ -5,9 +5,11 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { motion } from "motion/react"
 import { darkModeContext } from '../../Context/DarkModeContext';
+import { useTranslation } from 'react-i18next';
 
 
 export default function ServantList() {
+  const { t } = useTranslation('servantList'); 
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -51,13 +53,13 @@ export default function ServantList() {
   let handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3001/servants/${id}`)
-      toast.success('Servant deleted successfully!', {
+      toast.success(t('deleteSuccess'), {
         duration: 4000,
         position: 'top-center',
       });
       await getData()
     } catch (error) {
-      toast.error('Failed to delete servant', {
+      toast.error(t('deleteError'), {
         duration: 4000,
         position: 'top-center',
       });
@@ -97,15 +99,16 @@ export default function ServantList() {
                 transition={{ duration: 1 }}  
               >
 
-          <h1 className='text-center  mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>Servant List</h1>
-          <p className="text-center mb-4  fs-4 tw-text-gray-600 dark:tw-text-white text-sm">
-            This list displays all active servants with their contact information and ministry roles.<br /> You can use the search function to find specific members.</p>
-          
+          <h1 className='text-center  mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>{t('title')}</h1>
+          <p className="text-center mb-4 fs-4 tw-text-gray-600 dark:tw-text-white text-sm">
+            {t('description.part1')}<br />
+            {t('description.part2')}
+          </p>          
           <div className="col">
             <div className={`${styles.searching} , mb-5 px-2 d-Myflex align-items-center  rounded-4 py-4 dark:tw-bg-gray-900`}>
               <input 
                 type="text" 
-                placeholder='Search by name....' 
+                placeholder={t('searchPlaceholder')}
                 className='w-input border border-0 pyt-3 me-2 rounded-2'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -118,16 +121,16 @@ export default function ServantList() {
                 value={selectedCohort}
                 onChange={(e) => setSelectedCohort(e.target.value)}
               >
-                <option value="">All Cohorts</option>
-                <option value="1st_University">1st Year University</option>
-                <option value="2nd_University">2nd Year University</option>
-                <option value="3rd_University">3rd Year University</option>
-                <option value="4th_University">4th Year University</option>
-                <option value="1_Graduate">1st Year Graduate</option>
-                <option value="2_Graduate">2nd Year Graduate</option>
-                <option value="3_Graduate">3rd Year Graduate</option>
-                <option value="4_Graduate">4th Year Graduate</option>
-                <option value="5_Graduate">5th Year Graduate</option>
+                <option value="">{t('allCohorts')}</option>
+                <option value="1st_University">{t('cohortOptions.1st_University')}</option>
+                <option value="2nd_University">{t('cohortOptions.2nd_University')}</option>
+                <option value="3rd_University">{t('cohortOptions.3rd_University')}</option>
+                <option value="4th_University">{t('cohortOptions.4th_University')}</option>
+                <option value="1_Graduate">{t('cohortOptions.1_Graduate')}</option>
+                <option value="2_Graduate">{t('cohortOptions.2_Graduate')}</option>
+                <option value="3_Graduate">{t('cohortOptions.3_Graduate')}</option>
+                <option value="4_Graduate">{t('cohortOptions.4_Graduate')}</option>
+                <option value="5_Graduate">{t('cohortOptions.5_Graduate')}</option>
               </select>
               
               <button 
@@ -137,7 +140,7 @@ export default function ServantList() {
                   setSelectedCohort('')
                 }}
               >
-                Reset Filters
+                {t('resetFilters')}
               </button>
             </div>
             
@@ -145,10 +148,10 @@ export default function ServantList() {
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Cohort:</th>
-                  <th scope="col">Update</th>
-                  <th scope="col">Delete</th>
+                  <th scope="col">{t('tableHeaders.name')}</th>
+                  <th scope="col">{t('tableHeaders.cohort')}</th>
+                  <th scope="col">{t('tableHeaders.details')}</th>
+                  <th scope="col">{t('tableHeaders.delete')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -166,7 +169,7 @@ export default function ServantList() {
             
             {filteredData.length === 0 && (
               <div className="text-center py-5">
-                <p className="text-muted">No servants found matching your criteria</p>
+                <p className="text-muted">{t('noResults')}</p>
               </div>
             )}
           </div>

@@ -1,0 +1,29 @@
+{
+    "navbar": {
+      "brand": "UGM",
+      "links": {
+        "home": "الرئيسية",
+        "about": "من نحن",
+        "events": "الفعاليات",
+        "kahoot": "كاهوت",
+        "memories": "ذكريات",
+        "contact": "اتصل بنا",
+        "servantInfo": "معلومات الخادم",
+        "servantList": "قائمة الخدام",
+        "shareEvent": "مشاركة فعالية",
+        "signIn": "تسجيل الدخول",
+        "signUp": "حساب جديد"
+      },
+      "userDropdown": {
+        "username": "اسم المستخدم",
+        "dashboard": "لوحة التحكم",
+        "profile": "الملف الشخصي",
+        "settings": "الإعدادات",
+        "logout": "تسجيل الخروج"
+      },
+      "languageSwitch": {
+        "english": "EN",
+        "arabic": "AR"
+      }
+    }
+  }

@@ -1,0 +1,25 @@
+{
+    "contact": {
+      "title": {
+        "part1": "Get in",
+        "part2": "Touch"
+      },
+      "subtitle": "Have a question or want to get involved? Reach out to us — we're here for you!",
+      "details": {
+        "meetingTime": "📅 Meeting Time:",
+        "meetingValue": "Friday at 4:00 PM",
+        "location": "📍 Location:",
+        "locationValue": "Virgin Mary & St. George Church, Gabriel, Alexandria, Egypt",
+        "phone": "📞 Phone:",
+        "phoneValue": "(+20)1201047167",
+        "email": "✉️ Email:",
+        "emailValue": "ugm@gmail.com"
+      },
+      "form": {
+        "namePlaceholder": "Name",
+        "phonePlaceholder": "Phone",
+        "messagePlaceholder": "Write your message here...",
+        "submitButton": "Submit"
+      }
+    }
+  }

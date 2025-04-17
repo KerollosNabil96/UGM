@@ -1,0 +1,11 @@
+{
+    "home": {
+      "title": "Welcome to the UGM family",
+      "subtitle": "Grow together in love and faith – Join our spiritual and church activities and be part of the service family!",
+      "carousel": {
+        "previous": "Previous",
+        "next": "Next",
+        "indicators": ["Slide 1", "Slide 2", "Slide 3"]
+      }
+    }
+  }
