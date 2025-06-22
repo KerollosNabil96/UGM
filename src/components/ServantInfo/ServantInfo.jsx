@@ -7,90 +7,96 @@ import { motion } from "motion/react"
 import axios, { Axios } from 'axios';
 import { div } from 'motion/react-client';
 import toast, { Toaster } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 
 
 export default function ServantInfo() {
   let { darkMode } = useContext(darkModeContext);
   const [isSubmitted, setisSubmitted] = useState(false)
+    const { t } = useTranslation('servantInfo'); 
+      const { i18n } = useTranslation();
+      const isRTL = i18n.language === 'ar';
+    
+  
 
   const daysOfWeek = [
-    'Saturday',
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday'
+    (t('servantInfo.weekDays.1')),
+    (t('servantInfo.weekDays.2')),
+    (t('servantInfo.weekDays.3')),
+    (t('servantInfo.weekDays.4')),
+    (t('servantInfo.weekDays.5')),
+    (t('servantInfo.weekDays.6')),
+    (t('servantInfo.weekDays.7'))
   ];
 
   const validate = (values) => {
     let errors = {};
     
     if (!values.firstName) {
-      errors.firstName = 'First name is required';
+      errors.firstName = (t('servantInfo.validation.firstNamerequired'));
     } else if (values.firstName.length < 3 || values.firstName.length > 15) {
-      errors.firstName = 'First name must be between 3 and 15 characters';
+      errors.firstName = (t('servantInfo.validation.firstNameLength'));
     }
 
     if (!values.secName) {
-      errors.secName = 'Second name is required';
+      errors.secName = (t('servantInfo.validation.secNamerequired'));
     } else if (values.secName.length < 3 || values.secName.length > 15) {
-      errors.secName = 'Second name must be between 3 and 15 characters';
+      errors.secName = (t('servantInfo.validation.secNameLength'));
     }
 
     if (!values.familyName) {
-      errors.familyName = 'Family name is required';
+      errors.familyName = (t('servantInfo.validation.familyNamerequired'));
     } else if (values.familyName.length < 3 || values.familyName.length > 15) {
-      errors.familyName = 'Family name must be between 3 and 15 characters';
+      errors.familyName = (t('servantInfo.validation.familyNameLength'));
     }
 
     if (!values.email) {
-      errors.email = 'Email is required';
+      errors.email = (t('servantInfo.validation.emailRequired'));
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
+      errors.email = (t('servantInfo.validation.invalidEmail'));
     }
 
     if (!values.Address) {
-      errors.Address = 'Address is required';
+      errors.Address = (t('servantInfo.validation.addressRequierd'));
     }
 
     if (!values.mobileNumber1) {
-      errors.mobileNumber1 = 'Mobile number is required';
+      errors.mobileNumber1 = (t('servantInfo.validation.mobileRequierd'));
     } else if (!/^01[0125][0-9]{8}$/.test(values.mobileNumber1)) {
-      errors.mobileNumber1 = 'Invalid mobile number';
+      errors.mobileNumber1 = (t('servantInfo.validation.invalidPhone'));
     }
 
     if (values.mobileNumber2 && !/^01[0125][0-9]{8}$/.test(values.mobileNumber2)) {
-      errors.mobileNumber2 = 'Invalid mobile number';
+      errors.mobileNumber2 = (t('servantInfo.validation.invalidPhone'));
     }
 
     if (values.landline && !/^(02|03)\d{7}$/.test(values.landline)) {
-      errors.landline = 'Invalid landline number';
+      errors.landline = (t('servantInfo.validation.invalidLandline'));
     }
 
     if (!values.church) {
-      errors.church = 'Church is required';
+      errors.church = (t('servantInfo.validation.ChurchRequierd'));
     }
 
     if (!values.college) {
-      errors.college = 'College or Institute is required';
+      errors.college = (t('servantInfo.validation.collegeٌRequierd'));
     }
 
     if (!values.governorateOfBirth) {
-      errors.governorateOfBirth = 'Governorate of birth is required';
+      errors.governorateOfBirth = (t('servantInfo.validation.governorateOfBirth'));
     }
 
     if (!values.maritalStatus) {
-      errors.maritalStatus = 'Marital status is required';
+      errors.maritalStatus = (t('servantInfo.validation.maritalRequierd'));
     }
 
     if (!values.cohort) {
-      errors.cohort = 'Cohort is required';
+      errors.cohort = (t('servantInfo.validation.CohortRequierd'));
     }
 
     if (!values.priestName) {
-      errors.priestName = 'Priest name is required';
+      errors.priestName = (t('servantInfo.validation.priestNameRequierd'));
     }
 
     if (!values.birthYear) {
@@ -100,23 +106,47 @@ export default function ServantInfo() {
     return errors;
   };
 
-  const onSubmit = async (values, { setSubmitting }) => {
+const onSubmit = async (values, { setSubmitting }) => {
+  try {
+    const token = localStorage.getItem('token'); 
 
-let response= await axios.post('http://localhost:3001/servants' , values)
+    if (!token) {
+      throw new Error("User is not authenticated");
+    }
 
-console.log(response.status===201)
 
-if(response.status===201){
-  setisSubmitted(true)
-    toast.success('Data submitted successfully!', {
+    const response = await axios.post(
+  'https://projectelkhdma-projectelkhdma.up.railway.app/api/v1/served/addServed',
+  values,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+);
+
+    if (response.status === 201) {
+      setisSubmitted(true);
+      toast.success('Data submitted successfully!', {
+        duration: 4000,
+        position: 'top-center',
+      });
+      formik.resetForm();
+    }
+  } catch (error) {
+    console.error('Submission error:', error);
+    toast.error('An error occurred while submitting. Please try again.', {
       duration: 4000,
       position: 'top-center',
     });
-  formik.resetForm()
-}
-    
+  } finally {
     setSubmitting(false);
-  };
+          console.log(values)
+
+  }
+};
+
 
   const formik = useFormik({
     initialValues: {
@@ -161,14 +191,13 @@ if(response.status===201){
       }}
     />
           <motion.div
-                initial={{ opacity: 0, x: -100 }}
+                initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
                 animate={{ opacity: 1, x: 0 }}     
                 transition={{ duration: 1 }}  
               >
-        <h1 className="text-center  mainColor dark:tw-text-indigo-600 mt-2 fw-bolder">Servant Information Form</h1>
+        <h1 className="text-center  mainColor dark:tw-text-indigo-600 mt-2 fw-bolder">{t('servantInfo.title')}</h1>
 <p className="text-center mb-4  fs-4 tw-text-gray-600 dark:tw-text-white text-sm">
-  Register your information for church service
-  This form collects servant data<br /> to help organize ministry activities
+  {t('servantInfo.description1')}<br />  {t('servantInfo.description2')}
 </p>
           <div className="row w-75 mx-auto">
             <div className={`${styles.shad} col-12 tw-bg-gray-100 dark:tw-bg-gray-900 px-4 rounded-4`}>
@@ -177,13 +206,13 @@ if(response.status===201){
                 <div className="names tw-flex tw-flex-col md:tw-flex-row tw-gap-3">
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
                     <label htmlFor="firstName" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      First Name:
+                    {t('servantInfo.labels.firstName')}
                     </label>
                     <input
                       type="text"
                       name="firstName"
                       id="firstName"
-                      placeholder="Enter first name"
+                      placeholder={t('servantInfo.placeholders.firstName')}
                       className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
                         formik.errors.firstName && formik.touched.firstName ? 'is-invalid' : ''
                       }`}
@@ -200,13 +229,13 @@ if(response.status===201){
 
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
                     <label htmlFor="secName" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Second Name:
+                    {t('servantInfo.labels.secName')}
                     </label>
                     <input
                       type="text"
                       name="secName"
                       id="secName"
-                      placeholder="Enter second name"
+                      placeholder={t('servantInfo.placeholders.secName')}
                       className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
                         formik.errors.secName && formik.touched.secName ? 'is-invalid' : ''
                       }`}
@@ -223,13 +252,13 @@ if(response.status===201){
 
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[34%]">
                     <label htmlFor="familyName" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Family Name:
+                    {t('servantInfo.labels.familyName')}
                     </label>
                     <input
                       type="text"
                       name="familyName"
                       id="familyName"
-                      placeholder="Enter family name"
+                      placeholder={t('servantInfo.placeholders.familyName')}
                       className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
                         formik.errors.familyName && formik.touched.familyName ? 'is-invalid' : ''
                       }`}
@@ -246,10 +275,10 @@ if(response.status===201){
                 </div>
 
                 {/* Birthdate Section */}
-                <p className='fw-bold mt-3 tw-text-responsive2 dark:tw-text-white'>Birthdate:</p>
+                <p className='fw-bold mt-3 tw-text-responsive2 dark:tw-text-white'>{t('servantInfo.labels.birthdate')}</p>
                 <div className='dateOfBirth w-100 mt-3 tw-flex tw-flex-col md:tw-flex-row'>
                   <div className="tw-w-full md:tw-w-[30%]">
-                    <label htmlFor="birthDay" className="tw-text-responsive2 dark:tw-text-white">Select Day:</label>
+                    <label htmlFor="birthDay" className="tw-text-responsive2 dark:tw-text-white"> {t('servantInfo.labels.day')}</label>
                     <select 
                       name="birthDay" 
                       id="birthDay" 
@@ -263,7 +292,7 @@ if(response.status===201){
                     </select>
                   </div>
                   <div className="tw-w-full md:tw-mt-0 tw-mt-3 md:tw-w-[30%]">
-                    <label htmlFor="birthMonth" className="tw-text-responsive2 dark:tw-text-white">Select Month:</label>
+                    <label htmlFor="birthMonth" className="tw-text-responsive2 dark:tw-text-white">{t('servantInfo.labels.month')}</label>
                     <select 
                       name="birthMonth" 
                       id="birthMonth" 
@@ -277,7 +306,7 @@ if(response.status===201){
                     </select>
                   </div>
                   <div className="tw-w-full md:tw-mt-0 tw-mt-3 md:tw-w-[30%]">
-                    <label htmlFor="birthYear" className="tw-text-responsive2 dark:tw-text-white">Select Year:</label>
+                    <label htmlFor="birthYear" className="tw-text-responsive2 dark:tw-text-white">{t('servantInfo.labels.year')}</label>
                     <select 
                       name="birthYear" 
                       id="birthYear" 
@@ -301,7 +330,7 @@ if(response.status===201){
 
                 {/* Email Section */}
                 <div className="email my-3 w-100">
-                  <label htmlFor="email" className='fw-bold tw-text-responsive2 dark:tw-text-white'>Email:</label>
+                  <label htmlFor="email" className='fw-bold tw-text-responsive2 dark:tw-text-white'>{t('servantInfo.labels.email')} :</label>
                   <input 
                     type="text"  
                     className='w-100 py-2 mt-2 border border-2 rounded-2' 
@@ -320,7 +349,7 @@ if(response.status===201){
 
                 {/* Address Section */}
                 <div className="Address tw-text-responsive2 my-3 w-100">
-                  <label htmlFor="Address" className='fw-bold dark:tw-text-white'>Address:</label>
+                  <label htmlFor="Address" className='fw-bold dark:tw-text-white'>{t('servantInfo.labels.address')} :</label>
                   <input 
                     type="text"  
                     className='w-100 py-2 mt-2 border border-2 rounded-2' 
@@ -338,7 +367,7 @@ if(response.status===201){
                 </div>
 
                 <div className="Address2 tw-text-responsive2 my-3 w-100">
-                  <label htmlFor="Address2" className='fw-bold dark:tw-text-white'>Address 2 (if available):</label>
+                  <label htmlFor="Address2" className='fw-bold dark:tw-text-white'>{t('servantInfo.labels.address2')} :</label>
                   <input 
                     type="text"  
                     className='w-100 py-2 mt-2 border border-2 rounded-2' 
@@ -354,7 +383,7 @@ if(response.status===201){
                 <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[100%]">
                   <div className="tw-flex tw-items-center tw-mt-4">
                     <label htmlFor="isExpatriate" className="tw-ml-2 dark:tw-text-white fw-bold me-2 tw-block tw-text-responsive2">
-                      Is expatriate?
+                    {t('servantInfo.labels.isExpatriate')}
                     </label>
                     <input
                       type="checkbox"
@@ -372,13 +401,13 @@ if(response.status===201){
                 <div className="mobiles tw-flex tw-flex-col md:tw-flex-row tw-gap-3 mt-3">
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
                     <label htmlFor="mobileNumber1" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Mobile number 1:
+                    {t('servantInfo.labels.mobile1')}
                     </label>
                     <input
                       type="text"
                       name="mobileNumber1"
                       id="mobileNumber1"
-                      placeholder="Enter mobile number (1)"
+                      placeholder={t('servantInfo.placeholders.mobile1')}
                       className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
                         formik.errors.mobileNumber1 && formik.touched.mobileNumber1 ? 'is-invalid' : ''
                       }`}
@@ -395,13 +424,13 @@ if(response.status===201){
 
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
                     <label htmlFor="mobileNumber2" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Mobile number 2 (if available):
+                    {t('servantInfo.labels.mobile2')}
                     </label>
                     <input
                       type="text"
                       name="mobileNumber2"
                       id="mobileNumber2"
-                      placeholder="Enter mobile number (2)"
+                      placeholder={t('servantInfo.placeholders.mobile2')}
                       className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
                         formik.errors.mobileNumber2 && formik.touched.mobileNumber2 ? 'is-invalid' : ''
                       }`}
@@ -418,13 +447,13 @@ if(response.status===201){
 
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[34%]">
                     <label htmlFor="landline" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Landline (if available):
+                    {t('servantInfo.labels.landline')}
                     </label>
                     <input
                       type="text"
                       name="landline"
                       id="landline"
-                      placeholder="Enter landline number"
+                      placeholder={t('servantInfo.placeholders.landline')}
                       className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
                         formik.errors.landline && formik.touched.landline ? 'is-invalid' : ''
                       }`}
@@ -442,7 +471,7 @@ if(response.status===201){
 
                 {/* Church Section */}
                 <div className="church tw-text-responsive2 my-3 w-100">
-                  <label htmlFor="church" className='fw-bold dark:tw-text-white'>Church:</label>
+                  <label htmlFor="church" className='fw-bold dark:tw-text-white'>{t('servantInfo.labels.church')}</label>
                   <input 
                     type="text"  
                     className='w-100 py-2 mt-2 border border-2 rounded-2' 
@@ -461,7 +490,7 @@ if(response.status===201){
 
                 {/* Priest Name */}
                 <div className="priestName tw-text-responsive2 my-3 w-100">
-                  <label htmlFor="priestName" className='fw-bold dark:tw-text-white'>Priest Name:</label>
+                  <label htmlFor="priestName" className='fw-bold dark:tw-text-white'>{t('servantInfo.labels.priestName')}</label>
                   <input 
                     type="text"  
                     className='w-100 py-2 mt-2 border border-2 rounded-2' 
@@ -482,13 +511,13 @@ if(response.status===201){
                 <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-3">
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
                     <label htmlFor="college" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      College or Institute:
+                    {t('servantInfo.labels.college')} :
                     </label>
                     <input
                       type="text"
                       name="college"
                       id="college"
-                      placeholder="Enter the college"
+                      placeholder={t('servantInfo.placeholders.college')}
                       className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
                         formik.errors.college && formik.touched.college ? 'is-invalid' : ''
                       }`}
@@ -505,13 +534,13 @@ if(response.status===201){
 
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
                     <label htmlFor="governorateOfBirth" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Governorate of birth:
+                    {t('servantInfo.labels.governorateOfBirth')}
                     </label>
                     <input
                       type="text"
                       name="governorateOfBirth"
                       id="governorateOfBirth"
-                      placeholder="Enter governorate of birth"
+                      placeholder={t('servantInfo.placeholders.governorate')}
                       className={`tw-form-control tw-mt-1 py-2 border border-2 rounded-2 ${
                         formik.errors.governorateOfBirth && formik.touched.governorateOfBirth ? 'is-invalid' : ''
                       }`}
@@ -531,7 +560,7 @@ if(response.status===201){
                 <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-3 mt-3">
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
                     <label htmlFor="maritalStatus" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Marital status:
+                    {t('servantInfo.labels.maritalStatus')}:
                     </label>
                     <select
                       name="maritalStatus"
@@ -543,10 +572,10 @@ if(response.status===201){
                       onBlur={formik.handleBlur}
                       value={formik.values.maritalStatus}
                     >
-                      <option value="">Select status</option>
-                      <option value="Single">Single</option>
-                      <option value="Engaged">Engaged</option>
-                      <option value="Married">Married</option>
+                <option value="">{t('servantInfo.options.selectStatus')}</option>
+                <option value="Single">{t('servantInfo.options.status.single')}</option>
+                <option value="Engaged">{t('servantInfo.options.status.engaged')}</option>
+                <option value="Married">{t('servantInfo.options.status.married')}</option>
                     </select>
                     {formik.errors.maritalStatus && formik.touched.maritalStatus && (
                       <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
@@ -557,7 +586,7 @@ if(response.status===201){
 
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
                     <label htmlFor="cohort" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Cohort:
+                    {t('servantInfo.labels.cohort')}
                     </label>
                     <select
                       name="cohort"
@@ -569,16 +598,16 @@ if(response.status===201){
                       onBlur={formik.handleBlur}
                       value={formik.values.cohort}
                     >
-                      <option value="">Select cohort</option>
-                      <option value="1st_University">1st Year University</option>
-                      <option value="2nd_University">2nd Year University</option>
-                      <option value="3rd_University">3rd Year University</option>
-                      <option value="4th_University">4th Year University</option>
-                      <option value="1_Graduate">1st Year Graduate</option>
-                      <option value="2_Graduate">2nd Year Graduate</option>
-                      <option value="3_Graduate">3rd Year Graduate</option>
-                      <option value="4_Graduate">4th Year Graduate</option>
-                      <option value="5_Graduate">5th Year Graduate</option>
+                      <option value="">{t('servantInfo.options.selectCohort')} </option>
+                      <option value="1st_University">{t('servantInfo.options.cohorts.1')}</option>
+                      <option value="2nd_University">{t('servantInfo.options.cohorts.2')}</option>
+                      <option value="3rd_University">{t('servantInfo.options.cohorts.3')}</option>
+                      <option value="4th_University">{t('servantInfo.options.cohorts.4')}</option>
+                      <option value="1_Graduate">{t('servantInfo.options.cohorts.g1')}</option>
+                      <option value="2_Graduate">{t('servantInfo.options.cohorts.g2')}</option>
+                      <option value="3_Graduate">{t('servantInfo.options.cohorts.g3')}</option>
+                      <option value="4_Graduate">{t('servantInfo.options.cohorts.g4')}</option>
+                      <option value="5_Graduate">{t('servantInfo.options.cohorts.g5')}</option>
                     </select>
                     {formik.errors.cohort && formik.touched.cohort && (
                       <div className="tw-text-red-500 tw-text-sm tw-mt-1" role="alert">
@@ -592,13 +621,13 @@ if(response.status===201){
                 <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-3 mt-3">
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%]">
                     <label htmlFor="profession" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Profession (if available):
+                    {t('servantInfo.labels.profession')}
                     </label>
                     <input
                       type="text"
                       name="profession"
                       id="profession"
-                      placeholder="Enter profession"
+                      placeholder={t('servantInfo.placeholders.profession')}
                       className="tw-form-control tw-mt-1 py-2 border border-2 rounded-2"
                       onChange={formik.handleChange}
                       value={formik.values.profession}
@@ -606,11 +635,10 @@ if(response.status===201){
                   </div>
                 </div>
 
-                {/* Day Off Section (Conditional) */}
                 {formik.values.profession && (
                   <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[50%] mt-3">
                     <label htmlFor="dayOff" className="tw-mt-3 fw-bold dark:tw-text-white tw-text-responsive2">
-                      Day off (Press Ctrl and select):
+                    {t('servantInfo.labels.dayOff')}
                     </label>
                     <select
                       name="dayOff"

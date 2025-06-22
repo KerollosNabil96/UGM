@@ -11,12 +11,15 @@ import { useTranslation } from 'react-i18next';
 export default function Home() {
   const { darkMode } = useContext(darkModeContext);
   const { t } = useTranslation('home');
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+
 
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
       <div className="container-fluid dark:tw-bg-gray-800">
         <motion.div
-          initial={{ opacity: 0, x: -100 }}
+          initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         >

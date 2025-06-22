@@ -1,0 +1,35 @@
+{
+    "updateRequest": {
+      "title": "Update Requests",
+      "requestDetails": "Request Details:",
+      "tableHeaders": {
+        "id": "#",
+        "name": "Name",
+        "cohort": "Cohort",
+        "request": "Request",
+        "action": "Action"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "confirmRejection": "Confirm Rejection"
+      },
+      "popups": {
+        "approve": {
+          "title": "Confirm Update Request",
+          "message": "Are you sure you want to send an update request for this user's data?"
+        },
+        "reject": {
+          "title": "Reject Update Request",
+          "message": "Are you sure you want to reject this update request? This action cannot be undone."
+        },
+        "details": {
+          "title": "Request Details",
+          "message": "{name} wants to change his number from {oldValue} to {newValue}"
+        }
+      },
+      "badges": {
+        "graduate": "Graduate-{number}"
+      }
+    }
+  }

@@ -6,34 +6,39 @@ import siwa from '../../assets/siwa.jpg'
 import afri from '../../assets/africa-safari-park-1200x1000.jpg'
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
 
 
 export default function Memories() {
     const { darkMode } = useContext(darkModeContext);
+      const { t } = useTranslation('memory');
+      const { i18n } = useTranslation();
+      const isRTL = i18n.language === 'ar';
     
   return <>
           <div className={`${darkMode? 'tw-dark' : ''}` }>
         
         <div className="container-fluid dark:tw-bg-gray-800" >
         <motion.div
-      initial={{ opacity: 0, x: -100 }} 
+       initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
       animate={{ opacity: 1, x: 0 }}     
       transition={{ duration: 1 }}       
     >
           <div className="container">
     <div className="row">
-    <h1 className='mt-5 fw-bold mainColor dark:tw-text-indigo-600 text-center'>Memories</h1>
+    <h1 className='mt-5 fw-bold mainColor dark:tw-text-indigo-600 text-center'>{t('pageTitle')}</h1>
 
 
 
     <div className={`${styles.searching} , d-Myflex align-items-center  rounded-4 py-4 dark:tw-bg-gray-900`}>
-  <input type="text" placeholder='Search by name....' className='w-input border border-0 pyt-3 me-2 rounded-2'/>
+  <input type="text" placeholder={t('searchPlaceholder')} className='w-input border border-0 pyt-3 me-2 rounded-2'/>
   <select id="options" className='pyt-3 w-Drop me-3 my-2 border border-0 rounded-2' name="options">
-    <option value="All Categories" selected>All Categories</option>
-    <option value="Events">Events</option>
-    <option value="Trip">Trip</option>
+    <option value="All Categories" selected>{t('allCategories')}</option>
+    <option value="Events">{t('events')}</option>
+    <option value="Trip">{t('trip')}</option>
   </select>
-  <button className='bg-main btn text-white w-myBtn dark:tw-bg-indigo-600 py-3'>Search</button>
+  <button className='bg-main btn text-white w-myBtn dark:tw-bg-indigo-600 py-3'>{t('searchButton')}</button>
 </div>
 
 <div className="row">
@@ -41,15 +46,15 @@ export default function Memories() {
     <div className="card position-relative dark:tw-bg-gray-900" style={{ height: "600px" }}>
       <img src={siwa} className="card-img-top w-100" style={{ height: "450px" }} />
       <div className="card-body position-relative">
-        <h5 className="card-title mainColor dark:tw-text-indigo-600">Siwa Oasis</h5>
+        <h5 className="card-title mainColor dark:tw-text-indigo-600">{t('cards.0.title')}</h5>
         
-        <div className={`${styles.parent} parent`}>
+        <div className={`${styles.parent} parent  ${isRTL ? styles.pad2 : styles.pad}`}>
           <div className="card-end d-flex justify-content-between w-100">
             <div className="card-date">
-              <span className="tw-text-gray-500  dark:tw-text-white my-2">21/03/2024</span>
+              <span className="tw-text-gray-500  dark:tw-text-white my-2">{t('cards.0.date')}</span>
             </div>
             <div className="card-btn">
-            <button className="bg-main text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600  py-2 rounded-3">More Info!</button>
+            <button className="bg-main text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600  py-2 rounded-3">{t('cards.0.button')}</button>
             </div>
           </div>
         </div>
@@ -60,14 +65,14 @@ export default function Memories() {
   <div class="card dark:tw-bg-gray-900" style={{height:'600px'}}>
   <img src={der} class="card-img-top w-100"  style={{height:'450px'}}/>
   <div class="card-body position-relative">
-    <h5 class="card-title mainColor dark:tw-text-indigo-600">Syrian Monastery</h5>
-    <div className={`${styles.parent} parent`}>
+    <h5 class="card-title mainColor dark:tw-text-indigo-600">{t('cards.1.title')}</h5>
+    <div className={`${styles.parent} parent  ${isRTL ? styles.pad2 : styles.pad}`}>
     <div className="card-end d-flex justify-content-between">
       <div className="card-date  ">
-        <span className='dark:tw-text-white tw-text-gray-500 my-2'>05/01/2025</span>
+        <span className='dark:tw-text-white tw-text-gray-500 my-2'>{t('cards.1.date')}</span>
       </div>
       <div className="card-btn">
-      <button className="bg-main text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600  py-2 rounded-3">More Info!</button>
+      <button className="bg-main text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600  py-2 rounded-3">{t('cards.0.button')}</button>
       </div>
     </div>
     </div>
@@ -78,14 +83,14 @@ export default function Memories() {
   <div class="card dark:tw-bg-gray-900"style={{height:'600px'}} >
   <img src={maria} class="card-img-top w-100"style={{height:'450px'}} />
   <div class="card-body position-relative">
-    <h5 class="card-title mainColor dark:tw-text-indigo-600">St. Maria Resort – Fun & Faith!</h5>
-    <div className={`${styles.parent} parent`}>
+    <h5 class="card-title mainColor dark:tw-text-indigo-600">{t('cards.2.title')}</h5>
+    <div className={`${styles.parent} parent  ${isRTL ? styles.pad2 : styles.pad}`}>
     <div className="card-end d-flex justify-content-between">
       <div className="card-date  ">
-        <span className='tw-text-gray-500  dark:tw-text-white my-2'>14/06/2025</span>
+        <span className='tw-text-gray-500  dark:tw-text-white my-2'>{t('cards.2.date')}</span>
       </div>
       <div className="card-btn">
-      <button className="bg-main text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600  py-2 rounded-3">More Info!</button>
+      <button className="bg-main text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600  py-2 rounded-3">{t('cards.2.button')}</button>
       </div>
     </div>
     </div>
@@ -93,20 +98,18 @@ export default function Memories() {
 </div>
   </div>
 
-
-
   <div className="col-lg-4 col-md-6  my-4">
   <div class="card dark:tw-bg-gray-900"style={{height:'600px'}} >
   <img src={afri} class="card-img-top w-100"style={{height:'450px'}} />
   <div class="card-body position-relative">
-    <h5 class="card-title mainColor dark:tw-text-indigo-600">africano park</h5>
-    <div className={`${styles.parent} parent`}>
+    <h5 class="card-title mainColor dark:tw-text-indigo-600">{t('cards.3.title')}</h5>
+    <div className={`${styles.parent} parent  ${isRTL ? styles.pad2 : styles.pad}`}>
     <div className="card-end d-flex justify-content-between">
       <div className="card-date  ">
-        <span className='tw-text-gray-500  dark:tw-text-white my-2'>10/02/2024</span>
+        <span className='tw-text-gray-500  dark:tw-text-white my-2'>{t('cards.3.date')}</span>
       </div>
       <div className="card-btn">
-      <button className="bg-main text-white tw-w-full tw-px-7  dark:tw-bg-indigo-600 py-2 rounded-3">More Info!</button>
+      <button className="bg-main text-white tw-w-full tw-px-7  dark:tw-bg-indigo-600 py-2 rounded-3">{t('cards.3.button')}</button>
       </div>
     </div>
     </div>

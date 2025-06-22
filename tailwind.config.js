@@ -8,6 +8,9 @@ module.exports = {
       fontSize: {
         'responsive': 'clamp(12px, 5vw, 2rem)', 
         'responsive2': 'clamp(14px, 2vw, 1rem)', 
+      },
+      zIndex: {
+        '9999': '9999', // 👈 هنا الإضافة المهمة
       }
     },
   },
@@ -18,4 +21,3 @@ module.exports = {
   prefix: 'tw-',
   darkMode: 'class'
 }
-

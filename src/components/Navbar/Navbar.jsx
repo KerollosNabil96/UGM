@@ -5,7 +5,7 @@ import styles from './Navbar.module.css';
 import { useTranslation } from 'react-i18next';
 
 export default function Navbar() {
-  let { darkMode, toggleDarkMode } = useContext(darkModeContext);
+  const { darkMode, toggleDarkMode, token, logout } = useContext(darkModeContext);
   const { t, i18n } = useTranslation('navbar');
 
   const toggleLanguage = () => {
@@ -14,13 +14,19 @@ export default function Navbar() {
     document.documentElement.lang = newLang;
     document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
   };
+
+  const role = localStorage.getItem('role');
+
+  const isAdmin = role === 'Admin' || role === 'SuperAdmin';
+
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
-      <nav className={`navbar navbar-expand-lg bg-main dark:tw-bg-gray-900 transition-colors duration-300 `} >
+      <nav className="navbar navbar-expand-lg bg-main dark:tw-bg-gray-900 transition-colors duration-300">
         <div className="container-fluid">
           <NavLink className="navbar-brand text-white tw-dark:text-blue-800 fw-bolder" to="/">
             UGM
           </NavLink>
+
           <button
             className="navbar-toggler"
             type="button"
@@ -32,232 +38,211 @@ export default function Navbar() {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav justify-content-center mb-2 mb-lg-0" style={{ width: '100%' }}>
               <li className="nav-item">
                 <NavLink
-                  className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
                   to="/"
+                  className={({ isActive }) =>
+                    isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                  }
                 >
                   {t('navbar.links.home')}
-                  </NavLink>
+                </NavLink>
               </li>
+
               <li className="nav-item">
                 <NavLink
+                  to="/about"
                   className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
+                    isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
                   }
-                  aria-current="page"
-                  to="about"
                 >
                   {t('navbar.links.about')}
-                  </NavLink>
+                </NavLink>
               </li>
+
               <li className="nav-item">
                 <NavLink
+                  to="/contact"
                   className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
+                    isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
                   }
-                  aria-current="page"
-                  to="events"
+                >
+                  {t('navbar.links.contact')}
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink
+                  to="/events"
+                  className={({ isActive }) =>
+                    isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                  }
                 >
                   {t('navbar.links.events')}
+                </NavLink>
+              </li>
 
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
-                  to="kahoot-game"
-                >
-                  {t('navbar.links.kahoot')}
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
-                  to="Memories"
-                >
-                                    {t('navbar.links.memories')}
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
-                  to="contact"
-                >
-             {t('navbar.links.contact')}
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
-                  to="servantInfo"
-                >
-          {t('navbar.links.servantInfo')}
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
-                  to="ServantList"
-                >
-              {t('navbar.links.servantList')}
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
-                  to="share-event"
-                >
-              {t('navbar.links.shareEvent')}
-                </NavLink>
-              </li>
+              {token && (
+                <>
+                  <li className="nav-item">
+                    <NavLink
+                      to="/kahoot-game"
+                      className={({ isActive }) =>
+                        isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                      }
+                    >
+                      {t('navbar.links.kahoot')}
+                    </NavLink>
+                  </li>
+
+                  <li className="nav-item">
+                    <NavLink
+                      to="/Memories"
+                      className={({ isActive }) =>
+                        isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                      }
+                    >
+                      {t('navbar.links.memories')}
+                    </NavLink>
+                  </li>
+
+                  {isAdmin && (
+                    <>
+                      <li className="nav-item">
+                        <NavLink
+                          to="/servantInfo"
+                          className={({ isActive }) =>
+                            isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                          }
+                        >
+                          {t('navbar.links.servantInfo')}
+                        </NavLink>
+                      </li>
+
+                      <li className="nav-item">
+                        <NavLink
+                          to="/ServantList"
+                          className={({ isActive }) =>
+                            isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                          }
+                        >
+                          {t('navbar.links.servantList')}
+                        </NavLink>
+                      </li>
+
+                      <li className="nav-item">
+                        <NavLink
+                          to="/share-event"
+                          className={({ isActive }) =>
+                            isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                          }
+                        >
+                          {t('navbar.links.shareEvent')}
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+                </>
+              )}
             </ul>
 
-            <ul className="navbar-nav ms-auto mb-2 mb-lg-0 position-relative">
+            <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <i
-                onClick={() => toggleDarkMode()}
-                className={
-                  darkMode
-                    ? 'fa-solid fa-sun crsr text-white fs-3 d-flex me-lg-3 cursor-pointer align-items-center'
-                    : 'fa-solid crsr fa-moon text-white fs-3 d-flex me-lg-3 cursor-pointer align-items-center'
-                }
+                onClick={toggleDarkMode}
+                className={`fa-solid ${darkMode ? 'fa-sun' : 'fa-moon'} text-white fs-3 me-lg-3 cursor-pointer`}
               />
-  <div className="tw-relative tw-flex tw-items-center tw-me-3 tw-h-9 mx-2">
-  <div className="tw-absolute tw-inset-0 tw-bg-[#4B0082] tw-rounded-full"></div>
-  <div 
-    onClick={toggleLanguage}
-    className="tw-relative tw-flex tw-items-center tw-h-full tw-px-1 tw-cursor-pointer tw-z-10"
-  >
-    <span className={`tw-px-3 tw-py-1 tw-rounded-full tw-transition-all ${i18n.language === 'en' ? 'tw-bg-[#7E4BFF] tw-font-bold tw-text-white' : 'tw-text-white/80'}`}>
-      {t('navbar.languageSwitch.english')}
-    </span>
-    <span className="tw-mx-1 tw-text-white">|</span>
-    <span className={`tw-px-3 tw-py-1 tw-rounded-full tw-transition-all ${i18n.language === 'ar' ? 'tw-bg-[#7E4BFF] tw-font-bold tw-text-white' : 'tw-text-white/80'}`}>
-    {t('navbar.languageSwitch.arabic')}
 
-    </span>
-  </div>
-</div>
-              <li className="nav-item">
-                <NavLink
-                  style={i18n.language === 'ar' ? { minWidth: '110px' } : {}}
-                  className={({ isActive }) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
-                  to="signin"
+              <div className="tw-relative tw-flex tw-items-center tw-me-3 tw-h-9 mx-2">
+                <div className="tw-absolute tw-inset-0 tw-bg-[#4B0082] tw-rounded-full"></div>
+                <div
+                  onClick={toggleLanguage}
+                  className="tw-relative tw-flex tw-items-center tw-h-full tw-px-1 tw-cursor-pointer tw-z-10"
                 >
-                  {t('navbar.links.signIn')}
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink 
-                  style={i18n.language === 'ar' ? { minWidth: '100px' } : {}}
-                  className={({ isActive } ) =>
-                    isActive ? `${styles.line} nav-link active text-white ` : 'nav-link active text-white'
-                  }
-                  aria-current="page"
-                  to="signup"
-                >
-                   {t('navbar.links.signUp')}
-                </NavLink>
-              </li>
-              <li className="nav-item dropdown position-relative">
-  <button
-    type="button"
-    className="btn bg-main dark:tw-bg-gray-900 text-white border border-1 dropdown-toggle"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-    style={{width:'170px'}}
-  >
-    {t('navbar.userDropdown.username')}
-  </button>
-  <ul className={`dropdown-menu dropdown-menu-end dark:tw-bg-gray-800 ${i18n.language === 'ar' ? 'tw-text-end tw-pe-3' : 'tw-ps-3'}`}>
-    <li>
-      <NavLink className="dropdown-item dark:tw-text-white tw-flex tw-items-center tw-justify-between" to={'dashboard'}>
-        {i18n.language === 'ar' ? (
-          <>
-            <span>{t('navbar.userDropdown.dashboard')}</span>
-            <i className="fa-solid fa-bars tw-ml-2 dark:tw-text-white"></i>
-          </>
-        ) : (
-          <>
-            <i className="fa-solid fa-bars tw-mr-2 dark:tw-text-white"></i>
-            <span>{t('navbar.userDropdown.dashboard')}</span>
-          </>
-        )}
-      </NavLink>
-    </li>
-    <li>
-      <NavLink className="dropdown-item dark:tw-text-white tw-flex tw-items-center tw-justify-between" to={'profile'}>
-        {i18n.language === 'ar' ? (
-          <>
-            <span>{t('navbar.userDropdown.profile')}</span>
-            <i className="fa-solid fa-user tw-ml-2 dark:tw-text-white"></i>
-          </>
-        ) : (
-          <>
-            <i className="fa-solid fa-user tw-mr-2 dark:tw-text-white"></i>
-            <span>{t('navbar.userDropdown.profile')}</span>
-          </>
-        )}
-      </NavLink>
-    </li>
-    <li >
-      <NavLink className="dropdown-item dark:tw-text-white tw-flex tw-items-center tw-justify-between" to={'settings'}>
-        {i18n.language === 'ar' ? (
-          <>
-            <span>{t('navbar.userDropdown.settings')}</span>
-            <i className="fa-solid fa-gear tw-ml-2 dark:tw-text-white"></i>
-          </>
-        ) : (
-          <>
-            <i className="fa-solid fa-gear tw-mr-2 dark:tw-text-white"></i>
-            <span>{t('navbar.userDropdown.settings')}</span>
-          </>
-        )}
-      </NavLink>
-    </li>
-    <li>
-      <NavLink className="dropdown-item dark:tw-text-white text-danger tw-flex tw-items-center tw-justify-between" to={'/'}>
-        {i18n.language === 'ar' ? (
-          <>
-            <span>{t('navbar.userDropdown.logout')}</span>
-            <i className="fa-solid fa-right-from-bracket tw-ml-2 text-danger"></i>
-          </>
-        ) : (
-          <>
-            <i className="fa-solid fa-right-from-bracket tw-mr-2 text-danger"></i>
-            <span>{t('navbar.userDropdown.logout')}</span>
-          </>
-        )}
-      </NavLink>
-    </li>
-  </ul>
-</li>
+                  <span
+                    className={`tw-px-3 tw-py-1 tw-rounded-full tw-transition-all ${
+                      i18n.language === 'en' ? 'tw-bg-[#7E4BFF] tw-font-bold tw-text-white' : 'tw-text-white/80'
+                    }`}
+                  >
+                    {t('navbar.languageSwitch.english')}
+                  </span>
+                  <span className="tw-mx-1 tw-text-white">|</span>
+                  <span
+                    className={`tw-px-3 tw-py-1 tw-rounded-full tw-transition-all ${
+                      i18n.language === 'ar' ? 'tw-bg-[#7E4BFF] tw-font-bold tw-text-white' : 'tw-text-white/80'
+                    }`}
+                  >
+                    {t('navbar.languageSwitch.arabic')}
+                  </span>
+                </div>
+              </div>
+
+              {!token ? (
+                <>
+                  <li className="nav-item">
+                    <NavLink
+                      to="/signin"
+                      className={({ isActive }) =>
+                        isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                      }
+                    >
+                      {t('navbar.links.signIn')}
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink
+                      to="/signup"
+                      className={({ isActive }) =>
+                        isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'
+                      }
+                    >
+                      {t('navbar.links.signUp')}
+                    </NavLink>
+                  </li>
+                </>
+              ) : (
+                <li className="nav-item dropdown position-relative">
+                  <button
+                    type="button"
+                    className="btn bg-main dark:tw-bg-gray-900 text-white border border-1 dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    style={{ width: '170px' }}
+                  >
+                    {t('navbar.userDropdown.username')}
+                  </button>
+                  <ul className={`dropdown-menu dropdown-menu-end dark:tw-bg-gray-800`}>
+                    {role !== 'User' && (
+  <li>
+    <NavLink className="dropdown-item dark:tw-text-white" to="/dashboard">
+      {t('navbar.userDropdown.dashboard')}
+    </NavLink>
+  </li>
+)}
+                    <li>
+                      <NavLink className="dropdown-item dark:tw-text-white" to="/profile">
+                        {t('navbar.userDropdown.profile')}
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink className="dropdown-item dark:tw-text-white" to="/settings">
+                        {t('navbar.userDropdown.settings')}
+                      </NavLink>
+                    </li>
+                    <li>
+                      <button
+                        onClick={logout}
+                        className="dropdown-item text-danger dark:tw-text-white"
+                      >
+                        <i className="fa-solid fa-right-from-bracket me-2 text-danger"></i>
+                        {t('navbar.userDropdown.logout')}
+                      </button>
+                    </li>
+                  </ul>
+                </li>
+              )}
             </ul>
           </div>
         </div>

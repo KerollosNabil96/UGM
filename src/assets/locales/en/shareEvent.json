@@ -1,0 +1,60 @@
+{
+    "shareEvent": {
+      "title": "Share your event",
+      "description": "Please provide all the necessary details about the event...",
+      "form": {
+        "eventName": "Event name",
+        "category": {
+          "label": "Category",
+          "options": {
+            "select": "Select Category",
+            "event": "Event",
+            "trip": "Trip"
+          }
+        },
+        "address": "Address",
+        "shortDescription": "Short description (will appear in the card) - Max 50 characters",
+        "fullDescription": "Full description - Write as much as you want",
+        "price": "Price (EGP)",
+        "phone": "Phone number (01XXXXXXXXX)",
+        "responsiblePerson": "Responsible person name",
+        "date": "Date",
+        "images": {
+          "first": "Upload first event image",
+          "second": "Upload second event image",
+          "third": "Upload third event image",
+          "change": "Change Image",
+          "select": "Select Image"
+        },
+        "submit": "Submit",
+        "submitting": "Submitting...",
+        "uploadAll": "Please upload all 3 images to submit",
+        "locationModal": {
+          "title": "Select Your Location",
+          "useMyLocation": "📍 Use My Location",
+          "confirmLocation": "✔ Confirm Selected Location",
+          "mapInstructions": "Address selected from map. Click the X to clear or map icon to change."
+        }
+      },
+      "validation": {
+        "required": "{{field}} is required",
+        "invalidCategory": "Invalid category",
+        "invalidPhone": "Phone number is not valid",
+        "negativePrice": "Price can't be negative",
+        "maxChars": "{{field}} must be at most {{max}} characters",
+        "minImages": "You must upload all 3 images",
+        "maxImages": "You can't upload more than 3 images"
+      },
+      "locationNotFound": "Location not found",
+      "failedFetchAddress": "Failed to fetch address",
+      "locationRetrieveError": "Unable to retrieve your location",
+      "geolocationNotSupported": "Geolocation is not supported by your browser",
+      "imageTypeError": "Please upload an image file only",
+      "imageSizeError": "Image must be less than 5MB",
+      "characters": "characters",
+      "event": "Event",
+      "shortDescriptionHint": "This will appear in event cards (max 50 characters)",
+      "fullDescriptionHint": "Detailed description of your event"
+    }
+  }
+  

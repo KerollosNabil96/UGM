@@ -18,6 +18,20 @@ import enKahoot from './assets/locales/en/kahoot.json';
 import arKahoot from './assets/locales/ar/kahoot.json';
 import enContact from './assets/locales/en/contact.json';
 import arContact from './assets/locales/ar/contact.json';
+import enMemory from './assets/locales/en/memory.json';
+import arMemory from './assets/locales/ar/memory.json';
+import enShareEvent from './assets/locales/en/shareEvent.json';
+import arShareEvent from './assets/locales/ar/shareEvent.json';
+import enServantInfo from './assets/locales/en/servantInfo.json';
+import arServantInfo from './assets/locales/ar/servantInfo.json';
+import enSignin from './assets/locales/en/signin.json';
+import arSignin from './assets/locales/ar/signin.json';
+import enSignup from './assets/locales/en/signup.json';
+import arSignup from './assets/locales/ar/signup.json';
+import enDashboard from './assets/locales/en/dashboard.json';
+import arDashboard from './assets/locales/ar/dashboard.json';
+import enUpdatedReq from './assets/locales/en//updateReq.json';
+import arUpdatedReq from './assets/locales/ar/updateReq.json';
 
 i18n
   .use(LanguageDetector) 
@@ -32,7 +46,15 @@ i18n
         events : enEvents,
         navbar : enNavbar,
         kahoot : enKahoot,
-        contact: enContact
+        contact: enContact,
+        memory : enMemory,
+        shareEvent : enShareEvent,
+        servantInfo : enServantInfo,
+        signIn : enSignin,
+        signUp : enSignup,
+        dashboard : enDashboard,
+        updatedReq : enUpdatedReq
+
 
        },
       ar: { 
@@ -43,9 +65,14 @@ i18n
         events :arEvents,
         navbar : arNavbar,
         kahoot : arKahoot,
-        contact: arContact
-
-
+        contact: arContact,
+        memory: arMemory,
+        shareEvent : arShareEvent,
+        servantInfo : arServantInfo,
+        signIn : arSignin,
+        signUp : arSignup,
+        dashboard : arDashboard,
+        updatedReq : arUpdatedReq
        },
     },
     fallbackLng: 'en',

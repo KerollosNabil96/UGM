@@ -17,11 +17,11 @@ export default function Events() {
     <>
       <div className={`${darkMode ? 'tw-dark' : ''}`}>
         <div className="container-fluid dark:tw-bg-gray-800">
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1 }}
-          >
+        <motion.div
+          initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+        >
             <div className="container">
               <div className="row">
                 <h1 className='mt-5 fw-bold mainColor dark:tw-text-indigo-600 text-center'>
@@ -45,7 +45,6 @@ export default function Events() {
                 </div>
 
                 <div className="row">
-                  {/* Siwa Card */}
                   <div className="col-lg-4 col-md-6 my-4">
                     <div className="card dark:tw-bg-gray-900" style={{height:'630px'}}>
                       <img src={siwa} className="card-img-top w-100" style={{ height: "360px" }} />

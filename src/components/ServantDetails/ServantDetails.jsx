@@ -5,19 +5,18 @@ import toast, { Toaster } from 'react-hot-toast';
 import React, { useContext, useEffect, useState } from 'react';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion , AnimatePresence} from "motion/react"
-import { form, span } from 'motion/react-client';
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 
 export default function ServantDetails() {
-
-  
   let location = useLocation();
   let navigate = useNavigate();
   let { darkMode } = useContext(darkModeContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [initialData, setInitialData] = useState(null);
-const [hidden, sethidden] = useState(false)
-  const [update, setupdate] = useState(false)
+  const [update, setUpdate] = useState(false);
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
 
   const daysOfWeek = [
     'Saturday',
@@ -29,19 +28,44 @@ const [hidden, sethidden] = useState(false)
     'Friday'
   ];
 
+  const formik = useFormik({
+    initialValues: initialData || {
+      firstName: '',
+      secName: '',
+      familyName: '',
+      email: '',
+      Address: '',
+      Address2: '',
+      mobileNumber1: '',
+      mobileNumber2: '',
+      landline: '',
+      church: '',
+      college: '',
+      governorateOfBirth: '',
+      maritalStatus: '',
+      cohort: '',
+      priestName: '',
+      birthDay: '',
+      birthMonth: '',
+      birthYear: '',
+      profession: '',
+      dayOff: [],
+      isExpatriate: false
+    },
+    validate,
+    onSubmit: handleSubmit,
+    enableReinitialize: true 
+  });
+
   useEffect(() => {
     if (location.state?.person) {
+      console.log("Initial data received:", location.state.person);
       setInitialData(location.state.person);
-      formik.setValues({
-        ...location.state.person,
-        dayOff: location.state.person.dayOff || []
-      });
     }
   }, [location.state]);
 
-  const validate = (values) => {
+  function validate(values) {
     let errors = {};
-    
     if (!values.firstName) {
       errors.firstName = 'First name is required';
     } else if (values.firstName.length < 3 || values.firstName.length > 15) {
@@ -113,69 +137,128 @@ const [hidden, sethidden] = useState(false)
     }
 
     return errors;
-  };
-
-  const onSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await axios.put(`http://localhost:3001/servants/${initialData.id}`, values);
-      
-      if(response.status === 200) {
-        setIsSubmitted(true);
-        toast.success('Data updated successfully!', {
-          duration: 4000,
-          position: 'top-center',
-        });
-      }
-    } catch (error) {
-      toast.error('Error updating data. Please try again.');
-      console.error('Update error:', error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const formik = useFormik({
-    initialValues: {
-      firstName: '',
-      secName: '',
-      familyName: '',
-      email: '',
-      Address: '',
-      Address2: '',
-      mobileNumber1: '',
-      mobileNumber2: '',
-      landline: '',
-      church: '',
-      college: '',
-      governorateOfBirth: '',
-      maritalStatus: '',
-      cohort: '',
-      priestName: '',
-      birthDay: '',
-      birthMonth: '',
-      birthYear: '',
-      profession: '',
-      dayOff: [],
-      isExpatriate: false
-    },
-    validate,
-    onSubmit,
-    enableReinitialize: true 
-  });
-
-  if (!initialData) {
-    return <div>Loading...</div>; 
   }
 
-   let goBack = ()=>{
-    navigate(-1)
-   }
+ async function handleSubmit(values, { setSubmitting }) {
+  console.log('Form submission started with values:', values);
+  
+  const token = localStorage.getItem('token');
+  if (!token) {
+    toast.error('Authentication token missing. Please login again.');
+    setSubmitting(false);
+    navigate('/login');
+    return;
+  }
 
-   const InfoItem = ({ label, value }) => (
+  if (!initialData?._id) {
+    toast.error('User ID not available');
+    setSubmitting(false);
+    return;
+  }
+
+  try {
+    const submissionData = { ...values };
+    
+    ['_id', 'creatorId', 'createdAt', 'updatedAt', '__v'].forEach(field => {
+      delete submissionData[field];
+    });
+
+    if (!Array.isArray(submissionData.dayOff)) {
+      submissionData.dayOff = [];
+    }
+
+    console.log('Processed submission data:', submissionData);
+
+    console.log('Sending PUT request to server...');
+    const response = await axios.put(
+      `https://projectelkhdma-projectelkhdma.up.railway.app/api/v1/served/updateServed/${initialData._id}`,
+      submissionData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 10000 
+      }
+    );
+
+    console.log('Full server response:', response);
+
+    if (response.status >= 200 && response.status < 300) {
+      const successMessage = response.data?.message || 'Data updated successfully!';
+      
+      toast.success(successMessage, {
+        duration: 4000,
+        position: 'top-center',
+      });
+
+      // Update local state
+      setInitialData(values);
+      
+      // Close edit mode and go back after delay
+      setTimeout(() => {
+        setUpdate(false);
+        navigate(-1);
+      }, 1500);
+      
+      return; // Exit early on success
+    }
+
+    // Handle non-success status codes
+    throw new Error(response.data?.message || `Server returned status ${response.status}`);
+
+  } catch (error) {
+    console.error('Full error details:', error);
+    
+    // 4. Special case: Handle "Updated Successfully" message
+    if (error.message.includes('Updated Successfully')) {
+      // Silent treatment - it actually succeeded
+      toast.success('Data updated successfully!', {
+        duration: 4000,
+        position: 'top-center',
+      });
+      setInitialData(values);
+      setTimeout(() => setUpdate(false), 1000);
+      return;
+    }
+
+    // 5. Normal error handling
+    let errorMessage = 'Error updating data. Please try again.';
+    
+    if (error.response) {
+      if (error.response.status === 401) {
+        errorMessage = 'Session expired. Please login again.';
+        setTimeout(() => navigate('/login'), 2000);
+      } else if (error.response.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+    } else if (error.request) {
+      errorMessage = 'No response from server. Check your connection.';
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    if (!errorMessage.includes('Success')) {
+      toast.error(errorMessage);
+    }
+    
+  } finally {
+    setSubmitting(false);
+  }
+}
+  if (!initialData) {
+    return <div className="tw-text-center tw-py-10">Loading servant data...</div>;
+  }
+
+  const goBack = () => {
+    navigate(-1);
+  }
+
+  const InfoItem = ({ label, value }) => (
     <div className="col-12 col-md-6">
       <div className="tw-bg-gray-100 dark:tw-bg-gray-700 tw-rounded-md tw-p-3 tw-shadow-sm">
         <span className="tw-font-semibold">{label}:</span>
-        <span className="tw-ml-2">{value}</span>
+        <span className="tw-ml-2">{value || 'N/A'}</span>
       </div>
     </div>
   );
@@ -184,87 +267,81 @@ const [hidden, sethidden] = useState(false)
     <>
       <Toaster />
       <div className={`${darkMode ? 'tw-dark' : ''}`}>
-          <div className="container-fluid dark:tw-bg-gray-800 py-4">
+        <div className="container-fluid dark:tw-bg-gray-800 py-4">
+          <div className="container">
+            <div className="row">
+              <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}     
+                transition={{ duration: 1 }}  
+              >
+                <h1 className='text-center mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>Servant Details</h1>
 
-      <div className="container">
-        <div className="row">
-          <motion.div
-                          initial={{ opacity: 0, x: -100 }}
-                          animate={{ opacity: 1, x: 0 }}     
-                          transition={{ duration: 1 }}  
-                        >
-          <h1 className='text-center mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>Servant Details</h1>
-          <div className="container my-4">
+                <div className="container my-4">
+                  <AnimatePresence mode="wait">
+                    {!update ? (
+                      <motion.div
+                        key="details"
+                        initial={{ opacity: 0, y: isRTL ? 10 : -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: isRTL ? 10 : -10 }}
+                        transition={{ duration: 0.3 }}
+                        className={`${styles.shad} tw-bg-white dark:tw-bg-gray-800 tw-shadow-md tw-rounded-xl tw-p-6 tw-text-gray-800 dark:tw-text-white tw-space-y-6`}
+                      >
+                        <button className='tw-my-1' onClick={goBack}>
+                          <i className="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <h2 className="tw-text-3xl tw-font-bold tw-text-center tw-text-indigo-600 dark:tw-text-indigo-400">
+                          {initialData.firstName} {initialData.secName} {initialData.familyName}
+                        </h2>
 
+                        <div className="row g-4">
+                          <InfoItem label="Email" value={initialData.email} />
+                          <InfoItem
+                            label="Birthdate"
+                            value={`${initialData.birthDay}/${initialData.birthMonth}/${initialData.birthYear}`}
+                          />
+                          <InfoItem label="Address 1" value={initialData.Address} />
+                          {initialData.Address2 && <InfoItem label="Address 2" value={initialData.Address2} />}
+                          <InfoItem label="Is expatriate?" value={initialData.isExpatriate ? 'Yes' : 'No'} />
+                          <InfoItem label="Mobile 1" value={initialData.mobileNumber1} />
+                          {initialData.mobileNumber2 && <InfoItem label="Mobile 2" value={initialData.mobileNumber2} />}
+                          {initialData.landline && <InfoItem label="Landline" value={initialData.landline} />}
+                          <InfoItem label="Church" value={initialData.church} />
+                          <InfoItem label="Priest Name" value={initialData.priestName} />
+                          <InfoItem label="College / Institute" value={initialData.college} />
+                          <InfoItem label="Governorate of birth" value={initialData.governorateOfBirth} />
+                          <InfoItem label="Marital Status" value={initialData.maritalStatus} />
+                          <InfoItem label="Cohort" value={initialData.cohort} />
+                          {initialData.profession && <InfoItem label="Profession" value={initialData.profession} />}
+                          {initialData.dayOff?.length > 0 && (
+                            <InfoItem label="Days off" value={initialData.dayOff.join(' - ')} />
+                          )}
 
-
-
-          <AnimatePresence mode="wait">
-  {!update ? (
-    <motion.div
-      key="details"
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
-      className={`${styles.shad} tw-bg-white dark:tw-bg-gray-800 tw-shadow-md tw-rounded-xl tw-p-6 tw-text-gray-800 dark:tw-text-white tw-space-y-6`}
-    >
-       <button className='tw-my-1' onClick={()=>{goBack()}}>
-        <i className="fa-solid fa-arrow-left"></i>
-      </button>
-      
-      <h2 className="tw-text-3xl tw-font-bold tw-text-center tw-text-indigo-600 dark:tw-text-indigo-400">
-        {formik.values.firstName} {formik.values.secName} {formik.values.familyName}
-      </h2>
-
-      <div className="row g-4">
-        
-        <InfoItem label="Email" value={formik.values.email} />
-        <InfoItem
-          label="Birthdate"
-          value={`${formik.values.birthDay}/${formik.values.birthMonth}/${formik.values.birthYear}`}
-        />
-        <InfoItem label="Address 1" value={formik.values.Address} />
-        {formik.values.Address2 && <InfoItem label="Address 2" value={formik.values.Address2} />}
-        <InfoItem label="Is expatriate?" value={formik.values.isExpatriate ? 'Yes' : 'No'} />
-        <InfoItem label="Mobile 1" value={formik.values.mobileNumber1} />
-        {formik.values.mobileNumber2 && <InfoItem label="Mobile 2" value={formik.values.mobileNumber2} />}
-        {formik.values.landline && <InfoItem label="Landline" value={formik.values.landline} />}
-        <InfoItem label="Church" value={formik.values.church} />
-        <InfoItem label="Priest Name" value={formik.values.priestName} />
-        <InfoItem label="College / Institute" value={formik.values.college} />
-        <InfoItem label="Governorate of birth" value={formik.values.governorateOfBirth} />
-        <InfoItem label="Marital Status" value={formik.values.maritalStatus} />
-        <InfoItem label="Cohort" value={formik.values.cohort} />
-        {formik.values.profession && <InfoItem label="Profession" value={formik.values.profession} />}
-        {formik.values.profession && (
-          <InfoItem label="Days off" value={formik.values.dayOff.join(' - ')} />
-        )}
-
-        <button
-          type="button"
-          className="bg-main mb-3 dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
-          onClick={() => setupdate(true)}
-        >
-          Update
-        </button>
-      </div>
-    </motion.div>
-  ) : (
-    <motion.div
-      key="form"
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
-      className={`${styles.shad} tw-bg-gray-100 dark:tw-bg-gray-900 tw-px-4 tw-rounded-xl tw-shadow-md`}
-    >
-      <button className='tw-my-3' onClick={()=>setupdate(false)}>
-        <i className="fa-solid fa-arrow-left"></i>
-      </button>
-      
-      <form onSubmit={formik.handleSubmit}>
-               {/* Names Section */}
+                          <button
+                            type="button"
+                            className="bg-main mb-3 dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
+                            onClick={() => setUpdate(true)}
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="form"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                        className={`${styles.shad} tw-bg-gray-100 dark:tw-bg-gray-900 tw-px-4 tw-rounded-xl tw-shadow-md`}
+                      >
+                        <button className='tw-my-3' onClick={() => setUpdate(false)}>
+                          <i className="fa-solid fa-arrow-left"></i>
+                        </button>
+                        
+                        <form onSubmit={formik.handleSubmit}>
+                                         {/* Names Section */}
                <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-4">
           <div className="tw-flex tw-flex-col tw-w-full md:tw-w-[33%]">
             <label htmlFor="firstName" className="tw-mt-3 tw-font-bold dark:tw-text-white tw-text-lg">
@@ -736,23 +813,29 @@ const [hidden, sethidden] = useState(false)
           </div>
         )}
 
-        <button
-          type="submit"
-          className="tw-bg-indigo-600 my-3 dark:tw-bg-indigo-700 bg-main tw-text-white tw-w-full tw-py-3 tw-rounded-xl tw-font-bold hover:tw-bg-indigo-700 dark:hover:tw-bg-indigo-800 tw-transition-colors"
-          disabled={formik.isSubmitting}
-          onClick={() => setupdate(false)}
-        >
-          {formik.isSubmitting ? 'Updating...' : 'Submit'}
-        </button>
-      </form>
-    </motion.div>
-  )}
-</AnimatePresence>
-</div>
-          </motion.div>
+                          <button
+                            type="submit"
+                            className="tw-bg-indigo-600 my-3 dark:tw-bg-indigo-700 bg-main tw-text-white tw-w-full tw-py-3 tw-rounded-xl tw-font-bold hover:tw-bg-indigo-700 dark:hover:tw-bg-indigo-800 tw-transition-colors"
+                            disabled={formik.isSubmitting}
+                          >
+                            {formik.isSubmitting ? (
+                              <>
+                                <span className="tw-inline-block tw-animate-spin tw-mr-2">
+                                  <i className="fas fa-spinner"></i>
+                                </span>
+                                Updating...
+                              </>
+                            ) : 'Submit'}
+                          </button>
+                        </form>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            </div>
+          </div>
         </div>
-      </div>
-      </div>
       </div>
     </>
   );

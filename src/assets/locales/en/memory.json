@@ -1,0 +1,31 @@
+{
+    "pageTitle": "Memories",
+    "searchPlaceholder": "Search by name....",
+    "allCategories": "All Categories",
+    "events": "Events",
+    "trip": "Trip",
+    "searchButton": "Search",
+    "cards": [
+      {
+        "title": "Siwa Oasis",
+        "date": "21/03/2024",
+        "button": "More Info!"
+      },
+      {
+        "title": "Syrian Monastery",
+        "date": "05/01/2025",
+        "button": "More Info!"
+      },
+      {
+        "title": "St. Maria Resort – Fun & Faith!",
+        "date": "14/06/2025",
+        "button": "More Info!"
+      },
+      {
+        "title": "Africano Park",
+        "date": "10/02/2024",
+        "button": "More Info!"
+      }
+    ]
+  }
+  

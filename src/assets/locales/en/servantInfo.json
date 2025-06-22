@@ -1,0 +1,98 @@
+{
+    "servantInfo": {
+      "title": "Servant Information Form",
+      "description1": "Register your information for church service This form collects servant data",
+      "description2": "to help organize ministry activities",
+      "labels": {
+        "firstName": "First Name",
+        "secName": "Second Name",
+        "familyName": "Family Name",
+        "email": "Email",
+        "address": "Address",
+        "address2": "Address 2 (if available)",
+        "birthdate": "Birthdate",
+        "day": "Select Day",
+        "month": "Select Month",
+        "year": "Select Year",
+        "mobile1": "Mobile number 1",
+        "mobile2": "Mobile number 2 (if available)",
+        "landline": "Landline (if available)",
+        "church": "Church",
+        "college": "College or Institute",
+        "governorateOfBirth": "Governorate of Birth",
+        "maritalStatus": "Marital Status",
+        "cohort": "Cohort",
+        "priestName": "Priest Name",
+        "profession": "Profession (if available)",
+        "dayOff": "Day off (Press Ctrl and select)",
+        "isExpatriate": "Is expatriate?"
+      },
+      "placeholders": {
+        "firstName": "Enter first name",
+        "secName": "Enter second name",
+        "familyName": "Enter family name",
+        "mobile1": "Enter mobile number (1)",
+        "mobile2": "Enter mobile number (2)",
+        "landline": "Enter landline number",
+        "governorate": "Enter governorate of birth",
+        "college": "Enter the college",
+        "profession": "Enter profession"
+      },
+      "options": {
+        "selectStatus": "Select status",
+        "selectCohort": "Select cohort",
+        "status": {
+          "single": "Single",
+          "engaged": "Engaged",
+          "married": "Married"
+        },
+        "cohorts": {
+          "1": "1st Year University",
+          "2": "2nd Year University",
+          "3": "3rd Year University",
+          "4": "4th Year University",
+          "g1": "1st Year Graduate",
+          "g2": "2nd Year Graduate",
+          "g3": "3rd Year Graduate",
+          "g4": "4th Year Graduate",
+          "g5": "5th Year Graduate"
+        }
+      },
+      "submit": {
+        "submit": "Submit",
+        "submitting": "Submitting...",
+        "success": "Data submitted successfully!"
+      },
+      "validation": {
+        "firstNamerequired": "First name is required",
+        "firstNameLength": "First name must be between 3 and 15 characters",
+        "secNamerequired": "Second name is required",
+        "secNameLength": "Second name must be between 3 and 15 characters",
+        "familyNamerequired": "Family name is required",
+        "emailRequired": "Email address is required",
+        "addressRequierd": "Address is required",
+        "mobileRequierd": "Mobile number is required",
+        "ChurchRequierd": "Church is required",
+        "priestNameRequierd": "Priest name is required",
+        "CohortRequierd": "Cohort is required",
+        "governorateOfBirth": "Governorate of birth  is required",
+        "collegeٌRequierd": "College or Institute  is required",
+        "maritalRequierd": "Marital status is required",
+        "familyNameLength": "Family name must be between 3 and 15 characters",
+        "minMax": "{{field}} must be between {{min}} and {{max}} characters",
+        "invalidEmail": "Invalid email address",
+        "invalidPhone": "Invalid mobile number",
+        "invalidLandline": "Invalid landline number"
+      }  ,
+      "weekDays" : {
+        "1": "Saturday",
+        "2": "Sunday",
+        "3": "Monday",
+        "4": "Tuesday",
+        "5": "Wednesday",
+        "6": "Thursday",
+        "7": "Friday"
+      }
+    }
+  }
+  

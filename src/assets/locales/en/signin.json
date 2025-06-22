@@ -1,0 +1,24 @@
+{
+  "signIn": {
+    "title": "Sign In",
+    "email": {
+      "label": "Email:",
+      "placeholder": "Enter your email.",
+      "errors": {
+        "required": "Email is required",
+        "invalid": "Invalid email address"
+      }
+    },
+    "password": {
+      "label": "Password:",
+      "placeholder": "Enter your password.",
+      "errors": {
+        "required": "Password is required",
+        "invalid": "Password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character"
+      }
+    },
+    "submit": "Register",
+    "success": "Logged in successfully!",
+    "welcome": "UGM Family"
+  }
+}

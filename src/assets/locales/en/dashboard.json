@@ -1,0 +1,7 @@
+{
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "users": "Users",
+      "updateRequests": "Update Requests"
+    }
+  }

@@ -3,9 +3,13 @@ import styles from './Settings.module.css';
 import { useFormik } from 'formik';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export default function Settings() {
       const { darkMode } = useContext(darkModeContext);
+      const { i18n } = useTranslation();
+      const isRTL = i18n.language === 'ar';
+      
 
    const daysOfWeek = [
      'Saturday',
@@ -111,7 +115,7 @@ if(!values2.newPassword){
           
           <div className="container-fluid dark:tw-bg-gray-800" >
           <motion.div
-        initial={{ opacity: 0, x: -100 }} 
+          initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
         animate={{ opacity: 1, x: 0 }}     
         transition={{ duration: 1 }}       
       >
