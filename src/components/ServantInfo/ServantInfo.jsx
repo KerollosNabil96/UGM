@@ -116,7 +116,7 @@ const onSubmit = async (values, { setSubmitting }) => {
 
 
     const response = await axios.post(
-  'https://projectelkhdma-projectelkhdma.up.railway.app/api/v1/served/addServed',
+  'https://ugmproject.vercel.app/api/v1/served/addServed',
   values,
   {
     headers: {

@@ -25,7 +25,7 @@ export default function ServantList() {
     const token = localStorage.getItem('token');
     try {
       setLoading(true);
-      const res = await axios.get('https://projectelkhdma-projectelkhdma.up.railway.app/api/v1/served/getAllServeds', {
+      const res = await axios.get('https://ugmproject.vercel.app/api/v1/served/getAllServeds', {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'

@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { darkModeContext } from '../../Context/DarkModeContext';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import { useTranslation } from 'react-i18next';
 
 export default function Navbar() {
   const { darkMode, toggleDarkMode, token, logout } = useContext(darkModeContext);
   const { t, i18n } = useTranslation('navbar');
+  const navigate = useNavigate(); // ⬅️ مهم
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'ar' : 'en';
@@ -15,8 +16,12 @@ export default function Navbar() {
     document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
   };
 
-  const role = localStorage.getItem('role');
+  const handleLogout = () => {
+    logout(); // ⬅️ من الكونتكست
+    navigate('/signin'); // ⬅️ إعادة التوجيه
+  };
 
+  const role = localStorage.getItem('role');
   const isAdmin = role === 'Admin' || role === 'SuperAdmin';
 
   return (
@@ -215,12 +220,12 @@ export default function Navbar() {
                   </button>
                   <ul className={`dropdown-menu dropdown-menu-end dark:tw-bg-gray-800`}>
                     {role !== 'User' && (
-  <li>
-    <NavLink className="dropdown-item dark:tw-text-white" to="/dashboard">
-      {t('navbar.userDropdown.dashboard')}
-    </NavLink>
-  </li>
-)}
+                      <li>
+                        <NavLink className="dropdown-item dark:tw-text-white" to="/dashboard">
+                          {t('navbar.userDropdown.dashboard')}
+                        </NavLink>
+                      </li>
+                    )}
                     <li>
                       <NavLink className="dropdown-item dark:tw-text-white" to="/profile">
                         {t('navbar.userDropdown.profile')}
@@ -233,7 +238,7 @@ export default function Navbar() {
                     </li>
                     <li>
                       <button
-                        onClick={logout}
+                        onClick={handleLogout}
                         className="dropdown-item text-danger dark:tw-text-white"
                       >
                         <i className="fa-solid fa-right-from-bracket me-2 text-danger"></i>

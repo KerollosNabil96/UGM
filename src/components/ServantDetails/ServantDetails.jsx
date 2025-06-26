@@ -171,7 +171,7 @@ export default function ServantDetails() {
 
     console.log('Sending PUT request to server...');
     const response = await axios.put(
-      `https://projectelkhdma-projectelkhdma.up.railway.app/api/v1/served/updateServed/${initialData._id}`,
+      `https://ugmproject.vercel.app/api/v1/served/updateServed/${initialData._id}`,
       submissionData,
       {
         headers: {

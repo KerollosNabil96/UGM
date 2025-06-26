@@ -6,7 +6,7 @@ import { darkModeContext } from '../../Context/DarkModeContext';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
+import toast , {Toaster} from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
@@ -64,7 +64,7 @@ export default function SignUp() {
     onSubmit: async (values) => {
       try {
         let { data } = await axios.post(
-          'https://projectelkhdma-projectelkhdma.up.railway.app/api/v1/user/signup',
+          'https://ugmproject.vercel.app/api/v1/user/signup',
           {
             userName: values.userName,
             email: values.email,

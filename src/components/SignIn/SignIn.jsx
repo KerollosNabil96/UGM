@@ -43,7 +43,7 @@ export default function SignIn() {
       setLoading(true);
       try {
         const response = await axios.post(
-          "https://projectelkhdma-projectelkhdma.up.railway.app/api/v1/user/login",
+          "https://ugmproject.vercel.app/api/v1/user/login",
           values
         );
         const token = response.data.token;
