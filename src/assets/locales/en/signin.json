@@ -19,6 +19,9 @@
     },
     "submit": "Register",
     "success": "Logged in successfully!",
-    "welcome": "UGM Family"
+    "welcome": "UGM Family",
+    "resendVerification": "Didn't receive verification email? Resend",
+    "verificationSuccess": "Verification email sent successfully.",
+    "verificationError": "Failed to send verification email. Please try again later."
   }
 }
