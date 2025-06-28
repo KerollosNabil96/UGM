@@ -33,7 +33,7 @@ export default function Navbar() {
           </NavLink>
 
           <button
-            className="navbar-toggler"
+            className="navbar-toggler bg-white"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
