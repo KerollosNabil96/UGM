@@ -34,3 +34,7 @@
       width: 100%; 
     }
   }
+.smooth-collapse {
+  transition: height 10s ease;
+  overflow: hidden;
+}
