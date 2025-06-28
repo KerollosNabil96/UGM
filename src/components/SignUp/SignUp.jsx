@@ -1,20 +1,21 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react';
 import styles from './SignUp.module.css';
 import { useFormik } from 'formik';
-import signUpImage from '../../assets/92765ddf95236aa0d03442a27590c405.png';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import toast , {Toaster} from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
 
 export default function SignUp() {
-  let { darkMode } = useContext(darkModeContext);
+  const { darkMode } = useContext(darkModeContext);
   const { t } = useTranslation("signUp");
   const { i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const validate = values => {
     const errors = {};
@@ -62,16 +63,11 @@ export default function SignUp() {
     },
     validate,
     onSubmit: async (values) => {
+      setLoading(true);
       try {
-        let { data } = await axios.post(
+        const { data } = await axios.post(
           'https://ugmproject.vercel.app/api/v1/user/signup',
-          {
-            userName: values.userName,
-            email: values.email,
-            phone: values.phone,
-            password: values.password,
-            rePassword: values.rePassword,
-          },
+          values,
           {
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
@@ -79,130 +75,99 @@ export default function SignUp() {
           }
         );
 
-        console.log(data)
-
         if (data.message === 'User created successfully') {
-          navigate('/signin');
-          toast.success(data.message);
+          navigate('/signin', { state: { successMessage: data.message } });
         }
       } catch (error) {
-        console.log(error.response.data?.err)
-        toast.error(error.response.data?.err || 'Signup failed.');
+        const errorMessage = error.response?.data?.err || 'Signup failed.';
+        if (errorMessage.includes('phone_1 dup key')) {
+          toast.error('This phone number is already registered. Please use a different one.');
+        } else if (errorMessage.includes('email_1 dup key')) {
+          toast.error('This email is already registered. Please use a different one.');
+        } else if (errorMessage.includes('userName_1 dup key')) {
+          toast.error('This username is already taken. Please choose another one.');
+        } else {
+          toast.error(errorMessage);
+        }
+      } finally {
+        setLoading(false);
       }
     }
   });
 
   return (
-    <>
-      <div className={`${darkMode ? 'tw-dark' : ''}`}>
-        <div className="container-fluid dark:tw-bg-gray-800 py-4">
-          <Toaster position="top-right" />
-          <div className="container my-5">
-            <motion.div
-              initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-            >
-              <div className="row w-75 mx-auto">
-                <div className="col-lg-6 ps-1 tw-bg-gray-100 dark:tw-bg-gray-900">
-                  <div className={`${styles['bg-image']}`}>
-                    <div className={`${styles['layer']}`}>
-                      <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100'>UGM Family</p>
-                    </div>
+    <div className={`${darkMode ? 'tw-dark' : ''}`}>
+      <div className="container-fluid dark:tw-bg-gray-800 py-4">
+        <div className="container my-5">
+          <motion.div
+            initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <div className="row w-75 mx-auto">
+              <div className="col-lg-6 ps-1 tw-bg-gray-100 dark:tw-bg-gray-900">
+                <div className={`${styles['bg-image']}`}>
+                  <div className={`${styles['layer']}`}>
+                    <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100'>
+                      UGM Family
+                    </p>
                   </div>
                 </div>
-                <div className="col-lg-6 tw-bg-gray-100 dark:tw-bg-gray-900 rounded-3 py-3">
-                  <form onSubmit={formik.handleSubmit}>
-
-                    <label htmlFor="userName" className='mt-3 dark:tw-text-white'>{t('signUp.name.label')}</label>
-                    <input
-                      onBlur={formik.handleBlur}
-                      type="text"
-                      name='userName'
-                      id='userName'
-                      placeholder={t('signUp.name.placeholder')}
-                      className='w-100 form-control mt-3'
-                      onChange={formik.handleChange}
-                      value={formik.values.userName}
-                    />
-                    {formik.errors.userName && formik.touched.userName ? (
-                      <div className="text-danger w-75" role="alert">{formik.errors.userName}</div>
-                    ) : null}
-
-                    <label htmlFor="Email" className='mt-3 dark:tw-text-white'>{t('signUp.email.label')}</label>
-                    <input
-                      onBlur={formik.handleBlur}
-                      type="email"
-                      name='email'
-                      id='email'
-                      placeholder={t('signUp.email.placeholder')}
-                      className='w-100 form-control mt-3'
-                      onChange={formik.handleChange}
-                      value={formik.values.email}
-                    />
-                    {formik.errors.email && formik.touched.email ? (
-                      <div className="text-danger w-100" role="alert">{formik.errors.email}</div>
-                    ) : null}
-
-                    <label htmlFor="Phone" className='mt-3 dark:tw-text-white'>{t('signUp.phone.label')}</label>
-                    <input
-                      onBlur={formik.handleBlur}
-                      type="tel"
-                      name='phone'
-                      id='Phone'
-                      placeholder={t('signUp.phone.placeholder')}
-                      className='w-100 form-control mt-3'
-                      onChange={formik.handleChange}
-                      value={formik.values.phone}
-                    />
-                    {formik.errors.phone && formik.touched.phone ? (
-                      <div className="text-danger w-75" role="alert">{formik.errors.phone}</div>
-                    ) : null}
-
-                    <label htmlFor="password" className='mt-3 dark:tw-text-white'>{t('signUp.password.label')}</label>
-                    <input
-                      onBlur={formik.handleBlur}
-                      type="password"
-                      name='password'
-                      id='password'
-                      placeholder={t('signUp.password.placeholder')}
-                      className='w-100 form-control mt-3'
-                      onChange={formik.handleChange}
-                      value={formik.values.password}
-                    />
-                    {formik.errors.password && formik.touched.password ? (
-                      <div className="text-danger w-75" role="alert">{formik.errors.password}</div>
-                    ) : null}
-
-                    <label htmlFor="rePassword" className='mt-3 dark:tw-text-white'>{t('signUp.rePassword.label')}</label>
-                    <input
-                      onBlur={formik.handleBlur}
-                      type="password"
-                      name='rePassword'
-                      id='rePassword'
-                      placeholder={t('signUp.rePassword.placeholder')}
-                      className='w-100 form-control mt-3'
-                      onChange={formik.handleChange}
-                      value={formik.values.rePassword}
-                    />
-                    {formik.errors.rePassword && formik.touched.rePassword ? (
-                      <div className="text-danger w-75" role="alert">{formik.errors.rePassword}</div>
-                    ) : null}
-
-                    <button
-                      type='submit'
-                      disabled={!(formik.dirty && formik.isValid)}
-                      className='bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4'>
-                      {t('signUp.submit')}
-                    </button>
-
-                  </form>
-                </div>
               </div>
-            </motion.div>
-          </div>
+              <div className="col-lg-6 tw-bg-gray-100 dark:tw-bg-gray-900 rounded-3 py-3">
+                <form onSubmit={formik.handleSubmit}>
+                  {/* Username */}
+                  <label htmlFor="userName" className='mt-3 dark:tw-text-white'>{t('signUp.name.label')}</label>
+                  <input type="text" name="userName" id="userName" className="w-100 form-control mt-3"
+                    placeholder={t('signUp.name.placeholder')} onChange={formik.handleChange}
+                    onBlur={formik.handleBlur} value={formik.values.userName} />
+                  {formik.touched.userName && formik.errors.userName &&
+                    <div className="text-danger w-75" role="alert">{formik.errors.userName}</div>}
+
+                  {/* Email */}
+                  <label htmlFor="email" className='mt-3 dark:tw-text-white'>{t('signUp.email.label')}</label>
+                  <input type="email" name="email" id="email" className="w-100 form-control mt-3"
+                    placeholder={t('signUp.email.placeholder')} onChange={formik.handleChange}
+                    onBlur={formik.handleBlur} value={formik.values.email} />
+                  {formik.touched.email && formik.errors.email &&
+                    <div className="text-danger w-100" role="alert">{formik.errors.email}</div>}
+
+                  {/* Phone */}
+                  <label htmlFor="phone" className='mt-3 dark:tw-text-white'>{t('signUp.phone.label')}</label>
+                  <input type="tel" name="phone" id="phone" className="w-100 form-control mt-3"
+                    placeholder={t('signUp.phone.placeholder')} onChange={formik.handleChange}
+                    onBlur={formik.handleBlur} value={formik.values.phone} />
+                  {formik.touched.phone && formik.errors.phone &&
+                    <div className="text-danger w-75" role="alert">{formik.errors.phone}</div>}
+
+                  {/* Password */}
+                  <label htmlFor="password" className='mt-3 dark:tw-text-white'>{t('signUp.password.label')}</label>
+                  <input type="password" name="password" id="password" className="w-100 form-control mt-3"
+                    placeholder={t('signUp.password.placeholder')} onChange={formik.handleChange}
+                    onBlur={formik.handleBlur} value={formik.values.password} />
+                  {formik.touched.password && formik.errors.password &&
+                    <div className="text-danger w-75" role="alert">{formik.errors.password}</div>}
+
+                  {/* RePassword */}
+                  <label htmlFor="rePassword" className='mt-3 dark:tw-text-white'>{t('signUp.rePassword.label')}</label>
+                  <input type="password" name="rePassword" id="rePassword" className="w-100 form-control mt-3"
+                    placeholder={t('signUp.rePassword.placeholder')} onChange={formik.handleChange}
+                    onBlur={formik.handleBlur} value={formik.values.rePassword} />
+                  {formik.touched.rePassword && formik.errors.rePassword &&
+                    <div className="text-danger w-75" role="alert">{formik.errors.rePassword}</div>}
+
+                  {/* Submit */}
+                  <button type="submit" disabled={!(formik.dirty && formik.isValid) || loading}
+                    className="bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4">
+                    {loading ? <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> : null}
+                    {loading ? 'Creating account...' : t('signUp.submit')}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
-    </>
-  )
+    </div>
+  );
 }
