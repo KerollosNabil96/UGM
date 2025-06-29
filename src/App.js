@@ -29,6 +29,7 @@ import './i18n';
 import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import Messages from './components/messages/messages';
 
 function App() {
   let router = createBrowserRouter([
@@ -80,18 +81,29 @@ function App() {
         },
 
         // Admin-only routes (Admin or SuperAdmin)
-        { 
-          path: 'dashboard',
-          element: (
-            <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
-              <Dashboard />
-            </ProtectedRoute>
-          ),
-          children: [
-            { index: true, element: <Users /> },
-            { path: 'update-request', element: <UpdateReq /> },
-          ],
-        },
+      {
+  path: 'dashboard',
+  element: (
+    <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
+      <Dashboard />
+    </ProtectedRoute>
+  ),
+  children: [
+    { index: true, element: <Users /> },
+    { path: 'update-request', element: <UpdateReq /> },
+    {
+      path: 'messages',
+      element: (() => {
+        const role = localStorage.getItem('role');
+        if (role === 'SuperAdmin') {
+          return <Messages />;
+        } else {
+          return <NotFound />;
+        }
+      })(),
+    },
+  ],
+},
         { 
           path: 'servantInfo', 
           element: (

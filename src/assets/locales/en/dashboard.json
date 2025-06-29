@@ -2,6 +2,7 @@
     "dashboard": {
       "title": "Admin Dashboard",
       "users": "Users",
-      "updateRequests": "Update Requests"
+      "updateRequests": "Update Requests",
+      "messages" : "messages"
     }
   }

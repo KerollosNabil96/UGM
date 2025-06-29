@@ -2,6 +2,7 @@
     "dashboard": {
       "title": "لوحة التحكم",
       "users": "المستخدمين",
-      "updateRequests": "طلبات التحديث"
+      "updateRequests": "طلبات التحديث",
+      "messages": "الرسائل"
     }
   }
