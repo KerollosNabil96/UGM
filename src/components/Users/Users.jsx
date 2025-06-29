@@ -11,7 +11,7 @@ export default function Users() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const USERS_PER_PAGE = 5;
+  const USERS_PER_PAGE = 10;
 
   const fetchData = async () => {
     setLoading(true);

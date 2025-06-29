@@ -1,0 +1,20 @@
+.spinnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background-color: white;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 5px solid rgba(79, 70, 229, 0.3);
+    border-top-color: #4f46e5; /* indigo-600 */
+}
+
+.darkSpinner {
+    border-color: rgba(99, 102, 241, 0.3); /* indigo-500 with opacity */
+    border-top-color: #6366f1; /* indigo-500 */
+}

@@ -28,6 +28,7 @@ import DarkModeProvider from './Context/DarkModeContext';
 import './i18n';
 import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 function App() {
   let router = createBrowserRouter([
@@ -35,28 +36,96 @@ function App() {
       path: '/',
       element: <Layout />,
       children: [
+        // Public Routes (accessible without token)
         { index: true, element: <Home /> },
         { path: 'about', element: <About /> },
-        { path: 'kahoot-game', element: <Kahoot /> },
-        { path: 'Memories', element: <Memories /> },
         { path: 'events', element: <Events /> },
         { path: 'contact', element: <Contact /> },
-        {
+        { path: 'signin', element: <SignIn /> },
+        { path: 'signup', element: <SignUp /> },
+        { path: 'not-found', element: <NotFound /> },
+
+        // Protected Routes accessible to all authenticated users
+        { 
+          path: 'kahoot-game', 
+          element: (
+            <ProtectedRoute>
+              <Kahoot />
+            </ProtectedRoute>
+          ) 
+        },
+        { 
+          path: 'Memories', 
+          element: (
+            <ProtectedRoute>
+              <Memories />
+            </ProtectedRoute>
+          ) 
+        },
+        { 
+          path: 'settings', 
+          element: (
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          ) 
+        },
+        { 
+          path: 'profile', 
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ) 
+        },
+
+        // Admin-only routes (Admin or SuperAdmin)
+        { 
           path: 'dashboard',
-          element: <Dashboard />,
+          element: (
+            <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
+              <Dashboard />
+            </ProtectedRoute>
+          ),
           children: [
             { index: true, element: <Users /> },
             { path: 'update-request', element: <UpdateReq /> },
           ],
         },
-        { path: 'servantInfo', element: <ServantInfo /> },
-        { path: 'ServantList', element: <ServantList /> },
-        { path: 'ServantList/ServantDetails/:id', element: <ServantDetails /> },
-        { path: 'share-Event', element: <ShareEvent /> },
-        { path: 'settings', element: <Settings /> },
-        { path: 'profile', element: <Profile /> },
-        { path: 'signin', element: <SignIn /> },
-        { path: 'signup', element: <SignUp /> },
+        { 
+          path: 'servantInfo', 
+          element: (
+            <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
+              <ServantInfo />
+            </ProtectedRoute>
+          ) 
+        },
+        { 
+          path: 'ServantList', 
+          element: (
+            <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
+              <ServantList />
+            </ProtectedRoute>
+          ) 
+        },
+        { 
+          path: 'ServantList/ServantDetails/:id', 
+          element: (
+            <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
+              <ServantDetails />
+            </ProtectedRoute>
+          ) 
+        },
+        { 
+          path: 'share-Event', 
+          element: (
+            <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
+              <ShareEvent />
+            </ProtectedRoute>
+          ) 
+        },
+
+        // 404 Page
         { path: '*', element: <NotFound /> },
       ],
     },

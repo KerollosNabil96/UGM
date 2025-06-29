@@ -43,7 +43,7 @@ export default function Dashboard() {
     </button>
   </div>
 </nav>
-        <div className={`col-2 bg-main ${styles.sideHidden} dark:tw-bg-gray-900` } style={{minHeight:'80vh' }}>
+        <div className={`col-2 bg-main  ${styles.sideHidden} dark:tw-bg-gray-900` } style={{minHeight:'80vh' }}>
           <h4 className='text-white my-4'> {t('dashboard.title')}</h4>
         <ul class="nav flex-column  w-100 bg-main dark:tw-bg-gray-900 h-100">
   <li class="nav-item">
