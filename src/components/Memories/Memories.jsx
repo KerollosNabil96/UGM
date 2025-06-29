@@ -21,7 +21,7 @@ export default function Memories() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         setAuthenticated(!!token);
-        const timer = setTimeout(() => setLoading(false), 800);
+        const timer = setTimeout(() => setLoading(false), 0);
         return () => clearTimeout(timer);
     }, []);
 
@@ -43,7 +43,7 @@ export default function Memories() {
                 >
                     <div className="container">
                         <div className="row">
-                            <h1 className='mt-5 fw-bold text-purple-600 dark:text-purple-400 text-center tw-text-3xl'>
+                            <h1 className='mt-5 fw-bold mainColor dark:tw-text-indigo-600 text-center tw-text-3xl'>
                                 {t('pageTitle')}
                             </h1>
 
@@ -51,18 +51,18 @@ export default function Memories() {
                                 <input 
                                     type="text" 
                                     placeholder={t('searchPlaceholder')} 
-                                    className='w-input border-0 tw-py-3 tw-px-4 me-2 rounded-2 dark:tw-bg-gray-700 dark:tw-text-white focus:tw-ring-2 focus:tw-ring-purple-500' 
+                                    className='w-input border-0 tw-py-3 tw-px-4 me-2 rounded-2 dark:tw-bg-gray-700 dark:tw-text-white focus:tw-ring-2 focus:tw-ring-indigo-500' 
                                 />
                                 <select 
                                     id="options" 
-                                    className='tw-py-3 tw-px-4 w-Drop me-3 my-2 border-0 rounded-2 dark:tw-bg-gray-700 dark:tw-text-white focus:tw-ring-2 focus:tw-ring-purple-500' 
+                                    className='tw-py-3 tw-px-4 w-Drop me-3 my-2 border-0 rounded-2 dark:tw-bg-gray-700 dark:tw-text-white focus:tw-ring-2 focus:tw-ring-indigo-500' 
                                     name="options"
                                 >
                                     <option value="All Categories" selected>{t('allCategories')}</option>
                                     <option value="Events">{t('events')}</option>
                                     <option value="Trip">{t('trip')}</option>
                                 </select>
-                                <button className='tw-bg-purple-600 hover:tw-bg-purple-700 tw-transition-colors btn text-white tw-px-7 tw-py-3 dark:tw-bg-purple-500 dark:hover:tw-bg-purple-600 tw-rounded-3'>
+                                <button className='bg-main hover:tw-bg-indigo-700 tw-transition-colors btn text-white tw-px-7 tw-py-3 dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700 tw-rounded-3'>
                                     {t('searchButton')}
                                 </button>
                             </div>
@@ -76,18 +76,18 @@ export default function Memories() {
                                     >
                                         <img src={siwa} className="card-img-top tw-w-full tw-h-[450px] tw-object-cover" alt="Siwa" />
                                         <div className="card-body tw-p-5">
-                                            <h5 className="card-title tw-text-purple-600 dark:tw-text-purple-400 tw-text-xl tw-font-semibold">
+                                            <h5 className="card-title mainColor dark:tw-text-indigo-600 tw-text-xl tw-font-semibold">
                                                 {t('cards.0.title')}
                                             </h5>
                                             <div className={`${styles.parent} ${isRTL ? styles.pad2 : styles.pad}`}>
                                                 <div className="card-end d-flex justify-content-between tw-mt-4">
                                                     <div className="card-date tw-flex tw-items-center">
-                                                        <span className="tw-text-gray-500 dark:tw-text-gray-300">
+                                                        <span className="tw-text-gray-500 dark:tw-text-white">
                                                             {t('cards.0.date')}
                                                         </span>
                                                     </div>
                                                     <div className="card-btn">
-                                                        <button className="tw-bg-purple-600 hover:tw-bg-purple-700 tw-transition-colors text-white tw-w-full tw-px-7 dark:tw-bg-purple-500 dark:hover:tw-bg-purple-600 tw-py-2 tw-rounded-3">
+                                                        <button className="bg-main hover:tw-bg-indigo-700 rounded-3 tw-transition-colors text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700 tw-py-2 tw-rounded-3">
                                                             {t('cards.0.button')}
                                                         </button>
                                                     </div>
@@ -105,18 +105,18 @@ export default function Memories() {
                                     >
                                         <img src={der} className="card-img-top tw-w-full tw-h-[450px] tw-object-cover" alt="Der" />
                                         <div className="card-body tw-p-5">
-                                            <h5 className="card-title tw-text-purple-600 dark:tw-text-purple-400 tw-text-xl tw-font-semibold">
+                                            <h5 className="card-title mainColor dark:tw-text-indigo-600 tw-text-xl tw-font-semibold">
                                                 {t('cards.1.title')}
                                             </h5>
                                             <div className={`${styles.parent} ${isRTL ? styles.pad2 : styles.pad}`}>
                                                 <div className="card-end d-flex justify-content-between tw-mt-4">
                                                     <div className="card-date tw-flex tw-items-center">
-                                                        <span className='dark:tw-text-gray-300 tw-text-gray-500'>
+                                                        <span className='tw-text-gray-500 dark:tw-text-white'>
                                                             {t('cards.1.date')}
                                                         </span>
                                                     </div>
                                                     <div className="card-btn">
-                                                        <button className="tw-bg-purple-600 hover:tw-bg-purple-700 tw-transition-colors text-white tw-w-full tw-px-7 dark:tw-bg-purple-500 dark:hover:tw-bg-purple-600 tw-py-2 tw-rounded-3">
+                                                        <button className="bg-main hover:tw-bg-indigo-700 rounded-3 tw-transition-colors text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700 tw-py-2 tw-rounded-3">
                                                             {t('cards.1.button')}
                                                         </button>
                                                     </div>
@@ -134,18 +134,18 @@ export default function Memories() {
                                     >
                                         <img src={maria} className="card-img-top tw-w-full tw-h-[450px] tw-object-cover" alt="Maria" />
                                         <div className="card-body tw-p-5">
-                                            <h5 className="card-title tw-text-purple-600 dark:tw-text-purple-400 tw-text-xl tw-font-semibold">
+                                            <h5 className="card-title mainColor dark:tw-text-indigo-600 tw-text-xl tw-font-semibold">
                                                 {t('cards.2.title')}
                                             </h5>
                                             <div className={`${styles.parent} ${isRTL ? styles.pad2 : styles.pad}`}>
                                                 <div className="card-end d-flex justify-content-between tw-mt-4">
                                                     <div className="card-date tw-flex tw-items-center">
-                                                        <span className='tw-text-gray-500 dark:tw-text-gray-300'>
+                                                        <span className='tw-text-gray-500 dark:tw-text-white'>
                                                             {t('cards.2.date')}
                                                         </span>
                                                     </div>
                                                     <div className="card-btn">
-                                                        <button className="tw-bg-purple-600 hover:tw-bg-purple-700 tw-transition-colors text-white tw-w-full tw-px-7 dark:tw-bg-purple-500 dark:hover:tw-bg-purple-600 tw-py-2 tw-rounded-3">
+                                                        <button className="bg-main hover:tw-bg-indigo-700 rounded-3 tw-transition-colors text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700 tw-py-2 tw-rounded-3">
                                                             {t('cards.2.button')}
                                                         </button>
                                                     </div>
@@ -163,18 +163,18 @@ export default function Memories() {
                                     >
                                         <img src={afri} className="card-img-top tw-w-full tw-h-[450px] tw-object-cover" alt="Africa" />
                                         <div className="card-body tw-p-5">
-                                            <h5 className="card-title tw-text-purple-600 dark:tw-text-purple-400 tw-text-xl tw-font-semibold">
+                                            <h5 className="card-title mainColor dark:tw-text-indigo-600 tw-text-xl tw-font-semibold">
                                                 {t('cards.3.title')}
                                             </h5>
                                             <div className={`${styles.parent} ${isRTL ? styles.pad2 : styles.pad}`}>
                                                 <div className="card-end d-flex justify-content-between tw-mt-4">
                                                     <div className="card-date tw-flex tw-items-center">
-                                                        <span className='tw-text-gray-500 dark:tw-text-gray-300'>
+                                                        <span className='tw-text-gray-500 dark:tw-text-white'>
                                                             {t('cards.3.date')}
                                                         </span>
                                                     </div>
                                                     <div className="card-btn">
-                                                        <button className="tw-bg-purple-600 hover:tw-bg-purple-700 tw-transition-colors text-white tw-w-full tw-px-7 dark:tw-bg-purple-500 dark:hover:tw-bg-purple-600 tw-py-2 tw-rounded-3">
+                                                        <button className="bg-main hover:tw-bg-indigo-700 rounded-3 tw-transition-colors text-white tw-w-full tw-px-7 dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700 tw-py-2 tw-rounded-3">
                                                             {t('cards.3.button')}
                                                         </button>
                                                     </div>

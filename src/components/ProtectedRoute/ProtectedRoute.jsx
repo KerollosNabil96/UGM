@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Spinner from '../Spinner/Spinner';
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-    const [authStatus, setAuthStatus] = useState('checking'); // checking, authenticated, unauthenticated
+    const [authStatus, setAuthStatus] = useState('checking'); 
     const [userRole, setUserRole] = useState(null);
 
     useEffect(() => {

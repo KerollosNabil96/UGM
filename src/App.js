@@ -36,7 +36,7 @@ function App() {
       path: '/',
       element: <Layout />,
       children: [
-        // Public Routes (accessible without token)
+        // Public Routes for all users
         { index: true, element: <Home /> },
         { path: 'about', element: <About /> },
         { path: 'events', element: <Events /> },
