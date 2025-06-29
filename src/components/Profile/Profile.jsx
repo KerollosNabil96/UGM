@@ -9,6 +9,8 @@ export default function Profile() {
   const { darkMode } = useContext(darkModeContext);
         const { i18n } = useTranslation();
         const isRTL = i18n.language === 'ar';
+            const userName = localStorage.getItem('userName');
+
   
 
   return <>
@@ -24,7 +26,7 @@ export default function Profile() {
   <h1 className='text-center  mainColor dark:tw-text-indigo-600 mt-2 fw-bolder pt-4'>Profile</h1>
   <p className='text-center mb-4  fs-4 tw-text-gray-600 dark:tw-text-white text-sm'>In this section, you can view your wallet and the trips or events you have booked.</p>
   <div className={`${styles.shad} row  w-100 mx-auto rounded-4 p-3 my-4`}>
-    <h2 className='mainColor dark:tw-text-indigo-600'>Hello , <span className='tw-text-black dark:tw-text-white'>Kerollos</span>!</h2>
+    <h2 className='mainColor dark:tw-text-indigo-600'>Hello , <span className='tw-text-black dark:tw-text-white'>{userName}</span>!</h2>
     <p className='tw-text-gray-500 fs-4 dark:tw-text-white '>Have a nice day!</p>
     <div className={`${styles.line} ` }></div>
     <h2 className='mt-4 fw-bold dark:tw-text-white'>Your Wallet :</h2>

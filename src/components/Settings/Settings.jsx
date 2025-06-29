@@ -14,6 +14,7 @@ export default function Settings() {
     const isRTL = i18n.language === 'ar';
     const [shouldRedirect, setShouldRedirect] = useState(false);
 
+
     // 2. تعريف useFormik في الأعلى قبل أي شروط
     const daysOfWeek = [
         'Saturday',

@@ -32,6 +32,7 @@ export default function Navbar() {
   };
 
   const role = localStorage.getItem('role');
+  const userName = localStorage.getItem('userName');
   const isAdmin = role === 'Admin' || role === 'SuperAdmin';
 
   return (
@@ -57,51 +58,51 @@ export default function Navbar() {
           <div ref={collapseRef} className="collapse navbar-collapse smooth-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav justify-content-center mb-2 mb-lg-0" style={{ width: '100%' }}>
               <li className="nav-item">
-                <NavLink to="/" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                <NavLink to="/" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                   {t('navbar.links.home')}
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/about" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                <NavLink to="/about" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                   {t('navbar.links.about')}
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/contact" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                <NavLink to="/contact" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                   {t('navbar.links.contact')}
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/events" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                <NavLink to="/events" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                   {t('navbar.links.events')}
                 </NavLink>
               </li>
               {token && (
                 <>
                   <li className="nav-item">
-                    <NavLink to="/kahoot-game" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                    <NavLink to="/kahoot-game" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                       {t('navbar.links.kahoot')}
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink to="/Memories" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                    <NavLink to="/Memories" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                       {t('navbar.links.memories')}
                     </NavLink>
                   </li>
                   {isAdmin && (
                     <>
                       <li className="nav-item">
-                        <NavLink to="/servantInfo" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                        <NavLink to="/servantInfo" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                           {t('navbar.links.servantInfo')}
                         </NavLink>
                       </li>
                       <li className="nav-item">
-                        <NavLink to="/ServantList" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                        <NavLink to="/ServantList" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                           {t('navbar.links.servantList')}
                         </NavLink>
                       </li>
                       <li className="nav-item">
-                        <NavLink to="/share-event" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                        <NavLink to="/share-event" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                           {t('navbar.links.shareEvent')}
                         </NavLink>
                       </li>
@@ -130,12 +131,12 @@ export default function Navbar() {
               {!token ? (
                 <div className={`tw-flex tw-items-center tw-gap-3 tw-flex-nowrap ${isRTL ? 'tw-min-w-[220px]' : ''}`}>
                   <li className="nav-item">
-                    <NavLink to="/signin" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                    <NavLink to="/signin" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                       {t('navbar.links.signIn')}
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink to="/signup" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link active text-white'}>
+                    <NavLink to="/signup" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                       {t('navbar.links.signUp')}
                     </NavLink>
                   </li>
@@ -144,12 +145,21 @@ export default function Navbar() {
                 <li className="nav-item dropdown position-relative">
                   <button
                     type="button"
-                    className="btn bg-main dark:tw-bg-gray-900 text-white border border-1 dropdown-toggle"
+                    className="btn bg-main dark:tw-bg-gray-900 text-white border border-1 dropdown-toggle tw-flex tw-items-center tw-gap-2"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                     style={{ width: '170px' }}
                   >
-                    {t('navbar.userDropdown.username')}
+                    <div
+                      className={`tw-rounded-full tw-w-7 tw-h-7 tw-flex tw-items-center tw-justify-center tw-text-sm fw-bold
+                        ${darkMode 
+                          ? 'tw-bg-indigo-400 tw-text-white' 
+                          : 'tw-bg-white tw-text-[#0d6efd]'
+                        }`}
+                    >
+                      {userName?.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="tw-truncate tw-text-start" style={{ maxWidth: '100px' }}>{userName}</span>
                   </button>
                   <ul className={`dropdown-menu dropdown-menu-end dark:tw-bg-gray-800`}>
                     {role !== 'User' && (
