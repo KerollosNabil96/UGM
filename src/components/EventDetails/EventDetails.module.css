@@ -1,0 +1,21 @@
+.img-large {
+  height: 600px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.img-small {
+  height: 300px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* نفس الطول في الموبايل */
+@media (max-width: 768px) {
+  .img-large,
+  .img-small {
+    height: 500px;
+  }
+}

@@ -19,6 +19,7 @@ import Settings from './components/Settings/Settings';
 import Profile from './components/Profile/Profile';
 import AnimatedCircle from './components/AnimatedCircle/AnimatedCircle';
 import ShareEvent from './components/ShareEvent/ShareEvent';
+import EventDetails from './components/EventDetails/EventDetails';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,7 +33,7 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Messages from './components/messages/messages';
 
 function App() {
-  let router = createBrowserRouter([
+  const router = createBrowserRouter([
     {
       path: '/',
       element: <Layout />,
@@ -41,100 +42,101 @@ function App() {
         { index: true, element: <Home /> },
         { path: 'about', element: <About /> },
         { path: 'events', element: <Events /> },
+        { path: 'event/:id', element: <EventDetails /> }, // ✅ متاحة لكل الناس
         { path: 'contact', element: <Contact /> },
         { path: 'signin', element: <SignIn /> },
         { path: 'signup', element: <SignUp /> },
         { path: 'not-found', element: <NotFound /> },
 
         // Protected Routes accessible to all authenticated users
-        { 
-          path: 'kahoot-game', 
+        {
+          path: 'kahoot-game',
           element: (
             <ProtectedRoute>
               <Kahoot />
             </ProtectedRoute>
-          ) 
+          ),
         },
-        { 
-          path: 'Memories', 
+        {
+          path: 'Memories',
           element: (
             <ProtectedRoute>
               <Memories />
             </ProtectedRoute>
-          ) 
+          ),
         },
-        { 
-          path: 'settings', 
+        {
+          path: 'settings',
           element: (
             <ProtectedRoute>
               <Settings />
             </ProtectedRoute>
-          ) 
+          ),
         },
-        { 
-          path: 'profile', 
+        {
+          path: 'profile',
           element: (
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
-          ) 
+          ),
         },
 
         // Admin-only routes (Admin or SuperAdmin)
-      {
-  path: 'dashboard',
-  element: (
-    <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
-      <Dashboard />
-    </ProtectedRoute>
-  ),
-  children: [
-    { index: true, element: <Users /> },
-    { path: 'update-request', element: <UpdateReq /> },
-    {
-      path: 'messages',
-      element: (() => {
-        const role = localStorage.getItem('role');
-        if (role === 'SuperAdmin') {
-          return <Messages />;
-        } else {
-          return <NotFound />;
-        }
-      })(),
-    },
-  ],
-},
-        { 
-          path: 'servantInfo', 
+        {
+          path: 'dashboard',
+          element: (
+            <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
+              <Dashboard />
+            </ProtectedRoute>
+          ),
+          children: [
+            { index: true, element: <Users /> },
+            { path: 'update-request', element: <UpdateReq /> },
+            {
+              path: 'messages',
+              element: (() => {
+                const role = localStorage.getItem('role');
+                if (role === 'SuperAdmin') {
+                  return <Messages />;
+                } else {
+                  return <NotFound />;
+                }
+              })(),
+            },
+          ],
+        },
+        {
+          path: 'servantInfo',
           element: (
             <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
               <ServantInfo />
             </ProtectedRoute>
-          ) 
+          ),
         },
-        { 
-          path: 'ServantList', 
+        {
+          path: 'ServantList',
           element: (
             <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
               <ServantList />
             </ProtectedRoute>
-          ) 
+          ),
         },
-        { 
-          path: 'ServantList/ServantDetails/:id', 
+        {
+          path: 'ServantList/ServantDetails/:id',
           element: (
             <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
               <ServantDetails />
             </ProtectedRoute>
-          ) 
+          ),
         },
-        { 
-          path: 'share-Event', 
+        {
+          path: 'share-Event',
           element: (
             <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
               <ShareEvent />
             </ProtectedRoute>
-          ) 
+          ),
         },
 
         // 404 Page

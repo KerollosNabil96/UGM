@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
@@ -9,6 +9,9 @@ import "leaflet/dist/leaflet.css";
 import styles from "./ShareEvent.module.css";
 import { darkModeContext } from '../../Context/DarkModeContext';
 import axios from "axios";
+import toast from 'react-hot-toast';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 
 export default function VenueForm() {
   const { t } = useTranslation('shareEvent');
@@ -22,6 +25,11 @@ export default function VenueForm() {
   const { i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
 
+  const fileInputsRef = [
+    useRef(null),
+    useRef(null),
+    useRef(null),
+  ];
 
   const formik = useFormik({
     initialValues: {
@@ -34,6 +42,7 @@ export default function VenueForm() {
       date: "",
       shortDescription: "",
       fullDescription: "",
+      images: Array(3).fill(null)
     },
     validationSchema: Yup.object({
       category: Yup.string()
@@ -44,6 +53,7 @@ export default function VenueForm() {
       address: Yup.string()
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.address') })),
       price: Yup.number()
+        .typeError(t('shareEvent.validation.required', { field: t('shareEvent.form.price') }))
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.price') }))
         .min(0, t('shareEvent.validation.negativePrice')),
       phone: Yup.string()
@@ -52,6 +62,7 @@ export default function VenueForm() {
       responsiblePerson: Yup.string()
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.responsiblePerson') })),
       date: Yup.date()
+        .typeError(t('shareEvent.validation.required', { field: t('shareEvent.form.date') }))
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.date') })),
       shortDescription: Yup.string()
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.shortDescription') }))
@@ -59,19 +70,124 @@ export default function VenueForm() {
       fullDescription: Yup.string()
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.fullDescription') })),
       images: Yup.array()
-        .of(Yup.mixed().required(t('shareEvent.validation.required', { field: t('shareEvent.form.images.label') })))
+        .of(Yup.string().required(t('shareEvent.validation.required', { field: t('shareEvent.form.images.label') })))
+        .required(t('shareEvent.validation.minImages'))
         .min(3, t('shareEvent.validation.minImages'))
         .max(3, t('shareEvent.validation.maxImages'))
     }),
-    onSubmit: async (values) => {
-      const formData = {
-        ...values,
-        images: imageFiles.filter(img => img !== null),
-      };
-      console.log(formData);
-      let res = await axios.post(`http://localhost:3001/events`, values)
-    },
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error(t('shareEvent.authError'));
+          setSubmitting(false);
+          return;
+        }
+
+        const res = await axios.post(
+          'https://ugmproject.vercel.app/api/v1/event/addEvent',
+          values,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            }
+          }
+        );
+
+        console.log(res)
+
+
+
+        toast.success(t('shareEvent.successMessage'));
+        resetForm();
+        setImages(Array(3).fill(null));
+        setImageFiles(Array(3).fill(null));
+
+        fileInputsRef.forEach(ref => {
+          if (ref.current) {
+            ref.current.value = null;
+          }
+        });
+      } catch (error) {
+          console.log("Submission Error:", error.response?.data || error.message || error);
+        toast.error(t('shareEvent.errorOccurred'));
+      } finally {
+        setSubmitting(false);
+      }
+    }
   });
+
+  const checkFormCompletion = () => {
+    const errors = {};
+    Object.keys(formik.values).forEach(key => {
+      if (!formik.values[key] || 
+          (Array.isArray(formik.values[key]) && formik.values[key].some(item => !item))) {
+        errors[key] = true;
+      }
+    });
+    
+    return {
+      isComplete: Object.keys(errors).length === 0,
+      missingFields: errors
+    };
+  };
+
+  const { isComplete, missingFields } = checkFormCompletion();
+
+  const getTooltipContent = () => {
+    if (isComplete) return '';
+    
+    const missingFieldsList = [];
+    
+    if (missingFields.eventName) missingFieldsList.push(t('shareEvent.form.eventName'));
+    if (missingFields.category) missingFieldsList.push(t('shareEvent.form.category.label'));
+    if (missingFields.address) missingFieldsList.push(t('shareEvent.form.address'));
+    if (missingFields.price) missingFieldsList.push(t('shareEvent.form.price'));
+    if (missingFields.phone) missingFieldsList.push(t('shareEvent.form.phone'));
+    if (missingFields.responsiblePerson) missingFieldsList.push(t('shareEvent.form.responsiblePerson'));
+    if (missingFields.date) missingFieldsList.push(t('shareEvent.form.date'));
+    if (missingFields.shortDescription) missingFieldsList.push(t('shareEvent.form.shortDescription'));
+    if (missingFields.fullDescription) missingFieldsList.push(t('shareEvent.form.fullDescription'));
+    if (missingFields.images) missingFieldsList.push(t('shareEvent.form.images.label'));
+    
+    return (
+      <div className="tw-text-sm">
+        <p className="tw-font-bold tw-mb-1">{t('shareEvent.validation.missingFields')}</p>
+        <ul className="tw-list-disc tw-pl-4">
+          {missingFieldsList.map((field, index) => (
+            <li key={index}>{field}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const errors = await formik.validateForm();
+
+    if (Object.keys(errors).length > 0) {
+      formik.setTouched({
+        eventName: true,
+        category: true,
+        address: true,
+        price: true,
+        phone: true,
+        responsiblePerson: true,
+        date: true,
+        shortDescription: true,
+        fullDescription: true,
+        images: [true, true, true],
+      });
+
+      toast.error(t('shareEvent.validation.requiredFields') || "Please fill all required fields correctly");
+      return;
+    }
+
+    formik.handleSubmit();
+  };
 
   async function fetchAddress(lat, lng) {
     try {
@@ -115,7 +231,7 @@ export default function VenueForm() {
   function handleImageUpload(index, event) {
     const file = event.target.files[0];
     if (!file) return;
-    
+
     if (!file.type.match('image.*')) {
       alert(t('shareEvent.imageTypeError'));
       return;
@@ -126,17 +242,25 @@ export default function VenueForm() {
       return;
     }
 
-    const newImages = [...images];
-    const newImageFiles = [...imageFiles];
-    
-    newImages[index] = URL.createObjectURL(file);
-    newImageFiles[index] = file;
-    
-    setImages(newImages);
-    setImageFiles(newImageFiles);
-    
-    formik.setFieldTouched(`images[${index}]`, true);
-    formik.setFieldValue("images", newImageFiles);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const newImages = [...images];
+      const newImageFiles = [...imageFiles];
+
+      newImages[index] = URL.createObjectURL(file);
+      newImageFiles[index] = e.target.result;
+
+      setImages(newImages);
+      setImageFiles(newImageFiles);
+
+      formik.setFieldTouched(`images[${index}]`, true);
+      formik.setFieldValue(`images[${index}]`, e.target.result);
+
+      if (fileInputsRef[index] && fileInputsRef[index].current) {
+        fileInputsRef[index].current.value = null;
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   function handleAddressChange(e) {
@@ -155,9 +279,9 @@ export default function VenueForm() {
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
       <div className="container-fluid dark:tw-bg-gray-800 py-4">
         <motion.div
-            initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
-          animate={{ opacity: 1, x: 0 }}     
-          transition={{ duration: 1 }}  
+          initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
         >
           <h1 className="text-center mainColor dark:tw-text-indigo-600 mt-2 fw-bolder">
             {t('shareEvent.title')}
@@ -167,7 +291,7 @@ export default function VenueForm() {
           </p>
 
           <div className={`tw-bg-gray-100 dark:tw-bg-gray-900 tw-text-gray-900 dark:tw-text-gray-100 tw-p-8 w-75 tw-mx-auto tw-rounded-lg ${styles.shad}`}>
-            <form onSubmit={formik.handleSubmit} className="tw-space-y-4">
+            <form onSubmit={handleFormSubmit} className="tw-space-y-4">
               {/* Event Name */}
               <div>
                 <input
@@ -362,110 +486,86 @@ export default function VenueForm() {
               {/* Event Images */}
               <div className="tw-space-y-3 tw-pt-2">
                 {[0, 1, 2].map((index) => (
-                  <div key={index} className="tw-bg-white dark:tw-bg-gray-800 rounded-3 tw-p-4 tw-text-center tw-border tw-border-gray-300 dark:tw-border-gray-600">
-                    {images[index] ? (
-                      <>
-                        <img 
-                          src={images[index]} 
-                          alt={`${t('shareEvent.event')} ${index + 1}`} 
-                          className="tw-w-full tw-h-24 tw-object-cover rounded-3 tw-mb-2" 
-                        />
-                        {formik.touched.images?.[index] && formik.errors.images?.[index] && (
-                          <div className="tw-text-red-500 tw-text-sm">{formik.errors.images[index]}</div>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <p className="tw-mb-2 tw-text-gray-500 dark:tw-text-gray-300">
-                          {index === 0 ? t('shareEvent.form.images.first') : 
-                           index === 1 ? t('shareEvent.form.images.second') : 
-                           t('shareEvent.form.images.third')}
-                        </p>
-                        {formik.touched.images?.[index] && formik.errors.images?.[index] && (
-                          <div className="tw-text-red-500 tw-text-sm">{formik.errors.images[index]}</div>
-                        )}
-                      </>
-                    )}
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={(e) => handleImageUpload(index, e)} 
-                      className="tw-hidden" 
-                      id={`eventImage${index}`} 
+                  <div key={index} className="tw-relative tw-border tw-rounded tw-p-2 tw-bg-white dark:tw-bg-gray-800">
+                    <input
+                      type="file"
+                      ref={fileInputsRef[index]}
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(index, e)}
+                      hidden
+                      id={`image-input-${index}`}
                     />
-                    <label 
-                      htmlFor={`eventImage${index}`} 
-                      className={`tw-inline-block dark:tw-bg-indigo-600 tw-px-4 tw-py-2 bg-main rounded-3 tw-cursor-pointer ${images[index] ? "tw-bg-gray-200 hover:tw-bg-gray-300" : "tw-bg-blue-500 hover:tw-bg-blue-600"} tw-transition tw-text-white`}
+                    <label
+                      htmlFor={`image-input-${index}`}
+                      className="tw-block tw-text-center tw-py-3 tw-cursor-pointer tw-text-indigo-600 dark:tw-text-indigo-400 tw-border tw-border-indigo-600 dark:tw-border-indigo-400 tw-rounded hover:tw-bg-indigo-100 dark:hover:tw-bg-indigo-900"
                     >
-                      {images[index] ? t('shareEvent.form.images.change') : t('shareEvent.form.images.select')}
+                      {images[index] ? (
+                        <img
+                          src={images[index]}
+                          alt={`event-img-${index}`}
+                          className="tw-w-full tw-h-40 tw-object-cover tw-rounded"
+                        />
+                      ) : (
+                        t('shareEvent.form.images.selectImage') 
+                      )}
                     </label>
+                    {formik.touched.images && formik.errors.images && (
+                      <div className="tw-text-red-500 tw-text-sm tw-mt-1">
+                        {typeof formik.errors.images === 'string'
+                          ? formik.errors.images
+                          : formik.errors.images.find((msg) => !!msg)}
+                      </div>
+                    )}
                   </div>
                 ))}
-                {formik.touched.images && typeof formik.errors.images === 'string' && (
-                  <div className="tw-text-red-500 tw-text-sm">{formik.errors.images}</div>
-                )}
               </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className={`tw-w-full tw-mt-6 tw-p-3 bg-main dark:tw-bg-indigo-600 rounded-3 tw-font-bold tw-transition tw-text-white ${!allImagesUploaded ? 'tw-opacity-50 tw-cursor-not-allowed' : ''}`}
-                disabled={!allImagesUploaded || formik.isSubmitting}
-              >
-                {formik.isSubmitting ? t('shareEvent.form.submitting') : t('shareEvent.form.submit')}
-                {!allImagesUploaded && (
-                  <div className="tw-text-xs tw-mt-1">
-                    {t('shareEvent.form.uploadAll')}
-                  </div>
-                )}
-              </button>
+              <div className="tw-flex tw-justify-center tw-mt-4">
+                <button
+                  type="submit"
+                  disabled={!isComplete || formik.isSubmitting}
+                  className={`tw-bg-[#4B0082]  w-100 tw-text-white tw-py-3 tw-px-6 tw-rounded tw-border-none tw-font-medium ${!isComplete || formik.isSubmitting ? "tw-cursor-not-allowed tw-opacity-60" : "tw-cursor-pointer hover:tw-bg-[#3a0063]"}`}
+                  data-tooltip-id="submit-tooltip"
+                  data-tooltip-place="top"
+                  data-tooltip-variant={darkMode ? "dark" : "light"}
+                >
+                  {formik.isSubmitting ? t('shareEvent.loading') : t('shareEvent.submit')}
+                </button>
+
+                <Tooltip id="submit-tooltip" className="tw-max-w-xs">
+                  {getTooltipContent()}
+                </Tooltip>
+              </div>
             </form>
-
-            {/* Location Modal */}
-            {locationModal && (
-              <div className="tw-fixed tw-inset-0 tw-bg-black/50 tw-flex tw-items-center tw-justify-center tw-z-50 tw-p-4">
-                <div className="tw-bg-white dark:tw-bg-gray-800 tw-p-6 tw-rounded-lg tw-w-full tw-max-w-md shad">
-                  <div className="tw-flex tw-justify-between tw-items-center tw-mb-4">
-                    <h3 className="tw-text-lg tw-font-bold dark:tw-text-white">
-                      {t('shareEvent.form.locationModal.title')}
-                    </h3>
-                    <button 
-                      onClick={() => setLocationModal(false)}
-                      className="tw-text-gray-500 dark:tw-bg-indigo-600 dark:tw-text-white hover:tw-text-gray-700 dark:hover:tw-text-gray-300 tw-text-xl"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <MapContainer 
-                    center={position} 
-                    zoom={13} 
-                    className="tw-h-64 tw-w-full tw-mb-4 tw-rounded tw-border tw-border-gray-300 dark:tw-border-gray-600"
-                    scrollWheelZoom={false}
-                  >
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    <LocationMarker />
-                  </MapContainer>
-                  <div className="tw-space-y-2">
-                    <button
-                      type="button"
-                      onClick={getUserLocation}
-                      className="tw-w-full tw-p-2 dark:tw-bg-indigo-600 bg-main tw-rounded tw-transition tw-text-white"
-                    >
-                      {t('shareEvent.form.locationModal.useMyLocation')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setLocationModal(false)}
-                      className="tw-w-full tw-p-2 tw-bg-green-500 hover:tw-bg-green-600 tw-rounded tw-transition tw-text-white"
-                    >
-                      {t('shareEvent.form.locationModal.confirmLocation')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </motion.div>
+
+        {/* Location Modal */}
+        {locationModal && (
+          <div className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+            <div className="tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-p-4 tw-w-96">
+              <button
+                onClick={() => setLocationModal(false)}
+                className="tw-text-red-600 tw-font-bold tw-text-xl tw-absolute tw-top-2 tw-right-4"
+              >
+                &times;
+              </button>
+              <MapContainer center={position} zoom={13} style={{ height: "300px", width: "100%" }}>
+                <TileLayer
+                  attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <LocationMarker />
+              </MapContainer>
+              <button
+                onClick={getUserLocation}
+                className="btn btn-secondary tw-mt-3 w-full"
+              >
+                {t('shareEvent.form.locationModal.getMyLocation')}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
