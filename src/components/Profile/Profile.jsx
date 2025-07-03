@@ -30,7 +30,7 @@ export default function Profile() {
     <p className='tw-text-gray-500 fs-4 dark:tw-text-white '>Have a nice day!</p>
     <div className={`${styles.line} ` }></div>
     <h2 className='mt-4 fw-bold dark:tw-text-white'>Your Wallet :</h2>
-    <h3 className='mt-3 fw-semibold dark:tw-text-white'>Your Available Balance : <span className=' fw-medium'> 15 EGP</span> </h3>
+    <h3 className='mt-3 fw-semibold dark:tw-text-white'>Your Available Balance : <span className=' fw-medium'> 0 EGP</span> </h3>
     <div className={`${styles.line2} mt-3`}></div>
     <h2 className='mt-4 fw-bold dark:tw-text-white'>Booking List :</h2>
 
