@@ -5,7 +5,7 @@
     background-size: cover;
     background-position: center;
     width: 100%;
-    min-height: 340px; 
+    min-height: 100%; 
     position: relative;
   }
 
