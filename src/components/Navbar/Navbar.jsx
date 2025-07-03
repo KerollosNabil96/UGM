@@ -106,6 +106,11 @@ export default function Navbar() {
                           {t('navbar.links.shareEvent')}
                         </NavLink>
                       </li>
+                      <li className="nav-item">
+                        <NavLink to="/share-Memory" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
+                          {t('navbar.links.shareMemory')}
+                        </NavLink>
+                      </li>
                     </>
                   )}
                 </>

@@ -30,8 +30,10 @@ import enSignup from './assets/locales/en/signup.json';
 import arSignup from './assets/locales/ar/signup.json';
 import enDashboard from './assets/locales/en/dashboard.json';
 import arDashboard from './assets/locales/ar/dashboard.json';
-import enUpdatedReq from './assets/locales/en//updateReq.json';
+import enUpdatedReq from './assets/locales/en/updateReq.json';
 import arUpdatedReq from './assets/locales/ar/updateReq.json';
+import arMemoryForm from './assets/locales/ar/memoryForm.json';
+import enMemoryForm from './assets/locales/en/memoryForm.json';
 
 i18n
   .use(LanguageDetector) 
@@ -53,7 +55,8 @@ i18n
         signIn : enSignin,
         signUp : enSignup,
         dashboard : enDashboard,
-        updatedReq : enUpdatedReq
+        updatedReq : enUpdatedReq,
+        memoryForm:enMemoryForm
 
 
        },
@@ -72,7 +75,9 @@ i18n
         signIn : arSignin,
         signUp : arSignup,
         dashboard : arDashboard,
-        updatedReq : arUpdatedReq
+        updatedReq : arUpdatedReq,
+        memoryForm : arMemoryForm
+
        },
     },
     fallbackLng: 'en',

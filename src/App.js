@@ -19,6 +19,7 @@ import Settings from './components/Settings/Settings';
 import Profile from './components/Profile/Profile';
 import AnimatedCircle from './components/AnimatedCircle/AnimatedCircle';
 import ShareEvent from './components/ShareEvent/ShareEvent';
+import ShareMemory from './components/ShareMemory/ShareMemory';
 import EventDetails from './components/EventDetails/EventDetails';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -42,7 +43,7 @@ function App() {
         { index: true, element: <Home /> },
         { path: 'about', element: <About /> },
         { path: 'events', element: <Events /> },
-        { path: 'event/:id', element: <EventDetails /> }, // ✅ متاحة لكل الناس
+        { path: 'event/:id', element: <EventDetails /> }, 
         { path: 'contact', element: <Contact /> },
         { path: 'signin', element: <SignIn /> },
         { path: 'signup', element: <SignUp /> },
@@ -135,6 +136,13 @@ function App() {
           element: (
             <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
               <ShareEvent />
+            </ProtectedRoute>
+          ),
+        },{
+          path: 'share-Memory',
+          element: (
+            <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
+              <ShareMemory />
             </ProtectedRoute>
           ),
         },

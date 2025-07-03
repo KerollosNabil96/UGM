@@ -1,0 +1,21 @@
+{
+  "shareMemory": {
+    "title": "Share a Memory",
+    "description": "Please share your special memory by filling in the details and uploading images."
+  },
+  "form": {
+    "titleLabel": "Memory Title",
+    "dateLabel": "Date",
+    "mainImageLabel": "Main Image",
+    "selectMainImage": "Click here to select the main image",
+    "galleryImagesLabel": "Gallery Images",
+    "selectGalleryImages": "Click here to select gallery images",
+    "submitButton": "Submit Memory"
+  },
+  "validation": {
+    "titleRequired": "Memory title is required",
+    "dateRequired": "Date is required",
+    "mainImageRequired": "Main image is required",
+    "galleryImagesRequired": "At least one gallery image is required"
+  }
+}

@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
+    "browser-image-compression": "^2.0.2",
     "date-fns": "^4.1.0",
     "formik": "^2.4.6",
     "i18next": "^21.10.0",

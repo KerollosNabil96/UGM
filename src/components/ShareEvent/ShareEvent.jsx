@@ -12,6 +12,7 @@ import axios from "axios";
 import toast from 'react-hot-toast';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
+import imageCompression from 'browser-image-compression';
 
 export default function VenueForm() {
   const { t } = useTranslation('shareEvent');
@@ -95,9 +96,6 @@ export default function VenueForm() {
           }
         );
 
-        console.log(res)
-
-
 
         toast.success(t('shareEvent.successMessage'));
         resetForm();
@@ -110,7 +108,8 @@ export default function VenueForm() {
           }
         });
       } catch (error) {
-          console.log("Submission Error:", error.response?.data || error.message || error);
+          // console.log("Submission Error:", error.response?.data || error.message || error);
+           console.log("Error from backend:", error);
         toast.error(t('shareEvent.errorOccurred'));
       } finally {
         setSubmitting(false);
@@ -169,6 +168,7 @@ export default function VenueForm() {
     const errors = await formik.validateForm();
 
     if (Object.keys(errors).length > 0) {
+      
       formik.setTouched({
         eventName: true,
         category: true,
@@ -228,7 +228,7 @@ export default function VenueForm() {
     return <Marker position={position} />;
   }
 
-  function handleImageUpload(index, event) {
+  async function handleImageUpload(index, event) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -237,30 +237,45 @@ export default function VenueForm() {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert(t('shareEvent.imageSizeError'));
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const newImages = [...images];
-      const newImageFiles = [...imageFiles];
-
-      newImages[index] = URL.createObjectURL(file);
-      newImageFiles[index] = e.target.result;
-
-      setImages(newImages);
-      setImageFiles(newImageFiles);
-
-      formik.setFieldTouched(`images[${index}]`, true);
-      formik.setFieldValue(`images[${index}]`, e.target.result);
-
-      if (fileInputsRef[index] && fileInputsRef[index].current) {
-        fileInputsRef[index].current.value = null;
-      }
+    const options = {
+      maxSizeMB: 0.03, 
+      maxWidthOrHeight: 900, 
+      useWebWorker: true,
+      fileType: 'image/jpeg' 
     };
-    reader.readAsDataURL(file);
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      
+      if (compressedFile.size > 5 * 1024 * 1024) {
+        alert(t('shareEvent.imageSizeError'));
+        return;
+      }
+console.log("Compressed size:", compressedFile.size / 1024, "KB");
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newImages = [...images];
+        const newImageFiles = [...imageFiles];
+
+        newImages[index] = URL.createObjectURL(compressedFile);
+        newImageFiles[index] = e.target.result;
+
+        setImages(newImages);
+        setImageFiles(newImageFiles);
+
+        formik.setFieldTouched(`images[${index}]`, true);
+        formik.setFieldValue(`images[${index}]`, e.target.result);
+
+        if (fileInputsRef[index] && fileInputsRef[index].current) {
+          fileInputsRef[index].current.value = null;
+        }
+      };
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error('Error compressing image:', error);
+      alert(t('shareEvent.imageCompressionError'));
+    }
   }
 
   function handleAddressChange(e) {

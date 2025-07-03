@@ -1,0 +1,21 @@
+{
+  "shareMemory": {
+    "title": "شارك ذكرى",
+    "description": "من فضلك شارك ذكرياتك الخاصة بملء التفاصيل ورفع الصور."
+  },
+  "form": {
+    "titleLabel": "عنوان الذكرى",
+    "dateLabel": "التاريخ",
+    "mainImageLabel": "الصورة الرئيسية",
+    "selectMainImage": "اضغط هنا لاختيار الصورة الرئيسية",
+    "galleryImagesLabel": "صور المعرض",
+    "selectGalleryImages": "اضغط هنا لاختيار صور للمعرض",
+    "submitButton": "إرسال الذكرى"
+  },
+  "validation": {
+    "titleRequired": "عنوان الذكرى مطلوب",
+    "dateRequired": "التاريخ مطلوب",
+    "mainImageRequired": "الصورة الرئيسية مطلوبة",
+    "galleryImagesRequired": "يجب اختيار صورة واحدة على الأقل للمعرض"
+  }
+}
