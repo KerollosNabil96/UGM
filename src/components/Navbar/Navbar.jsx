@@ -3,7 +3,7 @@ import { darkModeContext } from '../../Context/DarkModeContext';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import { useTranslation } from 'react-i18next';
-import ugm from '../../assets/ugm.png'
+import ugm from '../../assets/ugm.png';
 
 export default function Navbar() {
   const { darkMode, toggleDarkMode, token, logout } = useContext(darkModeContext);
@@ -41,7 +41,7 @@ export default function Navbar() {
       <nav className="navbar navbar-expand-lg bg-main dark:tw-bg-gray-900 transition-colors duration-300">
         <div className="container-fluid">
           <NavLink className="navbar-brand text-white tw-dark:text-blue-800 fw-bolder" to="/">
-<img src={ugm} height={40} alt="" className="tw-rounded-full" /> <span>UGM</span>
+            <img src={ugm} height={40} alt="" className="tw-rounded-full" /> <span>UGM</span>
           </NavLink>
 
           <button
@@ -78,6 +78,7 @@ export default function Navbar() {
                   {t('navbar.links.events')}
                 </NavLink>
               </li>
+
               {token && (
                 <>
                   <li className="nav-item">
@@ -90,6 +91,7 @@ export default function Navbar() {
                       {t('navbar.links.memories')}
                     </NavLink>
                   </li>
+
                   {isAdmin && (
                     <>
                       <li className="nav-item">
@@ -170,23 +172,23 @@ export default function Navbar() {
                   <ul className={`dropdown-menu dropdown-menu-end dark:tw-bg-gray-800`}>
                     {role !== 'User' && (
                       <li>
-                        <NavLink className="dropdown-item dark:tw-text-white" to="/dashboard">
+                        <NavLink onClick={closeNavbar} className="dropdown-item dark:tw-text-white" to="/dashboard">
                           {t('navbar.userDropdown.dashboard')}
                         </NavLink>
                       </li>
                     )}
                     <li>
-                      <NavLink className="dropdown-item dark:tw-text-white" to="/profile">
+                      <NavLink onClick={closeNavbar} className="dropdown-item dark:tw-text-white" to="/profile">
                         {t('navbar.userDropdown.profile')}
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink className="dropdown-item dark:tw-text-white" to="/settings">
+                      <NavLink onClick={closeNavbar} className="dropdown-item dark:tw-text-white" to="/settings">
                         {t('navbar.userDropdown.settings')}
                       </NavLink>
                     </li>
                     <li>
-                      <button onClick={handleLogout} className="dropdown-item text-danger dark:tw-text-white">
+                      <button onClick={() => { closeNavbar(); handleLogout(); }} className="dropdown-item text-danger dark:tw-text-white">
                         <i className="fa-solid fa-right-from-bracket me-2 text-danger"></i>
                         {t('navbar.userDropdown.logout')}
                       </button>
