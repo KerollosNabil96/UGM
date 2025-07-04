@@ -1,13 +1,14 @@
 {
-    "kahoot": {
-      "title": "Kahoot Game",
-      "description": {
-        "line1": "Join the Kahoot game and enjoy the competition and",
-        "line2": "challenge with your friends! 😊"
-      },
-      "form": {
-        "placeholder": "Game Pin",
-        "button": "Submit"
-      }
+  "kahoot": {
+    "title": "Kahoot Game",
+    "description": {
+      "line1": "Test your knowledge with fun quizzes!",
+      "line2": "Join our Kahoot and have fun!"
+    },
+    "form": {
+      "placeholder": "Enter your code",
+      "button": "Submit",
+      "toast": "📢 Kahoot is being prepared and will be ready soon!"
     }
   }
+}

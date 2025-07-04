@@ -14,12 +14,12 @@
           "trip": "Trip"
         }
       },
-      "address": "Address",
+      "address": "Address (Select precise location from map)",
       "shortDescription": "Short description (will appear on cards)",
       "fullDescription": "Full description",
       "price": "Price (EGP)",
       "phone": "Phone Number",
-      "responsiblePerson": "Responsible Person Name",
+      "responsiblePerson": "Responsible Person",
       "date": "Date",
       "images": {
         "label": "Event Images",
@@ -27,7 +27,12 @@
       },
       "locationModal": {
         "getMyLocation": "📍 Use My Current Location",
-        "mapInstructions": "Address selected from map. Click X to clear or map icon to change."
+        "mapInstructions": "Address selected from map. Click X to clear or map icon to change.",
+        "search": "Search",
+        "searchPlace": "Search for a place (e.g. 'Pyramids, Giza')",
+        "confirmLocation": "Confirm Location",
+        "cancel": "Cancel",
+        "selectPreciseLocation": "Please select the location precisely from the map"
       }
     },
     "validation": {
@@ -39,7 +44,8 @@
       "minImages": "You must upload at least 3 images",
       "maxImages": "You can upload maximum 3 images",
       "missingFields": "Missing required fields:",
-      "requiredFields": "Please fill all required fields correctly"
+      "requiredFields": "Please fill all required fields correctly",
+      "locationPrecision": "Location must be selected precisely from the map"
     },
     "locationNotFound": "Location not found",
     "failedFetchAddress": "Failed to retrieve address",
@@ -48,10 +54,22 @@
     "imageTypeError": "Please upload an image file only",
     "imageSizeError": "Image must be less than 5MB",
     "characters": "characters",
-    "shortDescriptionHint": "This will appear on event cards (max 50 characters)",
+    "shortDescriptionHint": "This will appear on event cards (max 100 characters)",
     "fullDescriptionHint": "Detailed description of your event",
     "authError": "Please log in to submit the event",
     "successMessage": "Event submitted successfully!",
-    "errorOccurred": "An error occurred during submission"
+    "errorOccurred": "An error occurred during submission",
+    "search": {
+      "noResults": "No results found",
+      "searching": "Searching...",
+      "error": "Error during search",
+      "instructions": "Type a place name and press search"
+    },
+    "mapControls": {
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "currentLocation": "My Location"
+    },
+    "locationHint": "To ensure the event appears correctly, please select the location precisely from the map"
   }
 }

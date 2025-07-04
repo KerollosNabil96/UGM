@@ -8,14 +8,12 @@ import { Navigate } from 'react-router-dom';
 import Spinner from '../Spinner/Spinner';
 
 export default function Settings() {
-    // 1. جميع استدعاءات Hooks الأساسية أولاً
     const { darkMode } = useContext(darkModeContext);
     const { i18n } = useTranslation();
     const isRTL = i18n.language === 'ar';
     const [shouldRedirect, setShouldRedirect] = useState(false);
 
 
-    // 2. تعريف useFormik في الأعلى قبل أي شروط
     const daysOfWeek = [
         'Saturday',
         'Sunday',

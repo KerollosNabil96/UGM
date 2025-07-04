@@ -1,31 +1,20 @@
 {
-    "pageTitle": "الذكريات",
-    "searchPlaceholder": "ابحث بالاسم....",
-    "allCategories": "جميع الفئات",
-    "events": "فعاليات",
-    "trip": "رحلة",
-    "searchButton": "بحث",
-    "cards": [
-      {
-        "title": "واحة سيوة",
-        "date": "٢١/٠٣/٢٠٢٤",
-        "button": "مزيد من المعلومات"
-      },
-      {
-        "title": "دير السريان",
-        "date": "٠٥/٠١/٢٠٢٥",
-        "button": "مزيد من المعلومات"
-      },
-      {
-        "title": "منتجع القديسة ماريا – متعة وإيمان!",
-        "date": "١٤/٠٦/٢٠٢٥",
-        "button": "مزيد من المعلومات"
-      },
-      {
-        "title": "أفريكانو بارك",
-        "date": "١٠/٠٢/٢٠٢٤",
-        "button": "مزيد من المعلومات"
-      }
-    ]
-  }
+  "pageTitle": "الذكريات",
+  "searchPlaceholder": "ابحث بالعنوان...",
+  "allDates": "كل التواريخ",
+  "resetFilter": "إعادة التعيين",
+  "allCategories": "كل الفئات",
+  "events": "فعاليات",
+  "trip": "رحلات",
+  "searchButton": "بحث",
+  "viewButton": "المزيد!",
+  "noMemories": "لا توجد ذكريات.",
+  "noMemoriesDescription": "حاول تغيير البحث أو فلتر السنة، أو انتظر ذكريات جديدة ✨",
+  "memoriesParagraph": "كل لحظة نجتمع فيها مع بعض بتبقى ذكرى جميلة نفتكرها طول حياتنا.",
   
+  "deleteMemoryTitle": "حذف الذكرى",
+  "deleteMemoryConfirm": "هل أنت متأكد من حذف",
+  "deleteMemoryWarning": "هذا الإجراء لا يمكن التراجع عنه.",
+  "cancel": "إلغاء",
+  "delete": "حذف"
+}

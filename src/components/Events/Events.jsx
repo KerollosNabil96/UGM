@@ -23,8 +23,8 @@ export default function Events() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  const token = localStorage.getItem('token') || null;
+  const role = localStorage.getItem('role') || '';
 
   const eventsPerPage = 6;
 
@@ -39,12 +39,13 @@ export default function Events() {
         setFilteredEvents(res.data.events);
       } catch (error) {
         console.error('Error fetching events:', error);
+        toast.error('Failed to load events');
       } finally {
         setLoading(false);
       }
     };
     fetchEvents();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const term = searchTerm.toLowerCase();
@@ -88,10 +89,28 @@ export default function Events() {
     setShowModal(true);
   };
 
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) return '/default-event-image.jpg';
+
+    if (imageUrl.includes('cloudinary.com')) {
+      return imageUrl;
+    }
+
+    if (imageUrl.startsWith('UgmMemoryUploads/')) {
+      return `https://res.cloudinary.com/djmr1aded/image/upload/${imageUrl}`;
+    }
+
+    if (imageUrl.startsWith('data:image')) {
+      return imageUrl;
+    }
+
+    return '/default-event-image.jpg';
+  };
+
   return (
     <>
       <div className={`${darkMode ? 'tw-dark' : ''}`}>
-        <div className="container-fluid dark:tw-bg-gray-800">
+<div className="container-fluid dark:tw-bg-gray-800 tw-min-h-[80vh]">
           <motion.div
             initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
             animate={{ opacity: 1, x: 0 }}
@@ -99,11 +118,10 @@ export default function Events() {
           >
             <div className="container">
               <div className="row">
-                <h1 className="mt-5 fw-bold mainColor dark:tw-text-indigo-600 text-center">
+                <h1 className="my-5 fw-bold mainColor dark:tw-text-indigo-600  text-center">
                   {t('events.title')}
                 </h1>
 
-                {/* Search bar */}
                 <div className={`${styles.searching} d-flex align-items-center gap-3 flex-wrap rounded-4 py-4 dark:tw-bg-gray-900`}>
                   <input
                     type="text"
@@ -142,97 +160,96 @@ export default function Events() {
                   </motion.button>
                 </div>
 
-                {/* Events */}
                 <div className="row">
                   {loading ? (
                     <div className="d-flex justify-content-center align-items-center my-5">
                       <div className="spinner"></div>
                     </div>
                   ) : currentEvents.length === 0 ? (
-                    <div className="text-center py-5">
-                      <h4 className="text-muted dark:tw-text-white">No events found.</h4>
-                      <p className="text-muted dark:tw-text-white">
-                        Try changing your search or category filter, or wait for upcoming events ✨
-                      </p>
-                    </div>
+                <div className="tw-max-w-md tw-mx-auto mt-4 tw-bg-gray-100 dark:tw-bg-gray-900 tw-rounded-lg tw-shadow-md tw-p-6 tw-text-center">
+  <h4 className="tw-text-lg tw-font-semibold tw-text-gray-700 dark:tw-text-white mb-2">
+    No events found.
+  </h4>
+  <p className="tw-text-gray-600 dark:tw-text-gray-300">
+    Try changing your search or category filter, or wait for upcoming events ✨
+  </p>
+</div>
+
                   ) : (
                     <AnimatePresence>
-                      {currentEvents.map((event) => {
-                        const imgSrc = event.images[0]?.startsWith('data:image')
-                          ? event.images[0]
-                          : `data:image/jpeg;base64,${event.images[0]}`;
+                      {currentEvents.map((event) => (
+                        <motion.div
+                          key={event._id}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          whileHover={{ scale: 1.03 }}
+                          transition={{ duration: 0.3 }}
+                          className="col-lg-4 col-md-6 my-4"
+                        >
+                          <div className="card dark:tw-bg-gray-900 shadow" style={{ height: '630px', position: 'relative' }}>
+                            {token && ['Admin', 'SuperAdmin'].includes(role) && (
+                              <motion.button
+                                whileHover={{ scale: 1.2, rotate: 90 }}
+                                transition={{ type: 'spring', stiffness: 300 }}
+                                onClick={() => confirmDelete(event)}
+                                style={{
+                                  position: 'absolute',
+                                  top: '10px',
+                                  right: '10px',
+                                  backgroundColor: 'red',
+                                  color: 'white',
+                                  borderRadius: '50%',
+                                  width: '32px',
+                                  height: '32px',
+                                  border: 'none',
+                                  fontSize: '20px',
+                                  cursor: 'pointer',
+                                  zIndex: 10,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}
+                                title="Delete Event"
+                              >
+                                &times;
+                              </motion.button>
+                            )}
 
-                        return (
-                          <motion.div
-                            key={event._id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            whileHover={{ scale: 1.03 }}
-                            transition={{ duration: 0.3 }}
-                            className="col-lg-4 col-md-6 my-4"
-                          >
-                            <div className="card dark:tw-bg-gray-900 shadow" style={{ height: '630px', position: 'relative' }}>
-                              {['Admin', 'SuperAdmin'].includes(role) && (
-                                <motion.button
-                                  whileHover={{ scale: 1.2, rotate: 90 }}
-                                  transition={{ type: 'spring', stiffness: 300 }}
-                                  onClick={() => confirmDelete(event)}
-                                  style={{
-                                    position: 'absolute',
-                                    top: '10px',
-                                    right: '10px',
-                                    backgroundColor: 'red',
-                                    color: 'white',
-                                    borderRadius: '50%',
-                                    width: '32px',
-                                    height: '32px',
-                                    border: 'none',
-                                    fontSize: '20px',
-                                    cursor: 'pointer',
-                                    zIndex: 10,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                  }}
-                                  title="Delete Event"
-                                >
-                                  &times;
-                                </motion.button>
-                              )}
-
-                              <img
-                                src={imgSrc}
-                                className="card-img-top w-100"
-                                style={{ height: '360px', objectFit: 'cover' }}
-                                alt={event.eventName}
-                              />
-                              <div className="card-body">
-                                <h5 className="card-title mainColor dark:tw-text-indigo-600">{event.eventName}</h5>
-                                <p className="card-text dark:tw-text-white">{event.shortDescription}</p>
-                                <div className={`${styles.parent} ${isRTL ? styles.pad2 : styles.pad} parent`}>
-                                  <div className="card-end d-flex justify-content-between w-100">
-                                    <span className="tw-text-gray-500 dark:tw-text-white my-2">
-                                      {new Date(event.date).toLocaleDateString('en-GB')}
-                                    </span>
-                                    <Link
-                                      to={`/event/${event._id}`}
-                                      className="bg-main text-white dark:tw-bg-indigo-600 tw-px-7 py-2 rounded-3"
-                                    >
-                                      View
-                                    </Link>
-                                  </div>
+                            <img
+                              src={getImageUrl(event.images[0])}
+                              className="card-img-top w-100"
+                              style={{ height: '360px', objectFit: 'cover' }}
+                              alt={event.eventName}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = '/default-event-image.jpg';
+                              }}
+                            />
+                            <div className="card-body">
+                              <h5 className="card-title mainColor dark:tw-text-indigo-600">{event.eventName}</h5>
+                              <p className="card-text dark:tw-text-white">{event.shortDescription}</p>
+                              <div className={`${styles.parent} ${isRTL ? styles.pad2 : styles.pad} parent`}>
+                                <div className="card-end d-flex justify-content-between w-100">
+                                  <span className="tw-text-gray-500 dark:tw-text-white my-2">
+                                    {new Date(event.date).toLocaleDateString('en-GB')}
+                                  </span>
+                                  <Link
+                                    to={`/event/${event._id}`}
+                                    className="bg-main text-white dark:tw-bg-indigo-600 tw-px-7 py-2 rounded-3"
+                                  >
+                                    View
+                                  </Link>
                                 </div>
                               </div>
                             </div>
-                          </motion.div>
-                        );
-                      })}
+                          </div>
+                        </motion.div>
+                      ))}
                     </AnimatePresence>
                   )}
                 </div>
 
-                {/* Pagination */}
                 {!loading && totalPages > 1 && (
                   <div className="d-flex justify-content-center align-items-center my-4 gap-2 flex-wrap">
                     {Array.from({ length: totalPages }, (_, i) => (
@@ -254,7 +271,6 @@ export default function Events() {
         </div>
       </div>
 
-      {/* Modal */}
       {showModal && selectedEvent && (
         <div className="modal-backdrop">
           <div className="modal-box">
@@ -269,8 +285,7 @@ export default function Events() {
         </div>
       )}
 
-      {/* Styles */}
-      <style jsx>{`
+      <style>{`
         .modal-backdrop {
           position: fixed;
           top: 0; left: 0;

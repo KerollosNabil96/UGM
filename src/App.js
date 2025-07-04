@@ -21,6 +21,7 @@ import AnimatedCircle from './components/AnimatedCircle/AnimatedCircle';
 import ShareEvent from './components/ShareEvent/ShareEvent';
 import ShareMemory from './components/ShareMemory/ShareMemory';
 import EventDetails from './components/EventDetails/EventDetails';
+import MemoryDetails from './components/MemoryDetails/MemoryDetails'
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -79,6 +80,14 @@ function App() {
           element: (
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: 'memory/:id',
+          element: (
+            <ProtectedRoute>
+              <MemoryDetails />
             </ProtectedRoute>
           ),
         },
