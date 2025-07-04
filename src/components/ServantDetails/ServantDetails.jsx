@@ -275,7 +275,7 @@ export default function ServantDetails() {
                 animate={{ opacity: 1, x: 0 }}     
                 transition={{ duration: 1 }}  
               >
-                <h1 className='text-center mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>Servant Details</h1>
+                <h1 className='text-center mainColor dark:tw-text-indigo-600 mt-5 fw-bolder'>Served Details</h1>
 
                 <div className="container my-4">
                   <AnimatePresence mode="wait">

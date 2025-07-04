@@ -1,7 +1,7 @@
 {
   "servantInfo": {
-    "title": "Servant Information Form",
-    "description1": "Register your information for church service This form collects servant data",
+    "title": "Served Information Form",
+    "description1": "Register your information for church service This form collects served data",
     "description2": "to help organize ministry activities",
     "labels": {
       "firstName": "First Name",
