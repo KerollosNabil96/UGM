@@ -3,6 +3,7 @@ import { darkModeContext } from '../../Context/DarkModeContext';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import { useTranslation } from 'react-i18next';
+import ugm from '../../assets/ugm.png'
 
 export default function Navbar() {
   const { darkMode, toggleDarkMode, token, logout } = useContext(darkModeContext);
@@ -40,7 +41,7 @@ export default function Navbar() {
       <nav className="navbar navbar-expand-lg bg-main dark:tw-bg-gray-900 transition-colors duration-300">
         <div className="container-fluid">
           <NavLink className="navbar-brand text-white tw-dark:text-blue-800 fw-bolder" to="/">
-            UGM
+<img src={ugm} height={40} alt="" className="tw-rounded-full" /> <span>UGM</span>
           </NavLink>
 
           <button
