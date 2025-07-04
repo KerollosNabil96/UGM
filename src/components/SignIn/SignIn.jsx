@@ -41,14 +41,11 @@ export default function SignIn() {
 
   const handleResendVerification = async () => {
     const email = formik.values.email;
-
     if (!email) {
       toast.error(t("signIn.email.errors.required"));
       return;
     }
-
     setResendLoading(true);
-
     try {
       const { data } = await axios.post(
         "https://ugmproject.vercel.app/api/v1/user/resendVerifyEmail",
@@ -78,9 +75,9 @@ export default function SignIn() {
           "https://ugmproject.vercel.app/api/v1/user/login",
           values
         );
-        const userName = response.data.userName
+        const userName = response.data.userName;
         const token = response.data.token;
-        localStorage.setItem('userName' , userName)
+        localStorage.setItem("userName", userName);
         login(token);
         localStorage.setItem("role", response.data.role);
         toast.success(t("signIn.success"));
@@ -105,8 +102,9 @@ export default function SignIn() {
           transition={{ duration: 1 }}
         >
           <div className="container my-5 justify-content-between d-flex align-items-center">
-            <div className="row w-75 mx-auto">
-              <div className="col-lg-6 ps-1 tw-bg-gray-100 dark:tw-bg-gray-900">
+            <div className="row w-100 mx-0">
+              {/* Image Column */}
+              <div className="col-12 col-lg-6 px-0">
                 <div className={`${styles["bg-image"]}`}>
                   <div className={`${styles["layer"]}`}>
                     <p className="mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100">
@@ -116,7 +114,8 @@ export default function SignIn() {
                 </div>
               </div>
 
-              <div className="col-lg-6 tw-bg-gray-100 dark:tw-bg-gray-900 rounded-3 py-3">
+              {/* Form Column */}
+              <div className="col-12 col-lg-6 tw-bg-gray-100 dark:tw-bg-gray-900 rounded-3 py-4 px-3">
                 <form onSubmit={formik.handleSubmit}>
                   {/* Email */}
                   <label htmlFor="email" className="mt-3 dark:tw-text-white">
@@ -128,12 +127,12 @@ export default function SignIn() {
                     name="email"
                     id="email"
                     placeholder={t("signIn.email.placeholder")}
-                    className="w-100 form-control mt-3"
+                    className="w-100 form-control mt-2"
                     onChange={formik.handleChange}
                     value={formik.values.email}
                   />
                   {formik.errors.email && formik.touched.email ? (
-                    <div className="text-danger w-75" role="alert">
+                    <div className="text-danger w-100 mt-1" role="alert">
                       {formik.errors.email}
                     </div>
                   ) : null}
@@ -148,21 +147,21 @@ export default function SignIn() {
                     name="password"
                     id="password"
                     placeholder={t("signIn.password.placeholder")}
-                    className="w-100 form-control mt-3"
+                    className="w-100 form-control mt-2"
                     onChange={formik.handleChange}
                     value={formik.values.password}
                   />
                   {formik.errors.password && formik.touched.password ? (
-                    <div className="text-danger w-100" role="alert">
+                    <div className="text-danger w-100 mt-1" role="alert">
                       {formik.errors.password}
                     </div>
                   ) : null}
 
-                  {/* Submit */}
+                  {/* Submit Button */}
                   <button
                     type="submit"
                     disabled={loading || !(formik.dirty && formik.isValid)}
-                    className="bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4"
+                    className="bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4 border-0"
                   >
                     {loading ? (
                       <i className="fa-solid fa-spinner fa-spin-pulse"></i>
