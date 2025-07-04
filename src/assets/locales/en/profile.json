@@ -1,0 +1,11 @@
+{
+  "title": "Profile",
+  "description": "In this section, you can view your wallet and the trips or events you have booked.",
+  "hello": "Hello",
+  "niceDay": "Have a nice day!",
+  "walletTitle": "Your Wallet :",
+  "balance": "Your Available Balance :",
+  "bookingTitle": "Booking List :",
+  "noBookingTitle": "You haven't booked any trips or events yet.",
+  "noBookingSubtext": "Once you book something, it will appear here!"
+}

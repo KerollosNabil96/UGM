@@ -34,7 +34,8 @@ import enUpdatedReq from './assets/locales/en/updateReq.json';
 import arUpdatedReq from './assets/locales/ar/updateReq.json';
 import arMemoryForm from './assets/locales/ar/memoryForm.json';
 import enMemoryForm from './assets/locales/en/memoryForm.json';
-
+import enProfile from './assets/locales/en/profile.json'
+import arProfile from './assets/locales/ar/profile.json'
 i18n
   .use(LanguageDetector) 
   .use(initReactI18next) 
@@ -56,7 +57,8 @@ i18n
         signUp : enSignup,
         dashboard : enDashboard,
         updatedReq : enUpdatedReq,
-        memoryForm:enMemoryForm
+        memoryForm:enMemoryForm,
+        profile : enProfile
 
 
        },
@@ -76,7 +78,9 @@ i18n
         signUp : arSignup,
         dashboard : arDashboard,
         updatedReq : arUpdatedReq,
-        memoryForm : arMemoryForm
+        memoryForm : arMemoryForm , 
+        profile : arProfile
+
 
        },
     },
