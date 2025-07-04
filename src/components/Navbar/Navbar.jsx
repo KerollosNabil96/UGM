@@ -150,7 +150,7 @@ export default function Navbar() {
                   </li>
                 </div>
               ) : (
-                <li className="nav-item dropdown position-relative">
+                <li className="nav-item dropdown  position-relative">
                   <button
                     type="button"
                     className="btn bg-main dark:tw-bg-gray-900 text-white border border-1 dropdown-toggle tw-flex tw-items-center tw-gap-2"
@@ -159,7 +159,7 @@ export default function Navbar() {
                     style={{ width: '170px' }}
                   >
                     <div
-                      className={`tw-rounded-full tw-w-7 tw-h-7 tw-flex tw-items-center tw-justify-center tw-text-sm fw-bold
+                      className={`tw-rounded-full tw-w-7  tw-h-7 tw-flex tw-items-center tw-justify-center tw-text-sm fw-bold
                         ${darkMode 
                           ? 'tw-bg-indigo-400 tw-text-white' 
                           : 'tw-bg-white tw-text-[#0d6efd]'
@@ -169,10 +169,10 @@ export default function Navbar() {
                     </div>
                     <span className="tw-truncate tw-text-start" style={{ maxWidth: '100px' }}>{userName}</span>
                   </button>
-                  <ul className={`dropdown-menu dropdown-menu-end dark:tw-bg-gray-800`}>
+                  <ul className={`dropdown-menu dropdown-menu-end tw-bg-white dark:tw-bg-gray-800`}>
                     {role !== 'User' && (
                       <li>
-                        <NavLink onClick={closeNavbar} className="dropdown-item dark:tw-text-white" to="/dashboard">
+                        <NavLink onClick={closeNavbar} className="dropdown-item dark:tw-text-white " to="/dashboard">
                           {t('navbar.userDropdown.dashboard')}
                         </NavLink>
                       </li>

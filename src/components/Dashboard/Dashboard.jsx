@@ -7,8 +7,9 @@ import { useTranslation } from 'react-i18next';
 
 export default function Dashboard() {
   const { darkMode } = useContext(darkModeContext);
-  const { t } = useTranslation("dashboard");
+  const { t, i18n } = useTranslation("dashboard"); 
   const role = localStorage.getItem('role');
+  const isRTL = i18n.language === 'ar'; 
 
   return (
     <>
@@ -16,8 +17,11 @@ export default function Dashboard() {
         <div className="row tw-bg-gray-100 dark:tw-bg-gray-800">
           
           {/* Mobile navbar toggle */}
-          <div className={`collapse bg-main ${styles.secNav}`} id="navbarToggleExternalContent">
-            <div className="bg-main py-4">
+          <div
+            className={`collapse ${darkMode ? 'tw-bg-gray-900' : 'bg-main'} ${styles.secNav}`}
+            id="navbarToggleExternalContent"
+          >
+            <div className={`${darkMode ? 'tw-bg-gray-900' : 'bg-main'} py-4`}>
               <ul className={`${styles.paddingLeft}`} style={{ listStyle: 'none' }}>
                 <li className="nav-item">
                   <NavLink className="nav-link active text-white" to="">
@@ -41,11 +45,11 @@ export default function Dashboard() {
           </div>
 
           {/* Top navbar */}
-          <nav className={`navbar bg-main ${styles.secNav}`}>
+          <nav className={`navbar ${darkMode ? 'tw-bg-gray-900' : 'bg-main'} ${styles.secNav}`}>
             <div className="container-fluid">
               <h3 className="text-white">{t('dashboard.title')}</h3>
               <button
-                className="navbar-toggler ms-auto"
+                className={`navbar-toggler ${isRTL ? 'me-auto' : 'ms-auto'} bg-white`}
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarToggleExternalContent"
@@ -74,7 +78,7 @@ export default function Dashboard() {
               </li>
               {role === 'SuperAdmin' && (
                 <li className="nav-item">
-                  <NavLink className="nav-link active text-white" to="messages">
+                  <NavLink className="nav-link active  text-white" to="messages">
                     <i className="fa-regular fa-envelope me-2"></i> {t('dashboard.messages')}
                   </NavLink>
                 </li>
@@ -91,4 +95,3 @@ export default function Dashboard() {
     </>
   );
 }
-
