@@ -1,11 +1,16 @@
 {
-    "home": {
-      "title": "Welcome to the UGM family",
-      "subtitle": "Grow together in love and faith – Join our spiritual and church activities and be part of the service family!",
-      "carousel": {
-        "previous": "Previous",
-        "next": "Next",
-        "indicators": ["Slide 1", "Slide 2", "Slide 3"]
-      }
-    }
+  "home": {
+    "title": "Welcome to the UGM Family",
+    "subtitle": "Growing together in love and faith – join our spiritual and church activities and become part of the service family!",
+    "carousel": {
+      "previous": "Previous",
+      "next": "Next",
+      "indicators": ["Slide 1", "Slide 2", "Slide 3"]
+    },
+    "verses": [
+      "For where two or three gather in my name, there am I with them. (Matthew 18:20)",
+      "They devoted themselves to the apostles’ teaching and to fellowship, to the breaking of bread and to prayer. (Acts 2:42)",
+      "And let us consider how we may spur one another on toward love and good deeds. (Hebrews 10:24)"
+    ]
   }
+}
