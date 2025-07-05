@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { toast } from 'react-hot-toast';
+import { darkModeContext } from '../../Context/DarkModeContext';
 
 // Custom Marker Icon
 const customIcon = new L.Icon({
@@ -21,6 +22,7 @@ const customIcon = new L.Icon({
 });
 
 export default function EventDetails() {
+  const { darkMode } = useContext(darkModeContext);
   const { id } = useParams();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -28,7 +30,7 @@ export default function EventDetails() {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [imageLoading, setImageLoading] = useState(Array(4).fill(true));
-  const [position, setPosition] = useState([31.2001, 29.9187]); // Default Alexandria coordinates
+  const [position, setPosition] = useState([31.2001, 29.9187]);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
 
@@ -39,70 +41,39 @@ export default function EventDetails() {
 
   const getCloudinaryUrl = (image) => {
     if (!image) return '';
-    
-    if (image.includes('cloudinary.com')) {
-      return image;
-    }
-    
-    if (image.startsWith('UgmMemoryUploads/')) {
-      return `https://res.cloudinary.com/djmr1aded/image/upload/${image}`;
-    }
-    
-    if (image.startsWith('data:image')) {
-      return '/default-event-image.jpg';
-    }
-    
+    if (image.includes('cloudinary.com')) return image;
+    if (image.startsWith('UgmMemoryUploads/')) return `https://res.cloudinary.com/djmr1aded/image/upload/${image}`;
     return '/default-event-image.jpg';
   };
 
   const updateMap = (newPosition) => {
     setPosition(newPosition);
-    
     if (mapRef.current) {
       mapRef.current.setView(newPosition, 15);
-      
-      if (markerRef.current) {
-        mapRef.current.removeLayer(markerRef.current);
-      }
-      
+      if (markerRef.current) mapRef.current.removeLayer(markerRef.current);
       markerRef.current = L.marker(newPosition, { icon: customIcon })
         .bindPopup(`<b>${event?.eventName || 'Event Location'}</b><br>${event?.address || ''}`)
         .addTo(mapRef.current);
-      
       markerRef.current.openPopup();
     }
   };
 
   const geocodeAddress = async (address) => {
     try {
-      // First try with the exact address
-      let response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(address)}`
-      );
+      let response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address)}`);
       let data = await response.json();
-
-      // If no results, try with Egypt appended
       if (data.length === 0) {
-        response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(address + ', Egypt')}`
-        );
+        response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address + ', Egypt')}`);
         data = await response.json();
       }
-
       if (data.length > 0) {
         const bestResult = data[0];
-        const newPosition = [parseFloat(bestResult.lat), parseFloat(bestResult.lon)];
-        
-        console.log('Found location:', bestResult.display_name);
-        updateMap(newPosition);
+        updateMap([parseFloat(bestResult.lat), parseFloat(bestResult.lon)]);
         return true;
       }
-
-      console.log('No results found for address:', address);
       toast.error('Could not find location on map. Showing default location.');
       return false;
     } catch (error) {
-      console.error('Geocoding error:', error);
       toast.error('Error while trying to locate address on map');
       return false;
     }
@@ -120,19 +91,14 @@ export default function EventDetails() {
         const res = await axios.get(`https://ugmproject.vercel.app/api/v1/event/getEventById/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setEvent(res.data.event);
-        
         if (res.data.event.address && res.data.event.address.trim() !== '') {
           const success = await geocodeAddress(res.data.event.address.trim());
-          if (!success) {
-            showMapError();
-          }
+          if (!success) showMapError();
         } else {
           showMapError();
         }
       } catch (err) {
-        console.error('Error fetching event:', err);
         toast.error('Failed to load event details');
       } finally {
         setLoading(false);
@@ -164,13 +130,17 @@ export default function EventDetails() {
     year: 'numeric',
   });
 
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="tw-container tw-mx-auto tw-px-4 tw-py-10 tw-bg-gradient-to-b tw-from-white tw-to-gray-50 dark:tw-from-gray-900 dark:tw-to-gray-950"
-    >
+    <div className={`${darkMode ? 'tw-dark' : ''}`}>
+            <div className="container-fluid dark:tw-bg-gray-800">
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="tw-container tw-mx-auto tw-px-4 tw-py-10 tw-bg-gradient-to-b tw-from-white tw-to-gray-50 dark:tw-from-gray-800 dark:tw-to-gray-850"
+      >
       {/* Back Button */}
       <div className="tw-mb-6">
         <button
@@ -290,7 +260,7 @@ export default function EventDetails() {
       <div className="tw-grid md:tw-grid-cols-2 tw-gap-8">
         <div className="tw-space-y-6">
           {/* Short Description */}
-          <section className="tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow-md tw-p-6 hover:tw-shadow-lg tw-transition-shadow">
+          <section className="tw-bg-white dark:tw-bg-gray-900 tw-rounded-xl tw-shadow-md tw-p-6 hover:tw-shadow-lg tw-transition-shadow">
             <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3">
               Short Description
             </h2>
@@ -300,7 +270,7 @@ export default function EventDetails() {
           </section>
 
           {/* Full Description */}
-          <section className="tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow-md tw-p-6 hover:tw-shadow-lg tw-transition-shadow">
+          <section className="tw-bg-white dark:tw-bg-gray-900 tw-rounded-xl tw-shadow-md tw-p-6 hover:tw-shadow-lg tw-transition-shadow">
             <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3">
               Full Description
             </h2>
@@ -310,7 +280,7 @@ export default function EventDetails() {
           </section>
 
           {/* Responsible Person */}
-          <section className="tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow-md tw-p-6 hover:tw-shadow-lg tw-transition-shadow">
+          <section className="tw-bg-white dark:tw-bg-gray-900 tw-rounded-xl tw-shadow-md tw-p-6 hover:tw-shadow-lg tw-transition-shadow">
             <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3 tw-flex tw-items-center tw-gap-2">
               <FaUser /> Responsible Servant
             </h2>
@@ -320,7 +290,7 @@ export default function EventDetails() {
           </section>
 
           {/* Contact Only */}
-          <div className="tw-bg-white dark:tw-bg-gray-800 tw-shadow-md tw-rounded-2xl tw-p-6">
+          <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">
             <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3 tw-flex tw-items-center tw-gap-2">
               <FaPhone /> Contact
             </h2>
@@ -330,19 +300,12 @@ export default function EventDetails() {
           </div>
 
           {/* Address Only */}
-          <div className="tw-bg-white dark:tw-bg-gray-800 tw-shadow-md tw-rounded-2xl tw-p-6">
-            <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3 tw-flex tw-items-center tw-gap-2">
-              <FaMapMarkerAlt /> Address
-            </h2>
-            <p className="tw-text-gray-700 dark:tw-text-gray-200">
-              {event.address}
-            </p>
-          </div>
+          
         </div>
 
         <div className="tw-space-y-6">
           {/* Booking Card */}
-          <div className="tw-bg-white dark:tw-bg-gray-800 tw-shadow-xl tw-rounded-2xl tw-p-6 tw-h-fit  tw-top-4">
+          <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-xl tw-rounded-2xl tw-p-6 tw-h-fit  tw-top-4">
             <h2 className="tw-text-2xl tw-font-bold tw-text-blue-700 dark:tw-text-blue-300 tw-mb-4">
               Start Booking
             </h2>
@@ -355,7 +318,7 @@ export default function EventDetails() {
           </div>
 
           {/* Date */}
-          <div className="tw-bg-white dark:tw-bg-gray-800 tw-shadow-md tw-rounded-2xl tw-p-6">
+          <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">
             <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3 tw-flex tw-items-center tw-gap-2">
               <FaCalendarAlt /> Event Date
             </h2>
@@ -364,8 +327,17 @@ export default function EventDetails() {
             </p>
           </div>
 
+          <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">
+            <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3 tw-flex tw-items-center tw-gap-2">
+              <FaMapMarkerAlt /> Address
+            </h2>
+            <p className="tw-text-gray-700 dark:tw-text-gray-200">
+              {event.address}
+            </p>
+          </div>
+
           {/* Map Section */}
-          <div className="tw-bg-white dark:tw-bg-gray-800 tw-shadow-md tw-rounded-2xl tw-overflow-hidden">
+          <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-overflow-hidden">
             <div className="tw-p-4 tw-border-b">
               <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-flex tw-items-center tw-gap-2">
                 <FaMapMarkerAlt /> Event Location
@@ -403,5 +375,7 @@ export default function EventDetails() {
         </div>
       </div>
     </motion.div>
+        </div>
+    </div>
   );
 }
