@@ -123,41 +123,40 @@ export default function Events() {
                 </h1>
 
                 <div className={`${styles.searching} d-flex align-items-center gap-3 flex-wrap rounded-4 py-4 dark:tw-bg-gray-900`}>
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search by name..."
-                    className="form-control py-3 px-3 rounded-2"
-                    style={{ flex: 2, minWidth: '200px' }}
-                  />
+  <input
+    type="text"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder={t('events.search.placeholder')}
+    className="form-control py-3 px-3 rounded-2"
+    style={{ flex: 2, minWidth: '200px' }}
+  />
 
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="form-select py-3 px-3 tw-text-gray-700 dark:tw-bg-gray-800 dark:tw-text-white rounded-2 border-0"
-                    style={{ flex: 1, minWidth: '150px' }}
-                  >
-                    <option value="all">All Categories</option>
-                    <option value="trip">Trip</option>
-                    <option value="event">Event</option>
-                  </select>
-
-                  <motion.button
-                    whileHover={{ scale: 1.05, backgroundColor: '#5f78ff' }}
-                    transition={{ duration: 0.3 }}
-                    onClick={() => {
-                      setSearchTerm('');
-                      setSelectedCategory('all');
-                      setFilteredEvents(events);
-                      setCurrentPage(1);
-                    }}
-                    className="btn bg-main dark:tw-bg-indigo-600 text-white py-3 px-4 rounded-2 d-flex align-items-center gap-2"
-                    style={{ flexShrink: 0 }}
-                  >
-                    <FiRotateCcw size={18} />
-                    Reset Search
-                  </motion.button>
+                <select
+    value={selectedCategory}
+    onChange={(e) => setSelectedCategory(e.target.value)}
+    className="form-select py-3 px-3 tw-text-gray-700 dark:tw-bg-gray-800 dark:tw-text-white rounded-2 border-0"
+    style={{ flex: 1, minWidth: '150px' }}
+  >
+    <option value="all">{t('events.search.categories.all')}</option>
+    <option value="trip">{t('events.search.categories.trip')}</option>
+    <option value="event">{t('events.search.categories.events')}</option>
+  </select>
+                 <motion.button
+    whileHover={{ scale: 1.05, backgroundColor: '#5f78ff' }}
+    transition={{ duration: 0.3 }}
+    onClick={() => {
+      setSearchTerm('');
+      setSelectedCategory('all');
+      setFilteredEvents(events);
+      setCurrentPage(1);
+    }}
+    className="btn bg-main dark:tw-bg-indigo-600 text-white py-3 px-4 rounded-2 d-flex align-items-center gap-2"
+    style={{ flexShrink: 0 }}
+  >
+    <FiRotateCcw size={18} />
+    {t('events.search.button')}
+  </motion.button>
                 </div>
 
                 <div className="row">

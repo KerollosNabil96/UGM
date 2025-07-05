@@ -1,0 +1,36 @@
+{
+  "settings": {
+    "title": "Settings",
+    "description": "In this section, you can edit your personal information and update your password.",
+    "profileInfo": "Profile Information:",
+    "update": "Update",
+    "updateEmail": "Update Email",
+    "updateChurch": "Update Church",
+    "updateCollege": "Update college or Institute",
+    "updatePriestName": "Update priest name",
+    "updateAddress1": "Update Address 1",
+    "updateAddress2": "Update Address 2 (if available)",
+    "updateMobile1": "Update mobile number 1",
+    "updateMobile2": "Update mobile number 2 (if available)",
+    "updateLandline": "Update landline",
+    "updateProfession": "Update profession (if available)",
+    "selectCohort": "Select cohort",
+    "selectStatus": "Select status",
+    "dayOffLabel": "Day off (Press Ctrl and select):",
+    "updatePassword": "Update Password:",
+    "oldPassword": "Enter old Password",
+    "newPassword": "Enter new Password",
+    "rePassword": "Enter Repassword",
+    "submitPassword": "Update Password",
+    "errors": {
+      "email": "Invalid email address",
+      "mobile": "Invalid mobile number",
+      "landline": "Invalid landline number",
+      "requiredOldPassword": "Old Password is required",
+      "requiredNewPassword": "New Password is required",
+      "requiredRePassword": "Repassword is required",
+      "passwordMismatch": "Password and repassword must be the same",
+      "passwordPattern": "New password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character"
+    }
+  }
+}

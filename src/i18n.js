@@ -36,6 +36,8 @@ import arMemoryForm from './assets/locales/ar/memoryForm.json';
 import enMemoryForm from './assets/locales/en/memoryForm.json';
 import enProfile from './assets/locales/en/profile.json'
 import arProfile from './assets/locales/ar/profile.json'
+import arSettings from './assets/locales/ar/settings.json'
+import enSettings from './assets/locales/en/settings.json'
 i18n
   .use(LanguageDetector) 
   .use(initReactI18next) 
@@ -58,7 +60,9 @@ i18n
         dashboard : enDashboard,
         updatedReq : enUpdatedReq,
         memoryForm:enMemoryForm,
-        profile : enProfile
+        profile : enProfile,
+         settings : enSettings
+        
 
 
        },
@@ -79,7 +83,8 @@ i18n
         dashboard : arDashboard,
         updatedReq : arUpdatedReq,
         memoryForm : arMemoryForm , 
-        profile : arProfile
+        profile : arProfile,
+        settings : arSettings
 
 
        },

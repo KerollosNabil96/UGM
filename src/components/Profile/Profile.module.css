@@ -1,39 +1,46 @@
 .Profile {}
 
-.shad{
-    box-shadow: 5px 5px 10px 2px rgba(128, 128, 128, 0.618);
+.shad {
+  box-shadow: 5px 5px 10px 2px rgba(128, 128, 128, 0.618);
 }
 
-
-.line{
-    position: relative;
+.line,
+.line2 {
+  position: relative;
 }
 
-.line::after{
-    content: '';
-    background-color:#4B0082;
-    height: 3px;
-    width: 15%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin-left: 12px;
+.line::after,
+.line2::after {
+  content: '';
+  background-color: #4B0082;
+  height: 3px;
+  position: absolute;
+  top: 0;
 }
 
-
-.line2{
-    position: relative;
+/* الخط اللي تحت "نتمنى لك يوم سعيد" */
+.lineLTR::after {
+  width: 15%;
+  left: 0;
+  margin-left: 12px;
 }
 
-.line2::after{
-    content: '';
-    background-color:#4B0082;
-    height: 3px;
-    width: 70%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin-left: 12px;
-    transform: translateX(20%);
+.lineRTL::after {
+  width: 15%;
+  right: 0;
+  margin-right: 12px;
+}
 
+.line2LTR::after {
+  width: 70%;
+  left: 0;
+  margin-left: 12px;
+  transform: translateX(20%);
+}
+
+.line2RTL::after {
+  width: 70%;
+  right: 0;
+  margin-right: 12px;
+  transform: translateX(-20%);
 }

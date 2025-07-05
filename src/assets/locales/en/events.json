@@ -1,34 +1,46 @@
 {
-    "events": {
-      "title": "Upcoming Events",
-      "search": {
-        "placeholder": "Search by name...",
-        "categories": {
-          "all": "All Categories",
-          "events": "Events",
-          "trip": "Trip"
-        },
-        "button": "Search"
+  "events": {
+    "title": "Upcoming Events",
+    "search": {
+      "placeholder": "Search by name...",
+      "categories": {
+        "all": "All Categories",
+        "events": "Events",
+        "trip": "Trip"
       },
-      "cards": {
-        "siwa": {
-          "title": "Siwa Oasis",
-          "description": "Experience golden dunes, refreshing springs, and unforgettable sunsets in a trip full of adventure, relaxation, and fellowship! ✨🚙",
-          "date": "21/09/2025",
-          "button": "More Info!"
-        },
-        "monastery": {
-          "title": "Syrian Monastery",
-          "description": "A spiritual journey to Deir El-Suryan, a place of peace, prayer, and rich history. Experience tranquility, heritage, and deep connection with faith in this sacred monastery.",
-          "date": "12/07/2025",
-          "button": "More Info!"
-        },
-        "maria": {
-          "title": "St. Maria Resort – Fun & Faith!",
-          "description": "Spend a special day at St. Maria Resort with sports, swimming, and spiritual activities. Enjoy fellowship, relaxation, and a time to grow in faith together! 🙏✨",
-          "date": "14/06/2025",
-          "button": "More Info!"
-        }
+      "button": "Search",
+      "reset": "Reset Search"
+    },
+    "cards": {
+      "siwa": {
+        "title": "Siwa Oasis",
+        "description": "Experience golden dunes, refreshing springs, and unforgettable sunsets in a trip full of adventure, relaxation, and fellowship! ✨🚙",
+        "date": "21/09/2025",
+        "button": "More Info!"
+      },
+      "monastery": {
+        "title": "Syrian Monastery",
+        "description": "A spiritual journey to Deir El-Suryan, a place of peace, prayer, and rich history. Experience tranquility, heritage, and deep connection with faith in this sacred monastery.",
+        "date": "12/07/2025",
+        "button": "More Info!"
+      },
+      "maria": {
+        "title": "St. Maria Resort – Fun & Faith!",
+        "description": "Spend a special day at St. Maria Resort with sports, swimming, and spiritual activities. Enjoy fellowship, relaxation, and a time to grow in faith together! 🙏✨",
+        "date": "14/06/2025",
+        "button": "More Info!"
       }
+    },
+    "empty": {
+      "title": "No events found.",
+      "subtitle": "Try changing your search or category filter, or wait for upcoming events ✨"
+    },
+    "modal": {
+      "title": "⚠️ Delete Event",
+      "body": "Are you sure you want to delete",
+      "warning": "This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
     }
   }
+}

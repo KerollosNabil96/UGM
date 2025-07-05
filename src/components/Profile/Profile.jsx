@@ -34,14 +34,14 @@ export default function Profile() {
 
               <p className="tw-text-gray-500 fs-4 dark:tw-text-white">{t('niceDay')}</p>
 
-              <div className={`${styles.line}`}></div>
+              <div className={`${styles.line} ${isRTL ? styles.lineRTL : styles.lineLTR}`}></div>
 
               <h2 className="mt-4 fw-bold dark:tw-text-white">{t('walletTitle')}</h2>
               <h3 className="mt-3 fw-semibold dark:tw-text-white">
                 {t('balance')} <span className="fw-medium">0 EGP</span>
               </h3>
 
-              <div className={`${styles.line2} mt-3`}></div>
+              <div className={`${styles.line2} ${isRTL ? styles.line2RTL : styles.line2LTR} mt-3`}></div>
 
               <h2 className="mt-4 fw-bold dark:tw-text-white">{t('bookingTitle')}</h2>
 

@@ -1,0 +1,36 @@
+{
+  "settings": {
+    "title": "الإعدادات",
+    "description": "في هذا القسم يمكنك تعديل بياناتك الشخصية وتحديث كلمة المرور.",
+    "profileInfo": "معلومات الملف الشخصي:",
+    "update": "تحديث",
+    "updateEmail": "تحديث البريد الإلكتروني",
+    "updateChurch": "تحديث اسم الكنيسة",
+    "updateCollege": "تحديث الكلية أو المعهد",
+    "updatePriestName": "تحديث اسم الأب الكاهن",
+    "updateAddress1": "تحديث العنوان ١",
+    "updateAddress2": "تحديث العنوان ٢ (إن وُجد)",
+    "updateMobile1": "تحديث رقم الموبايل ١",
+    "updateMobile2": "تحديث رقم الموبايل ٢ (إن وُجد)",
+    "updateLandline": "تحديث التليفون الأرضي",
+    "updateProfession": "تحديث الوظيفة (إن وُجدت)",
+    "selectCohort": "اختر السنة",
+    "selectStatus": "اختر الحالة الاجتماعية",
+    "dayOffLabel": "يوم الإجازة (اضغط Ctrl واختر):",
+    "updatePassword": "تحديث كلمة المرور:",
+    "oldPassword": "أدخل كلمة المرور القديمة",
+    "newPassword": "أدخل كلمة المرور الجديدة",
+    "rePassword": "أعد إدخال كلمة المرور",
+    "submitPassword": "تحديث كلمة المرور",
+    "errors": {
+      "email": "البريد الإلكتروني غير صحيح",
+      "mobile": "رقم الموبايل غير صحيح",
+      "landline": "رقم التليفون الأرضي غير صحيح",
+      "requiredOldPassword": "كلمة المرور القديمة مطلوبة",
+      "requiredNewPassword": "كلمة المرور الجديدة مطلوبة",
+      "requiredRePassword": "إعادة كلمة المرور مطلوبة",
+      "passwordMismatch": "كلمتا المرور غير متطابقتين",
+      "passwordPattern": "يجب أن تحتوي كلمة المرور على ٨ أحرف على الأقل، تتضمن حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا خاصًا"
+    }
+  }
+}
