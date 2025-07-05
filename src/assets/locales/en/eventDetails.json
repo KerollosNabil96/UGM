@@ -1,0 +1,16 @@
+{
+  "eventDetails": {
+    "backToEvents": "Back to Events",
+    "shortDescription": "Short Description",
+    "fullDescription": "Full Description",
+    "responsibleServant": "Responsible Servant",
+    "contact": "Contact",
+    "eventDate": "Event Date",
+    "address": "Address",
+    "eventLocation": "Event Location",
+    "startBooking": "Start Booking",
+    "noLocation": "No precise location determined for this event",
+    "eventNotFound": "Event not found",
+    "locationError": "Could not determine event location. Showing default location."
+  }
+}
