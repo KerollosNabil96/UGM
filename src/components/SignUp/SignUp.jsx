@@ -105,7 +105,8 @@ export default function SignUp() {
             transition={{ duration: 1 }}
           >
             <div className="row w-75 mx-auto">
-              <div className="col-lg-6 ps-1 tw-bg-gray-100 dark:tw-bg-gray-900">
+              <div className="col-12 col-lg-6 px-0">
+
                 <div className={`${styles['bg-image']}`}>
                   <div className={`${styles['layer']}`}>
                     <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100'>
