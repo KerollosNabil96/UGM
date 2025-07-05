@@ -6,6 +6,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function MemoryDetails() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ export default function MemoryDetails() {
   const [isOpen, setIsOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
   const navigate = useNavigate();
+const { t, i18n } = useTranslation('memoryDetails');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,9 +42,8 @@ export default function MemoryDetails() {
     );
   }
 
-  if (!memory) return <div className="text-center text-danger mt-5">Memory not found.</div>;
+  if (!memory) return <div className="text-center text-danger mt-5">{t('notFound')}</div>;
 
-  // حذف تكرار mainImage من galleryImages
   const allImages = [
     memory.mainImage,
     ...(memory.galleryImages || []).filter(img => img !== memory.mainImage)
@@ -69,7 +70,7 @@ export default function MemoryDetails() {
                 onClick={() => navigate('/memories')}
                 className="tw-flex tw-items-center tw-gap-2 tw-text-blue-600 hover:tw-text-blue-800 dark:tw-text-blue-400 dark:hover:tw-text-blue-200 tw-font-medium tw-bg-blue-50 dark:tw-bg-gray-800 tw-px-4 tw-py-2 tw-rounded-xl tw-shadow-sm hover:tw-shadow-md tw-transition-all"
               >
-                <FiArrowLeft className="tw-text-lg" /> Back to memories
+                <FiArrowLeft className="tw-text-lg" /> {t('back')}
               </button>
             </div>
 
@@ -81,7 +82,7 @@ export default function MemoryDetails() {
             {/* التاريخ */}
             <p className="tw-text-center tw-mb-6 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-gray-500 dark:tw-text-white">
               <span className="tw-text-xl">📅</span>
-              {new Date(memory.date).toLocaleDateString('en-GB', {
+              {new Date(memory.date).toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : 'en-GB', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
