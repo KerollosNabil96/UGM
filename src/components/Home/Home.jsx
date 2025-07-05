@@ -39,6 +39,15 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  const images = [firstImg, secImage, thirdImage, fourthImg, fifthImg];
+  const imagePositions = [
+    'center 80%', 
+    'center 75%', 
+    'center 70%', 
+    'center 30%',
+    'center 60%', 
+  ];
+
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
       <div className="container-fluid dark:tw-bg-gray-800">
@@ -57,8 +66,8 @@ export default function Home() {
                 {t('home.subtitle')}
               </p>
 
-              {/* ✅ Verse Container - Fixed Height with Smooth Transitions */}
-              <div className="d-flex justify-content-center align-items-center my-4" style={{ 
+              {/* ✅ Verse Container */}
+              <div className="d-flex justify-content-center align-items-center my-4" style={{
                 height: '150px',
                 position: 'relative',
                 overflow: 'hidden'
@@ -108,7 +117,7 @@ export default function Home() {
                   style={{ height: "100%" }}
                 >
                   <div className="carousel-indicators">
-                    {[0, 1, 2, 3, 4].map((index) => (
+                    {images.map((_, index) => (
                       <button
                         key={index}
                         type="button"
@@ -121,7 +130,7 @@ export default function Home() {
                   </div>
 
                   <div className="carousel-inner rounded-5" style={{ height: "100%" }}>
-                    {[firstImg, secImage, thirdImage, fourthImg, fifthImg].map((img, i) => (
+                    {images.map((img, i) => (
                       <div
                         key={i}
                         className={`carousel-item ${i === 0 ? 'active' : ''} rounded-5`}
@@ -131,7 +140,11 @@ export default function Home() {
                           src={img}
                           className="d-block w-100"
                           alt=""
-                          style={{ height: "100%", objectFit: "cover", objectPosition: "center 60%" }}
+                          style={{
+                            height: "100%",
+                            objectFit: "cover",
+                            objectPosition: imagePositions[i] || 'center center',
+                          }}
                         />
                       </div>
                     ))}
