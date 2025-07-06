@@ -11,6 +11,7 @@
     "startBooking": "Start Booking",
     "noLocation": "No precise location determined for this event",
     "eventNotFound": "Event not found",
-    "locationError": "Could not determine event location. Showing default location."
+    "locationError": "Could not determine event location. Showing default location.",
+      "currency": "ُEGP"
   }
 }

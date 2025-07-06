@@ -309,7 +309,7 @@ const { t, i18n } = useTranslation('eventDetails');
                   {t('eventDetails.startBooking')}
                 </h2>
                 <p className="tw-text-green-600 dark:tw-text-green-400 tw-text-4xl tw-font-extrabold tw-mb-6">
-                  {event.price} {t('common.currency')}
+                  {event.price} {t('eventDetails.currency')}
                 </p>
               </div>
 
