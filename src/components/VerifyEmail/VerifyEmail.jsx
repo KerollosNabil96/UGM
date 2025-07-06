@@ -21,6 +21,9 @@ export default function VerifyEmail() {
     if (!token) {
       setError(t('missingToken'));
       setLoading(false);
+      setTimeout(() => {
+        window.location.href = 'https://ugm-family.vercel.app/';
+      }, 3000);
       return;
     }
 
@@ -36,7 +39,10 @@ export default function VerifyEmail() {
 
       } catch (err) {
         console.error("Verification Error:", err);
-        setError(t('error'));
+        setError(t('tryLater')); // الرسالة الجديدة
+        setTimeout(() => {
+          window.location.href = 'https://ugm-family.vercel.app/';
+        }, 3000);
       } finally {
         setLoading(false);
       }
@@ -67,9 +73,14 @@ export default function VerifyEmail() {
                   {t('loading')}
                 </p>
               ) : error ? (
-                <p className="tw-text-red-600 dark:tw-text-red-400 fw-bold fs-5">
-                  {error}
-                </p>
+                <>
+                  <p className="tw-text-red-600 dark:tw-text-red-400 fw-bold fs-5">
+                    {error}
+                  </p>
+                  <p className="tw-text-gray-500 dark:tw-text-gray-400 mt-3">
+                    {t('redirectingToHome')}
+                  </p>
+                </>
               ) : (
                 <>
                   <p className="tw-text-green-600 dark:tw-text-green-400 fw-bold fs-5">

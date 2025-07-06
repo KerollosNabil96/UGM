@@ -1,8 +1,10 @@
 {
   "title": "Email Verification",
   "loading": "Verifying your email...",
-  "missingToken": "Missing verification token.",
-  "error": "Verification failed. Please try again.",
+  "missingToken": "Verification token is missing.",
+  "error": "Verification failed.",
   "success": "Your email has been successfully verified!",
-  "redirecting": "Redirecting to sign-in page..."
+  "redirecting": "Redirecting to sign-in page...",
+  "tryLater": "Something went wrong. Please try again later.",
+  "redirectingToHome": "Redirecting to homepage..."
 }
