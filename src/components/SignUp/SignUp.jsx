@@ -97,8 +97,8 @@ export default function SignUp() {
 
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
-      <div className="container-fluid dark:tw-bg-gray-800 py-4">
-        <div className="container my-5">
+      <div className="container-fluid dark:tw-bg-gray-800 py-4" >
+        <div className="container my-5" style={{ minHeight: '66vh' }}>
           <motion.div
             initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
             animate={{ opacity: 1, x: 0 }}

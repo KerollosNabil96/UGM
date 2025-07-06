@@ -101,7 +101,7 @@ export default function SignIn() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         >
-          <div className="container my-5 justify-content-between d-flex align-items-center">
+          <div className="container my-5 justify-content-between d-flex align-items-center" style={{ minHeight: '62vh' }}>
             <div className="row w-100 mx-0">
               {/* Image Column */}
               <div className="col-12 col-lg-6 px-0">
