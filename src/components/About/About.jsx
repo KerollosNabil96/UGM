@@ -12,7 +12,7 @@ export default function About() {
 
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
-      <div className="container-fluid dark:tw-bg-gray-800">
+      <div className="container-fluid dark:tw-bg-gray-800 tw-overflow-x-hidden">
 
         <div className="tw-relative tw-w-full tw-h-[400px] tw-rounded-b-3xl tw-overflow-hidden">
           <img
@@ -42,7 +42,6 @@ export default function About() {
           </div>
         </div>
 
-        {/* 👇 باقي المحتوى */}
         <motion.div
           initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -53,9 +52,13 @@ export default function About() {
       <h2 className="tw-relative tw-text-center tw-text-xl tw-font-bold tw-text-indigo-600 dark:tw-text-indigo-400 tw-my-8 tw-flex tw-items-center tw-gap-4">
   <span className="tw-flex-grow tw-h-px tw-bg-indigo-500 dark:tw-bg-indigo-400" />
   
-  <span className={`tw-whitespace-nowrap ${i18n.language === 'en' ? 'tw-uppercase tw-tracking-wider' : ''}`}>
-    ✨ {t('slogan')} ✨
-  </span>
+  <span
+  className={`tw-text-center tw-break-words tw-px-2 
+    ${i18n.language === 'en' ? 'tw-uppercase tw-tracking-wider' : ''}
+    tw-text-sm sm:tw-text-base md:tw-text-lg`}
+>
+  ✨ {t('slogan')} ✨
+</span>
 
   <span className="tw-flex-grow tw-h-px tw-bg-indigo-500 dark:tw-bg-indigo-400" />
 </h2>
