@@ -89,7 +89,28 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <form className='mt-5' onSubmit={handleSubmit}>
+                {/* 💬 نص توضيحي وزر مجهول */}
+                <p className='text-center fw-semibold fs-5 mt-4 dark:tw-text-white'>
+                  {t('contact.note')}
+                </p>
+
+                <div className="text-center my-3">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary px-4 rounded-4"
+                    onClick={() =>
+                      setFormData({
+                        userName: 'Anonymous',
+                        phone: '01000000000',
+                        message: formData.message,
+                      })
+                    }
+                  >
+                    {t('contact.anonymousButton')}
+                  </button>
+                </div>
+
+                <form className='mt-4' onSubmit={handleSubmit}>
                   <div className="parent d-flex gap-3 justify-content-between">
                     <div className="w-100">
                       <input

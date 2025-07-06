@@ -28,6 +28,7 @@ export default function Users() {
         }
       );
 
+
       if (role === 'SuperAdmin') {
         const adminsResponse = await axios.get(
           'https://ugmproject.vercel.app/api/v1/user/gitAllAdmins',
