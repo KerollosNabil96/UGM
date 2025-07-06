@@ -27,6 +27,12 @@ export default function VerifyEmail() {
       try {
         const res = await axios.get(`https://ugmproject.vercel.app/api/v1/user/verifyEmail?token=${token}`);
         setMessage(res.data.message || t('success'));
+
+        // ✅ التوجيه بعد 3 ثواني فقط في حالة النجاح
+        setTimeout(() => {
+          window.location.href = 'https://ugm-family.vercel.app/signin';
+        }, 3000);
+
       } catch (err) {
         setError(t('error'));
       } finally {
@@ -45,9 +51,12 @@ export default function VerifyEmail() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         >
-          <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-            <div className="tw-bg-white dark:tw-bg-gray-900 tw-p-8 tw-rounded-2xl tw-shadow-lg tw-text-center tw-w-full tw-max-w-md">
-              <h2 className="tw-text-2xl tw-font-bold mb-4 dark:tw-text-white">
+          <div
+            className="container d-flex justify-content-center align-items-center"
+            style={{ minHeight: '80vh' }} 
+          >
+            <div className="tw-bg-white dark:tw-bg-gray-900 tw-p-12 tw-rounded-2xl tw-shadow-lg tw-text-center tw-w-full tw-max-w-xl"> {/* ✅ مربع أكبر */}
+              <h2 className="tw-text-3xl tw-font-bold mb-6 dark:tw-text-white">
                 {t('title')}
               </h2>
 
@@ -56,7 +65,10 @@ export default function VerifyEmail() {
               ) : error ? (
                 <p className="tw-text-red-600 dark:tw-text-red-400 fw-bold fs-5">{error}</p>
               ) : (
-                <p className="tw-text-green-600 dark:tw-text-green-400 fw-bold fs-5">{message}</p>
+                <>
+                  <p className="tw-text-green-600 dark:tw-text-green-400 fw-bold fs-5">{message}</p>
+                  <p className="tw-text-gray-500 dark:tw-text-gray-400 mt-3">{t('redirecting')}</p>
+                </>
               )}
             </div>
           </div>
