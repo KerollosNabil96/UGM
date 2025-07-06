@@ -15,20 +15,37 @@ export default function Home() {
   const { t, i18n } = useTranslation('home');
   const isRTL = i18n.language === 'ar';
 
-  const verses = [
-    {
-      ar: 'لأنه حيثما اجتمع اثنان أو ثلاثة باسمي فهناك أكون في وسطهم (متى 18:20)',
-      en: 'For where two or three gather in my name, there am I with them. (Matthew 18:20)',
-    },
-    {
-      ar: 'مواظبين على الصلاة والشركة وكسر الخبز (أعمال الرسل 2:42)',
-      en: 'They devoted themselves to the apostle teaching and to fellowship, to the breaking of bread and to prayer. (Acts 2:42)',
-    },
-    {
-      ar: 'لنلاحظ بعضنا بعضًا للتحريض على المحبة والأعمال الحسنة (عبرانيين 10:24)',
-      en: 'And let us consider how we may spur one another on toward love and good deeds. (Hebrews 10:24)',
-    },
-  ];
+ const verses = [
+  {
+    ar: 'لأنه حيثما اجتمع اثنان أو ثلاثة باسمي فهناك أكون في وسطهم (متى 18:20)',
+    en: 'For where two or three gather in my name, there am I with them. (Matthew 18:20)',
+  },
+  {
+    ar: 'مواظبين على الصلاة والشركة وكسر الخبز (أعمال الرسل 2:42)',
+    en: 'They devoted themselves to the apostle teaching and to fellowship, to the breaking of bread and to prayer. (Acts 2:42)',
+  },
+  {
+    ar: 'لنلاحظ بعضنا بعضًا للتحريض على المحبة والأعمال الحسنة (عبرانيين 10:24)',
+    en: 'And let us consider how we may spur one another on toward love and good deeds. (Hebrews 10:24)',
+  },
+  {
+  ar: 'ليكون الجميع واحدًا، كما أنك أنت أيها الآب فيَّ، وأنا فيك، ليكونوا هم أيضًا واحدًا فينا. (يوحنا 17:21)',
+  en: 'That all of them may be one, Father, just as you are in me and I am in you. (John 17:21)'
+  },
+  {
+  ar: 'كما أن لنا أعضاءً كثيرة في جسد واحد... هكذا نحن الكثيرين جسد واحد في المسيح، وأعضاء بعضًا لبعض كل واحد للآخر. (رومية 12:5)',
+  en: 'So in Christ we, though many, form one body, and each member belongs to all the others. (Romans 12:5)'
+  },
+  {
+  ar: 'كان هؤلاء كلهم يواظبون بنفس واحدة على الصلاة. (أعمال الرسل 1:14)',
+  en: 'They all joined together constantly in prayer. (Acts 1:14)'
+  },
+  {
+  ar: 'احملوا بعضكم أثقال بعض، وهكذا تمّموا ناموس المسيح. (غلاطية 6:2)',
+  en: 'Carry each other’s burdens, and in this way you will fulfill the law of Christ. (Galatians 6:2)'
+  },
+];
+
 
   const [verseIndex, setVerseIndex] = useState(0);
 
@@ -49,7 +66,7 @@ export default function Home() {
   ];
 
   return (
-    <div className={`${darkMode ? 'tw-dark' : ''}`}>
+    <div className={`${darkMode ? 'tw-dark' : ''}`} style={{ overflow: 'hidden' }}>
       <div className="container-fluid dark:tw-bg-gray-800">
         <motion.div
           initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
