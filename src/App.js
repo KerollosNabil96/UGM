@@ -22,6 +22,7 @@ import ShareEvent from './components/ShareEvent/ShareEvent';
 import ShareMemory from './components/ShareMemory/ShareMemory';
 import EventDetails from './components/EventDetails/EventDetails';
 import MemoryDetails from './components/MemoryDetails/MemoryDetails'
+import VerifyEmail from './components/VerifyEmail/VerifyEmail'
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -51,6 +52,7 @@ function App() {
         { path: 'signup', element: <SignUp /> },
         { path: 'not-found', element: <NotFound /> },
         { path: 'faqs', element: <FAQs /> },
+        { path: 'verifyEmail', element: <VerifyEmail /> },
 
         // Protected Routes accessible to all authenticated users
         {

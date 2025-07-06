@@ -44,6 +44,8 @@ import arMemoryDetails from './assets/locales/ar/memoryDetails.json'
 import enMemoryDetails from './assets/locales/en/memoryDetails.json'
 import enFaqs from './assets/locales/en/faqs.json'
 import arFaqs from './assets/locales/ar/faqs.json'
+import arVerify from './assets/locales/ar/verify.json'
+import enVerify from './assets/locales/en/verify.json'
 i18n
   .use(LanguageDetector) 
   .use(initReactI18next) 
@@ -70,7 +72,8 @@ i18n
          settings : enSettings,
          eventDetails :enEventDetails,
          memoryDetails : enMemoryDetails,
-         faqs : enFaqs
+         faqs : enFaqs , 
+         verify : enVerify
         
 
 
@@ -96,12 +99,8 @@ i18n
         settings : arSettings,
         eventDetails :arEventDetails,
         memoryDetails : arMemoryDetails , 
-        faqs : arFaqs
-
-
-
-
-
+        faqs : arFaqs,
+        verify : arVerify
        },
     },
     fallbackLng: 'en',

@@ -4,6 +4,7 @@
     "email": {
       "label": "Email:",
       "placeholder": "Enter your email.",
+      "error": "Login faile.",
       "errors": {
         "required": "Email is required",
         "invalid": "Invalid email address"

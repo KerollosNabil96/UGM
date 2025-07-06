@@ -1,0 +1,8 @@
+{
+  "title": "Email Verification",
+  "loading": "Verifying your email...",
+  "success": "Email verified successfully!",
+  "error": "An error occurred during verification.",
+  "missingToken": "Invalid or missing verification link.",
+  "redirectingIn": "Redirecting in"
+}
