@@ -42,6 +42,8 @@ import enEventDetails from './assets/locales/en/eventDetails.json'
 import arEventDetails from './assets/locales/ar/eventDetails.json'
 import arMemoryDetails from './assets/locales/ar/memoryDetails.json'
 import enMemoryDetails from './assets/locales/en/memoryDetails.json'
+import enFaqs from './assets/locales/en/faqs.json'
+import arFaqs from './assets/locales/ar/faqs.json'
 i18n
   .use(LanguageDetector) 
   .use(initReactI18next) 
@@ -67,7 +69,8 @@ i18n
         profile : enProfile,
          settings : enSettings,
          eventDetails :enEventDetails,
-         memoryDetails : enMemoryDetails
+         memoryDetails : enMemoryDetails,
+         faqs : enFaqs
         
 
 
@@ -92,7 +95,9 @@ i18n
         profile : arProfile,
         settings : arSettings,
         eventDetails :arEventDetails,
-        memoryDetails : arMemoryDetails
+        memoryDetails : arMemoryDetails , 
+        faqs : arFaqs
+
 
 
 

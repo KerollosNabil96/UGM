@@ -69,15 +69,21 @@ export default function Navbar() {
                 </NavLink>
               </li>
               <li className="nav-item">
+                <NavLink to="/events" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
+                  {t('navbar.links.events')}
+                </NavLink>
+              </li>
+              <li className="nav-item">
                 <NavLink to="/contact" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
                   {t('navbar.links.contact')}
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/events" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
-                  {t('navbar.links.events')}
+                <NavLink to="/faqs" onClick={closeNavbar} className={({ isActive }) => isActive ? `${styles.line} nav-link active text-white` : 'nav-link text-white'}>
+                  {t('navbar.links.Faqs')}
                 </NavLink>
               </li>
+              
 
               {token && (
                 <>

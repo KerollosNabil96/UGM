@@ -33,6 +33,7 @@ import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Messages from './components/messages/messages';
+import FAQs from './components/FAQs/FAQs'
 
 function App() {
   const router = createBrowserRouter([
@@ -49,6 +50,7 @@ function App() {
         { path: 'signin', element: <SignIn /> },
         { path: 'signup', element: <SignUp /> },
         { path: 'not-found', element: <NotFound /> },
+        { path: 'faqs', element: <FAQs /> },
 
         // Protected Routes accessible to all authenticated users
         {

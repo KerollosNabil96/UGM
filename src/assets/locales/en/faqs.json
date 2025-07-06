@@ -1,0 +1,28 @@
+{
+  "title": "Frequently Asked Questions",
+  "subtitle": "Here you'll find answers to common questions",
+  "q1": {
+    "title": "📅 When is the meeting?",
+    "answer": "The meeting is held every Friday at 6:00 PM."
+  },
+  "q2": {
+    "title": "📍 Where do we meet?",
+    "answer": "At St. Mary & St. George Church, Gabriel, Alexandria, Egypt."
+  },
+  "q3": {
+"title": "📞 What is the servant's phone number?",
+    "answer": "You can reach the responsible servant at 01201047167."
+  },
+  "q4": {
+    "title": "💰 What is the wallet system?",
+    "answer": "The wallet is like a virtual account for each youth. You earn balance by attending weekly meetings or winning in competitions. You can use your balance to book trips."
+  },
+  "q5": {
+    "title": "✉️ How can I contact the service leader or ask for help?",
+    "answer": "You can send a message, prayer request, or complaint through the Contact section. You can also choose to stay anonymous if you prefer."
+  },
+  "q6": {
+    "title": "⛪ Can I join if I'm from another church?",
+    "answer": "Absolutely! We’d love to have you as part of our family. You’re welcome anytime."
+  }
+}

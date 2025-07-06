@@ -8,7 +8,7 @@
         "events": "Events",
         "trip": "Trip"
       },
-      "button": "Search",
+      "button": "Reset Search",
       "reset": "Reset Search"
     },
     "cards": {
