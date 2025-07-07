@@ -40,6 +40,11 @@ export default function Dashboard() {
                     </NavLink>
                   </li>
                 )}
+                <li className="nav-item">
+                  <NavLink className="nav-link active text-white" to="wallet-managment">
+                    <i className="fa-solid fa-wallet me-1"></i>{t('dashboard.walletManagment')}
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -83,6 +88,11 @@ export default function Dashboard() {
                   </NavLink>
                 </li>
               )}
+              <li className="nav-item">
+                <NavLink className="nav-link active text-white" to="wallet-managment">
+                  <i className="fa-solid fa-wallet me-1"></i> {t('dashboard.walletManagment')}
+                </NavLink>
+              </li>
             </ul>
           </div>
 

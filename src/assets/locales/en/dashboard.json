@@ -3,6 +3,7 @@
       "title": "Admin Dashboard",
       "users": "Users",
       "updateRequests": "Update Requests",
-      "messages" : "messages"
+      "messages" : "messages",
+      "walletManagment" : "Wallet managment"
     }
   }

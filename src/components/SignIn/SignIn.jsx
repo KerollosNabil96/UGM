@@ -77,6 +77,7 @@ export default function SignIn() {
         );
         const userName = response.data.userName;
         const token = response.data.token;
+        localStorage.setItem('wallet', JSON.stringify(response.data.wallet));
         localStorage.setItem("userName", userName);
         login(token);
         localStorage.setItem("role", response.data.role);
