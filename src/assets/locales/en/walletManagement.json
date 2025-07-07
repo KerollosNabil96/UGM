@@ -1,0 +1,53 @@
+{
+  "walletManagement": {
+    "title": "Wallet Management",
+    "searchPlaceholder": "Search by name...",
+    "tableHeaders": {
+      "index": "#",
+      "name": "Name",
+      "balance": "Balance",
+      "manage": "Manage",
+      "history": "History"
+    },
+    "noUsers": "No users found",
+    "updated": "Updated!",
+    "manageButton": "Manage",
+    "historyButton": "History",
+    "modal": {
+      "title": "Manage Wallet for {userName}",
+      "amountLabel": "Amount (EGP):",
+      "operationLabel": "Operation:",
+      "operationOptions": {
+        "add": "Add",
+        "remove": "Remove"
+      },
+      "descriptionLabel": "Description:",
+      "cancelButton": "Cancel",
+      "confirmButton": "Confirm",
+      "processing": "Processing..."
+    },
+    "historyModal": {
+      "title": "Wallet History for {userName}",
+      "headers": {
+        "operation": "Operation",
+        "amount": "Amount",
+        "description": "Description",
+        "admin": "Admin",
+        "date": "Date"
+      },
+      "noTransactions": "No transactions yet.",
+      "closeButton": "Close"
+    },
+    "pagination": {
+      "previous": "«",
+      "next": "»"
+    },
+    "errors": {
+      "fillFields": "Fill all fields correctly",
+      "insufficientBalance": "Cannot remove more than available balance",
+      "transactionSuccess": "Transaction successful",
+      "transactionFailed": "Transaction failed",
+      "fetchError": "Error fetching users"
+    }
+  }
+}

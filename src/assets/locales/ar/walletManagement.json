@@ -1,0 +1,53 @@
+{
+  "walletManagement": {
+    "title": "إدارة المحافظ",
+    "searchPlaceholder": "البحث بالاسم...",
+    "tableHeaders": {
+      "index": "#",
+      "name": "الاسم",
+      "balance": "الرصيد",
+      "manage": "إدارة",
+      "history": "السجل"
+    },
+    "noUsers": "لا يوجد مستخدمون",
+    "updated": "تم التحديث!",
+    "manageButton": "إدارة",
+    "historyButton": "السجل",
+    "modal": {
+      "title": "إدارة محفظة {userName}",
+      "amountLabel": "المبلغ (ج.م):",
+      "operationLabel": "العملية:",
+      "operationOptions": {
+        "add": "إضافة",
+        "remove": "سحب"
+      },
+      "descriptionLabel": "الوصف:",
+      "cancelButton": "إلغاء",
+      "confirmButton": "تأكيد",
+      "processing": "جاري المعالجة..."
+    },
+    "historyModal": {
+      "title": "سجل المحفظة لـ {userName}",
+      "headers": {
+        "operation": "العملية",
+        "amount": "المبلغ",
+        "description": "الوصف",
+        "admin": "المشرف",
+        "date": "التاريخ"
+      },
+      "noTransactions": "لا توجد معاملات حتى الآن.",
+      "closeButton": "إغلاق"
+    },
+    "pagination": {
+      "previous": "«",
+      "next": "»"
+    },
+    "errors": {
+      "fillFields": "املأ جميع الحقول بشكل صحيح",
+      "insufficientBalance": "لا يمكن سحب أكثر من الرصيد المتاح",
+      "transactionSuccess": "تمت العملية بنجاح",
+      "transactionFailed": "فشلت العملية",
+      "fetchError": "خطأ في جلب بيانات المستخدمين"
+    }
+  }
+}

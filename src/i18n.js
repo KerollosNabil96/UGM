@@ -46,6 +46,8 @@ import enFaqs from './assets/locales/en/faqs.json'
 import arFaqs from './assets/locales/ar/faqs.json'
 import arVerify from './assets/locales/ar/verify.json'
 import enVerify from './assets/locales/en/verify.json'
+import enWalletManagement from './assets/locales/en/walletManagement.json'
+import arWalletManagement from './assets/locales/ar/walletManagement.json'
 i18n
   .use(LanguageDetector) 
   .use(initReactI18next) 
@@ -73,7 +75,8 @@ i18n
          eventDetails :enEventDetails,
          memoryDetails : enMemoryDetails,
          faqs : enFaqs , 
-         verify : enVerify
+         verify : enVerify, 
+         walletManagement: enWalletManagement,
         
 
 
@@ -100,7 +103,8 @@ i18n
         eventDetails :arEventDetails,
         memoryDetails : arMemoryDetails , 
         faqs : arFaqs,
-        verify : arVerify
+        verify : arVerify,
+         walletManagement: arWalletManagement,
        },
     },
     fallbackLng: 'en',

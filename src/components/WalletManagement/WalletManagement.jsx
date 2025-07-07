@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './WalletManagement.module.css';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
 export default function WalletManagement() {
+  const { t, i18n } = useTranslation("walletManagement");
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,8 +18,10 @@ export default function WalletManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [processing, setProcessing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(10); 
+  const [usersPerPage] = useState(10);
   const [pageRange] = useState(6);
+
+  const isRTL = i18n.language === 'ar';
 
   const fetchData = async () => {
     setLoading(true);
@@ -33,7 +37,7 @@ export default function WalletManagement() {
       setUsers(response.data.users);
       setFilteredUsers(response.data.users);
     } catch (error) {
-      toast.error('Error fetching users');
+      toast.error(t('walletManagement.errors.fetchError'));
     } finally {
       setLoading(false);
     }
@@ -46,13 +50,13 @@ export default function WalletManagement() {
   useEffect(() => {
     if (searchTerm.trim() === '') {
       setFilteredUsers(users);
-      setCurrentPage(1); // Reset to first page when search is cleared
+      setCurrentPage(1);
     } else {
       const filtered = users.filter(user =>
         user.userName.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredUsers(filtered);
-      setCurrentPage(1); // Reset to first page on new search
+      setCurrentPage(1);
     }
   }, [searchTerm, users]);
 
@@ -62,12 +66,10 @@ export default function WalletManagement() {
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
-  // Get current page range for pagination buttons
   const getPageRange = () => {
     let start = Math.max(1, currentPage - Math.floor(pageRange / 2));
     let end = Math.min(totalPages, start + pageRange - 1);
     
-    // Adjust if we're at the end
     if (end - start + 1 < pageRange) {
       start = Math.max(1, end - pageRange + 1);
     }
@@ -82,7 +84,7 @@ export default function WalletManagement() {
   const handleTransaction = async () => {
     const token = localStorage.getItem('token');
     if (!selectedUser || !amount || !operation || isNaN(amount)) {
-      toast.error('Fill all fields correctly');
+      toast.error(t('walletManagement.errors.fillFields'));
       return;
     }
 
@@ -93,7 +95,7 @@ export default function WalletManagement() {
         : currentBalance + parseFloat(amount);
 
     if (newBalance < 0) {
-      toast.error('Cannot remove more than available balance');
+      toast.error(t('walletManagement.errors.insufficientBalance'));
       return;
     }
 
@@ -124,7 +126,7 @@ export default function WalletManagement() {
       setUpdatedUserId(selectedUser._id);
       setTimeout(() => setUpdatedUserId(null), 3000);
 
-      toast.success('Transaction successful');
+      toast.success(t('walletManagement.errors.transactionSuccess'));
       setAmount('');
       setDescription('');
       setSelectedUser(null);
@@ -132,7 +134,7 @@ export default function WalletManagement() {
       const errorMessage =
         error?.response?.data?.message ||
         error?.response?.data?.err ||
-        'Transaction failed';
+        t('walletManagement.errors.transactionFailed');
       toast.error(errorMessage);
       console.error(error);
     } finally {
@@ -141,42 +143,45 @@ export default function WalletManagement() {
   };
 
   return (
-    <div className={`tw-container-fluid ${styles.walletContainer} tw-text-white tw-p-4`}>
+    <div 
+      className={`tw-container-fluid ${styles.walletContainer} tw-text-white tw-p-4`}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="tw-row tw-flex tw-justify-center">
         <div className={`tw-w-full tw-mt-4 tw-rounded-2xl tw-p-3 tw-relative ${styles.shad} tw-max-w-[1800px]`}>
           <div className="tw-flex tw-flex-col tw-mb-4 tw-w-full">
             <h3 className="tw-text-xl md:tw-text-2xl tw-font-semibold tw-text-black dark:tw-text-white tw-mb-3 tw-text-center md:tw-text-left">
-  Wallet Management
-</h3>
+              {t('walletManagement.title')}
+            </h3>
             <div className="tw-relative tw-w-full">
               <input
-  type="text"
-  placeholder="Search by name..."
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-  className="tw-w-full tw-bg-white dark:tw-bg-gray-700 tw-text-gray-800 dark:tw-text-gray-200 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-4 tw-py-2 tw-pl-10 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-yellow-400 dark:focus:tw-ring-yellow-500"
-/>
-              <i className="fa-solid fa-search tw-absolute tw-left-3 tw-top-3 tw-text-gray-400"></i>
+                type="text"
+                placeholder={t('walletManagement.searchPlaceholder')}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="tw-w-full tw-bg-white dark:tw-bg-gray-700 tw-text-gray-800 dark:tw-text-gray-200 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-4 tw-py-2 tw-pl-10 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-yellow-400 dark:focus:tw-ring-yellow-500"
+              />
+              <i className={`fa-solid fa-search tw-absolute ${isRTL ? 'tw-right-3' : 'tw-left-3'} tw-top-3 tw-text-gray-400`}></i>
             </div>
           </div>
 
- {loading ? (
-  <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
-    <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
-      <span className="visually-hidden">Loading...</span>
-    </div>
-  </div>
-) : (
+          {loading ? (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
+              <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : (
             <>
               <div className="tw-overflow-x-auto">
                 <table className="tw-w-full tw-text-sm tw-border tw-rounded-lg tw-overflow-hidden tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white">
                   <thead className="tw-bg-gray-100 dark:tw-bg-gray-800">
                     <tr>
-                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">#</th>
-                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">Name</th>
-                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">Balance</th>
-                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">Manage</th>
-                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">History</th>
+                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.tableHeaders.index')}</th>
+                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.tableHeaders.name')}</th>
+                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.tableHeaders.balance')}</th>
+                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.tableHeaders.manage')}</th>
+                      <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.tableHeaders.history')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -192,7 +197,9 @@ export default function WalletManagement() {
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">
                             {user.userName}
                             {updatedUserId === user._id && (
-                              <span className="tw-text-green-500 tw-text-xs tw-ml-2">Updated!</span>
+                              <span className="tw-text-green-500 tw-text-xs tw-ml-2">
+                                {t('walletManagement.updated')}
+                              </span>
                             )}
                           </td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">{user.wallet || 0} EGP</td>
@@ -201,7 +208,7 @@ export default function WalletManagement() {
                               className="tw-bg-yellow-500 tw-text-white dark:tw-bg-transparent dark:tw-text-yellow-400 dark:tw-border dark:tw-border-yellow-400 tw-px-2 tw-py-1 tw-rounded hover:tw-bg-yellow-400 hover:tw-text-black tw-text-xs sm:tw-text-sm"
                               onClick={() => setSelectedUser(user)}
                             >
-                              Manage
+                              {t('walletManagement.manageButton')}
                             </button>
                           </td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">
@@ -209,7 +216,7 @@ export default function WalletManagement() {
                               className="tw-bg-blue-500 tw-text-white tw-px-2 tw-py-1 tw-rounded hover:tw-bg-blue-600 tw-text-xs sm:tw-text-sm"
                               onClick={() => setHistoryUser(user)}
                             >
-                              History
+                              {t('walletManagement.historyButton')}
                             </button>
                           </td>
                         </tr>
@@ -217,7 +224,7 @@ export default function WalletManagement() {
                     ) : (
                       <tr>
                         <td colSpan="5" className="tw-px-4 tw-py-6 tw-text-center">
-                          No users found
+                          {t('walletManagement.noUsers')}
                         </td>
                       </tr>
                     )}
@@ -230,18 +237,16 @@ export default function WalletManagement() {
                 <div className="tw-flex tw-justify-center tw-mt-4">
                   <nav>
                     <ul className="tw-flex tw-list-none tw-p-0 tw-m-0 tw-flex-wrap tw-justify-center">
-                      {/* Previous Button */}
                       <li className={`tw-mx-1 tw-my-1 ${currentPage === 1 ? 'tw-opacity-50 tw-cursor-not-allowed' : ''}`}>
                         <button
                           className="tw-px-3 tw-py-1 tw-rounded tw-border tw-border-gray-300 tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white"
                           onClick={() => handlePageChange(currentPage - 1)}
                           disabled={currentPage === 1}
                         >
-                          &laquo;
+                          {t('walletManagement.pagination.previous')}
                         </button>
                       </li>
 
-                      {/* Page Numbers */}
                       {getPageRange().map((number) => (
                         <li key={number} className="tw-mx-1 tw-my-1">
                           <button
@@ -257,14 +262,13 @@ export default function WalletManagement() {
                         </li>
                       ))}
 
-                      {/* Next Button */}
                       <li className={`tw-mx-1 tw-my-1 ${currentPage === totalPages ? 'tw-opacity-50 tw-cursor-not-allowed' : ''}`}>
                         <button
                           className="tw-px-3 tw-py-1 tw-rounded tw-border tw-border-gray-300 tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white"
                           onClick={() => handlePageChange(currentPage + 1)}
                           disabled={currentPage === totalPages}
                         >
-                          &raquo;
+                          {t('walletManagement.pagination.next')}
                         </button>
                       </li>
                     </ul>
@@ -283,13 +287,13 @@ export default function WalletManagement() {
             <div
               onClick={(e) => e.stopPropagation()}
               className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-md tw-mx-4"
+              dir={isRTL ? 'rtl' : 'ltr'}
             >
               <h4 className="tw-mb-4 tw-font-semibold tw-text-lg">
-                <i className="fa-solid fa-wallet tw-text-yellow-400"></i> Manage Wallet for{' '}
-                <strong>{selectedUser.userName}</strong>
+                <i className="fa-solid fa-wallet tw-text-yellow-400"></i> {t('walletManagement.modal.title', { userName: selectedUser.userName })}
               </h4>
               <div className="tw-mb-4">
-                <label className="tw-block tw-mb-1">Amount (EGP):</label>
+                <label className="tw-block tw-mb-1">{t('walletManagement.modal.amountLabel')}</label>
                 <input
                   type="number"
                   value={amount}
@@ -298,18 +302,18 @@ export default function WalletManagement() {
                 />
               </div>
               <div className="tw-mb-4">
-                <label className="tw-block tw-mb-1">Operation:</label>
+                <label className="tw-block tw-mb-1">{t('walletManagement.modal.operationLabel')}</label>
                 <select
                   className="tw-w-full tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-3 tw-py-2"
                   value={operation}
                   onChange={(e) => setOperation(e.target.value)}
                 >
-                  <option value="add">Add</option>
-                  <option value="remove">Remove</option>
+                  <option value="add">{t('walletManagement.modal.operationOptions.add')}</option>
+                  <option value="remove">{t('walletManagement.modal.operationOptions.remove')}</option>
                 </select>
               </div>
               <div className="tw-mb-4">
-                <label className="tw-block tw-mb-1">Description:</label>
+                <label className="tw-block tw-mb-1">{t('walletManagement.modal.descriptionLabel')}</label>
                 <input
                   type="text"
                   value={description}
@@ -317,12 +321,12 @@ export default function WalletManagement() {
                   className="tw-w-full tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-3 tw-py-2"
                 />
               </div>
-              <div className="tw-flex tw-justify-end tw-flex-wrap tw-gap-2">
+              <div className={`tw-flex tw-justify-end tw-flex-wrap tw-gap-2 ${isRTL ? 'tw-flex-row-reverse' : ''}`}>
                 <button
                   onClick={() => setSelectedUser(null)}
                   className="tw-border tw-border-gray-400 tw-text-gray-600 tw-rounded-md tw-px-4 tw-py-2 hover:tw-bg-gray-200 tw-flex-1 sm:tw-flex-none"
                 >
-                  Cancel
+                  {t('walletManagement.modal.cancelButton')}
                 </button>
                 <button
                   onClick={handleTransaction}
@@ -332,10 +336,10 @@ export default function WalletManagement() {
                   {processing ? (
                     <span className="tw-flex tw-items-center">
                       <span className="tw-animate-spin tw-rounded-full tw-h-4 tw-w-4 tw-border-t-2 tw-border-b-2 tw-border-yellow-600 tw-mr-2"></span>
-                      Processing...
+                      {t('walletManagement.modal.processing')}
                     </span>
                   ) : (
-                    'Confirm'
+                    t('walletManagement.modal.confirmButton')
                   )}
                 </button>
               </div>
@@ -351,31 +355,32 @@ export default function WalletManagement() {
             <div
               onClick={(e) => e.stopPropagation()}
               className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-3xl tw-overflow-y-auto tw-max-h-[90vh] tw-mx-4"
+              dir={isRTL ? 'rtl' : 'ltr'}
             >
               <h4 className="tw-text-lg tw-font-semibold tw-mb-4">
-                Wallet History for <strong>{historyUser.userName}</strong>
+                {t('walletManagement.historyModal.title', { userName: historyUser.userName })}
               </h4>
               {historyUser.walletHistory?.length > 0 ? (
                 <div className="tw-overflow-x-auto">
                   <table className="tw-w-full tw-text-sm tw-border tw-rounded tw-overflow-hidden tw-bg-white dark:tw-bg-gray-800">
                     <thead>
                       <tr>
-                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">Operation</th>
-                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">Amount</th>
-                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">Description</th>
-                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">Admin</th>
-                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">Date</th>
+                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.historyModal.headers.operation')}</th>
+                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.historyModal.headers.amount')}</th>
+                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.historyModal.headers.description')}</th>
+                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.historyModal.headers.admin')}</th>
+                        <th className="tw-px-2 tw-py-2 sm:tw-px-4">{t('walletManagement.historyModal.headers.date')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {historyUser.walletHistory.map((item, idx) => (
                         <tr key={item._id || idx} className="tw-border-t">
-                          <td className="tw-px-2 tw-py-2 sm:tw-px-4">{item.operation}</td>
+                          <td className="tw-px-2 tw-py-2 sm:tw-px-4">{t(`walletManagement.operations.${item.operation}`)}</td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">{item.amount} EGP</td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">{item.description || '-'}</td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">{item.performedBy?.adminName || '-'}</td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">
-                            {new Date(item.createdAt).toLocaleString('en-GB', {
+                            {new Date(item.createdAt).toLocaleString(i18n.language, {
                               day: '2-digit',
                               month: '2-digit',
                               year: 'numeric',
@@ -389,14 +394,14 @@ export default function WalletManagement() {
                   </table>
                 </div>
               ) : (
-                <p>No transactions yet.</p>
+                <p>{t('walletManagement.historyModal.noTransactions')}</p>
               )}
-              <div className="tw-text-right tw-mt-4">
+              <div className={`tw-text-right tw-mt-4 ${isRTL ? 'tw-text-left' : ''}`}>
                 <button
                   onClick={() => setHistoryUser(null)}
                   className="tw-bg-gray-300 tw-text-black tw-rounded-md tw-px-4 tw-py-2 hover:tw-bg-gray-400"
                 >
-                  Close
+                  {t('walletManagement.historyModal.closeButton')}
                 </button>
               </div>
             </div>
