@@ -27,7 +27,7 @@
       "processing": "Processing..."
     },
     "historyModal": {
-      "title": "Wallet History for {userName}",
+      "title": "Wallet History for {{userName}}",
       "headers": {
         "operation": "Operation",
         "amount": "Amount",

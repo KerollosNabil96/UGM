@@ -34,6 +34,7 @@ export default function WalletManagement() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      console.log(response.data.users)
       setUsers(response.data.users);
       setFilteredUsers(response.data.users);
     } catch (error) {
@@ -357,9 +358,9 @@ export default function WalletManagement() {
               className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-3xl tw-overflow-y-auto tw-max-h-[90vh] tw-mx-4"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
-              <h4 className="tw-text-lg tw-font-semibold tw-mb-4">
-                {t('walletManagement.historyModal.title', { userName: historyUser.userName })}
-              </h4>
+<h4 className="tw-text-lg tw-font-semibold tw-mb-4">
+  {t('walletManagement.historyModal.title', { userName: historyUser.userName })}
+</h4>
               {historyUser.walletHistory?.length > 0 ? (
                 <div className="tw-overflow-x-auto">
                   <table className="tw-w-full tw-text-sm tw-border tw-rounded tw-overflow-hidden tw-bg-white dark:tw-bg-gray-800">
@@ -375,7 +376,7 @@ export default function WalletManagement() {
                     <tbody>
                       {historyUser.walletHistory.map((item, idx) => (
                         <tr key={item._id || idx} className="tw-border-t">
-                          <td className="tw-px-2 tw-py-2 sm:tw-px-4">{t(`walletManagement.operations.${item.operation}`)}</td>
+                          <td className="tw-px-2 tw-py-2 sm:tw-px-4">{t(`${item.operation}`)}</td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">{item.amount} EGP</td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">{item.description || '-'}</td>
                           <td className="tw-px-2 tw-py-2 sm:tw-px-4">{item.performedBy?.adminName || '-'}</td>

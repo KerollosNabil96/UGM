@@ -27,7 +27,7 @@
       "processing": "جاري المعالجة..."
     },
     "historyModal": {
-      "title": "سجل المحفظة لـ {userName}",
+      "title": "سجل المحفظة لـ {{userName}}",
       "headers": {
         "operation": "العملية",
         "amount": "المبلغ",
