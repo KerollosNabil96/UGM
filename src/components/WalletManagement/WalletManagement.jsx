@@ -151,9 +151,11 @@ export default function WalletManagement() {
       <div className="tw-row tw-flex tw-justify-center">
         <div className={`tw-w-full tw-mt-4 tw-rounded-2xl tw-p-3 tw-relative ${styles.shad} tw-max-w-[1800px]`}>
           <div className="tw-flex tw-flex-col tw-mb-4 tw-w-full">
-            <h3 className="tw-text-xl md:tw-text-2xl tw-font-semibold tw-text-black dark:tw-text-white tw-mb-3 tw-text-center md:tw-text-left">
-              {t('walletManagement.title')}
-            </h3>
+            <h3
+  className={`tw-text-xl md:tw-text-2xl tw-font-semibold tw-text-black dark:tw-text-white tw-mb-3 ${isRTL ? 'tw-text-right' : 'tw-text-left'}`}
+>
+  {t('walletManagement.title')}
+</h3>
             <div className="tw-relative tw-w-full">
               <input
                 type="text"
