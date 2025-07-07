@@ -14,7 +14,7 @@
     "manageButton": "Manage",
     "historyButton": "History",
     "modal": {
-      "title": "Manage Wallet for {userName}",
+      "title": "Manage Wallet for {{userName}}",
       "amountLabel": "Amount (EGP):",
       "operationLabel": "Operation:",
       "operationOptions": {

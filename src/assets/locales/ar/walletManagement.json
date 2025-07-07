@@ -14,7 +14,7 @@
     "manageButton": "إدارة",
     "historyButton": "السجل",
     "modal": {
-      "title": "إدارة محفظة {userName}",
+      "title": "إدارة محفظة {{userName}}",
       "amountLabel": "المبلغ (ج.م):",
       "operationLabel": "العملية:",
       "operationOptions": {
