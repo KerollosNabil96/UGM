@@ -158,43 +158,45 @@ export default function ServantList() {
                       <p className="mt-3 text-muted">{t('Loading')}</p>
                     </div>
                   ) : (
-                    <table className="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>{t('tableHeaders.name')}</th>
-                          <th>{t('tableHeaders.cohort')}</th>
-                          <th>{t('tableHeaders.details')}</th>
-                          <th>{t('tableHeaders.delete')}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredData.map((person, index) => (
-                          <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{person.firstName} {person.secName} {person.familyName}</td>
-                            <td>{person.cohort}</td>
-                            <td>
-                              <i
-                                className="fa-solid fa-pen-to-square text-success ms-3 crsr"
-                                onClick={() => handleEdit(person._id, person)}
-                              ></i>
-                            </td>
-                            <td>
-                              <i
-                                className="fa-solid fa-trash text-danger ms-3 crsr"
-                                onClick={() => handleDelete(person)}
-                              ></i>
-                            </td>
-                          </tr>
-                        ))}
-                        {filteredData.length === 0 && (
+                    <div className="tw-w-full tw-overflow-x-auto tw-overflow-y-visible">
+                      <table className="table table-striped tw-w-full">
+                        <thead>
                           <tr>
-                            <td colSpan="5" className="text-center py-5 text-muted">{t('noResults')}</td>
+                            <th>#</th>
+                            <th>{t('tableHeaders.name')}</th>
+                            <th>{t('tableHeaders.cohort')}</th>
+                            <th>{t('tableHeaders.details')}</th>
+                            <th>{t('tableHeaders.delete')}</th>
                           </tr>
-                        )}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {filteredData.map((person, index) => (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>{person.firstName} {person.secName} {person.familyName}</td>
+                              <td>{person.cohort}</td>
+                              <td>
+                                <i
+                                  className="fa-solid fa-pen-to-square text-success ms-3 crsr"
+                                  onClick={() => handleEdit(person._id, person)}
+                                ></i>
+                              </td>
+                              <td>
+                                <i
+                                  className="fa-solid fa-trash text-danger ms-3 crsr"
+                                  onClick={() => handleDelete(person)}
+                                ></i>
+                              </td>
+                            </tr>
+                          ))}
+                          {filteredData.length === 0 && (
+                            <tr>
+                              <td colSpan="5" className="text-center py-5 text-muted">{t('noResults')}</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   )}
                 </div>
               </motion.div>
@@ -203,44 +205,44 @@ export default function ServantList() {
         </div>
       </div>
 
- {showConfirm && (
-  <div className="tw-fixed tw-inset-0 tw-z-[9999] tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-px-4">
-    <div className={`tw-w-full tw-max-w-md tw-rounded-xl tw-shadow-xl tw-p-6 tw-text-center
-      ${darkMode ? 'tw-bg-gray-800 tw-text-white' : 'tw-bg-white tw-text-gray-900'}`}>
+      {showConfirm && (
+        <div className="tw-fixed tw-inset-0 tw-z-[9999] tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-px-4">
+          <div className={`tw-w-full tw-max-w-md tw-rounded-xl tw-shadow-xl tw-p-6 tw-text-center
+            ${darkMode ? 'tw-bg-gray-800 tw-text-white' : 'tw-bg-white tw-text-gray-900'}`}>
 
-      <div className="tw-mb-4">
-        <div className="tw-w-16 tw-h-16 tw-mx-auto tw-flex tw-items-center tw-justify-center tw-rounded-full tw-bg-red-100">
-          <i className="fa-solid fa-triangle-exclamation tw-text-red-600 tw-text-3xl"></i>
+            <div className="tw-mb-4">
+              <div className="tw-w-16 tw-h-16 tw-mx-auto tw-flex tw-items-center tw-justify-center tw-rounded-full tw-bg-red-100">
+                <i className="fa-solid fa-triangle-exclamation tw-text-red-600 tw-text-3xl"></i>
+              </div>
+              <h2 className="tw-text-2xl tw-font-bold tw-mt-4 tw-text-red-600">Delete Confirmation</h2>
+            </div>
+
+            <p className="tw-mb-2">
+              Are you sure you want to delete
+              <strong> {selectedUser?.firstName} {selectedUser?.secName} {selectedUser?.familyName}</strong>?
+            </p>
+            <p className="tw-text-sm tw-text-red-500 tw-mb-6">This action cannot be undone.</p>
+
+            <div className="tw-flex tw-justify-center tw-gap-4">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className={`tw-px-5 tw-py-2 tw-rounded-lg tw-text-sm tw-font-semibold tw-transition
+                  ${darkMode
+                    ? 'tw-bg-gray-700 hover:tw-bg-gray-600 tw-text-white'
+                    : 'tw-bg-gray-200 hover:tw-bg-gray-300 tw-text-gray-900'}`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="tw-px-5 tw-py-2 tw-rounded-lg tw-bg-red-600 hover:tw-bg-red-700 tw-text-white tw-font-semibold tw-text-sm"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
-        <h2 className="tw-text-2xl tw-font-bold tw-mt-4 tw-text-red-600">Delete Confirmation</h2>
-      </div>
-
-      <p className="tw-mb-2">
-        Are you sure you want to delete 
-        <strong> {selectedUser?.firstName} {selectedUser?.secName} {selectedUser?.familyName}</strong>?
-      </p>
-      <p className="tw-text-sm tw-text-red-500 tw-mb-6">This action cannot be undone.</p>
-
-      <div className="tw-flex tw-justify-center tw-gap-4">
-        <button
-          onClick={() => setShowConfirm(false)}
-          className={`tw-px-5 tw-py-2 tw-rounded-lg tw-text-sm tw-font-semibold tw-transition
-            ${darkMode 
-              ? 'tw-bg-gray-700 hover:tw-bg-gray-600 tw-text-white' 
-              : 'tw-bg-gray-200 hover:tw-bg-gray-300 tw-text-gray-900'}`}
-        >
-          Cancel
-        </button>
-        <button
-          onClick={confirmDelete}
-          className="tw-px-5 tw-py-2 tw-rounded-lg tw-bg-red-600 hover:tw-bg-red-700 tw-text-white tw-font-semibold tw-text-sm"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      )}
     </>
   );
 }
