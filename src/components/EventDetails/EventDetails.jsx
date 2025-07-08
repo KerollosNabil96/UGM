@@ -312,20 +312,25 @@ const { t, i18n } = useTranslation('eventDetails');
 
             <div className="tw-space-y-6">
               {/* Booking Card */}
-              <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-xl tw-rounded-2xl tw-p-6 tw-h-fit tw-top-4">
-                <h2 className="tw-text-2xl tw-font-bold tw-text-blue-700 dark:tw-text-blue-300 tw-mb-4">
-                  {t('eventDetails.startBooking')}
-                </h2>
-                <p className="tw-text-green-600 dark:tw-text-green-400 tw-text-4xl tw-font-extrabold tw-mb-6">
-                  {event.price} {t('eventDetails.currency')}
-                </p>
-                  <button
+             <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-xl tw-rounded-2xl tw-p-6 tw-h-fit tw-top-4">
+  <h2 className="tw-text-2xl tw-font-bold tw-text-blue-700 dark:tw-text-blue-300 tw-mb-4">
+    {t('eventDetails.startBooking')}
+  </h2>
+  <p className={`tw-text-4xl tw-font-extrabold tw-mb-6 ${event.price === 0 ? 'tw-text-green-600 dark:tw-text-green-400' : 'tw-text-gray-500 dark:tw-text-gray-400'}`}>
+    {event.price === 0 ? t('eventDetails.freeEvent') : `${event.price} ${t('eventDetails.currency')}`}
+  </p>
+  <button
     onClick={() => navigate(`/book/${event._id}`)}
-    className="tw-w-full tw-bg-blue-600 hover:tw-bg-blue-700 tw-text-white tw-font-semibold tw-py-2 tw-rounded-xl tw-transition-all tw-shadow-md"
+    disabled={event.price === 0}
+    className={`tw-w-full tw-font-semibold tw-py-2 tw-rounded-xl tw-transition-all tw-shadow-md ${
+      event.price === 0 
+        ? 'tw-bg-gray-300 dark:tw-bg-gray-600 tw-text-gray-500 dark:tw-text-gray-400 tw-cursor-not-allowed' 
+        : 'tw-bg-blue-600 hover:tw-bg-blue-700 tw-text-white'
+    }`}
   >
-    {t('eventDetails.bookNow')}
+    {event.price === 0 ? t('eventDetails.freeEvent') : t('eventDetails.bookNow')}
   </button>
-              </div>
+</div>
 
               {/* Date */}
               <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">

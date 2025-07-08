@@ -3,16 +3,17 @@
     "backToEvents": "Back to Events",
     "shortDescription": "Short Description",
     "fullDescription": "Full Description",
-    "responsibleServant": "Responsible Servant",
+    "responsibleServant": "Responsible Servant", 
     "contact": "Contact",
     "eventDate": "Event Date",
     "address": "Address",
     "eventLocation": "Event Location",
     "startBooking": "Start Booking",
-    "noLocation": "No precise location determined for this event",
+    "noLocation": "No specific location for this event",
     "eventNotFound": "Event not found",
     "locationError": "Could not determine event location. Showing default location.",
-      "currency": "ُEGP",
-      "bookNow" : "Book Now"
+    "currency": "EGP",
+    "bookNow": "Book Now",
+    "freeEvent": "Free Event"
   }
 }
