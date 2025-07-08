@@ -141,6 +141,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
             }
           }
         );
+        console.log(res)
         toast.success(t('shareEvent.successMessage'));
         resetForm();
         setImages(Array(3).fill(null));

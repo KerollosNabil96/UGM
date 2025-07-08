@@ -34,6 +34,10 @@
     "processingTimeNote": "Processing may take up to 24 hours",
     "yourInformation": "Your Information",
     "ID": "ID",
-    "name": "Name"
+    "name": "Name",
+    "userIdMissing": "You must be logged in to proceed",
+    "eventNotFound": "Event not found",
+    "backToEvents": "Back to Events",
+    "bookingError": "An error occurred while completing the booking"
   }
 }

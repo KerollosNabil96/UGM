@@ -37,6 +37,11 @@ export default function EventBooking() {
     return name;
   };
 
+  // Scroll to top on initial render
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Validate user ID
   useEffect(() => {
     if (!Id) {
@@ -166,10 +171,26 @@ export default function EventBooking() {
     }
   };
 
-  if (loading || !event) {
+  if (loading) {
     return (
-      <div className="tw-flex tw-items-center tw-justify-center tw-h-screen">
+      <div className={`${darkMode ? 'tw-dark' : ''} tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800 tw-z-50`}>
         <div className="tw-w-12 tw-h-12 tw-border-4 tw-border-blue-500 tw-border-t-transparent tw-rounded-full tw-animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!event) {
+    return (
+      <div className={`${darkMode ? 'tw-dark' : ''} tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800`}>
+        <div className="tw-text-center">
+          <p className="tw-text-lg tw-text-gray-700 dark:tw-text-gray-300">{t('eventBooking.eventNotFound')}</p>
+          <button
+            onClick={() => navigate('/events')}
+            className="tw-mt-4 tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-lg hover:tw-bg-blue-700"
+          >
+            {t('eventBooking.backToEvents')}
+          </button>
+        </div>
       </div>
     );
   }
@@ -178,8 +199,8 @@ export default function EventBooking() {
     <div className={`${darkMode ? 'tw-dark' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container-fluid dark:tw-bg-gray-800 tw-min-h-[80vh]">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
           className="tw-container tw-max-w-3xl tw-mx-auto tw-p-6 tw-bg-gradient-to-b tw-from-white tw-to-gray-50 dark:tw-from-gray-800 dark:tw-to-gray-850"
         >

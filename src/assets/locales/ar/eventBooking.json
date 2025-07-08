@@ -34,6 +34,10 @@
     "processingTimeNote": "قد يستغرق الأمر حتى 24 ساعة للمراجعة",
     "yourInformation": "معلوماتك",
     "ID": "رقم التعريف",
-    "name": "الاسم"
+    "name": "الاسم",
+    "userIdMissing": "يجب تسجيل الدخول أولاً",
+    "eventNotFound": "لم يتم العثور على الحدث",
+    "backToEvents": "العودة إلى الفعاليات",
+    "bookingError": "حدث خطأ أثناء محاولة الحجز"
   }
 }

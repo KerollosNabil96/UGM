@@ -165,13 +165,15 @@ export default function Events() {
                       <div className="spinner"></div>
                     </div>
                   ) : currentEvents.length === 0 ? (
-                <div className="tw-max-w-md tw-mx-auto mt-4 tw-bg-gray-100 dark:tw-bg-gray-900 tw-rounded-lg tw-shadow-md tw-p-6 tw-text-center">
-  <h4 className="tw-text-lg tw-font-semibold tw-text-gray-700 dark:tw-text-white mb-2">
-    No events found.
-  </h4>
-  <p className="tw-text-gray-600 dark:tw-text-gray-300">
-    Try changing your search or category filter, or wait for upcoming events ✨
-  </p>
+              <div className="fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-p-4">
+  <div className="tw-max-w-md tw-w-full tw-mx-auto tw-bg-gray-100 dark:tw-bg-gray-900 tw-rounded-lg tw-shadow-md tw-p-6 tw-text-center">
+    <h4 className="tw-text-lg tw-font-semibold tw-text-gray-700 dark:tw-text-white mb-2">
+      No events found.
+    </h4>
+    <p className="tw-text-gray-600 dark:tw-text-gray-300">
+      Try changing your search or category filter, or wait for upcoming events ✨
+    </p>
+  </div>
 </div>
 
                   ) : (

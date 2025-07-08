@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -23,7 +23,7 @@ const customIcon = new L.Icon({
 });
 
 export default function EventDetails() {
-const { t, i18n } = useTranslation('eventDetails');
+  const { t, i18n } = useTranslation('eventDetails');
   const { darkMode } = useContext(darkModeContext);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -88,34 +88,62 @@ const { t, i18n } = useTranslation('eventDetails');
     updateMap(position);
   };
 
+  // حل مشكلة التمرير عند العودة
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id, token]);
+
   useEffect(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const handlePopState = () => {
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    
     const fetchEvent = async () => {
       try {
-        setLoading(true);
+        if (isMounted) setLoading(true);
         const res = await axios.get(`https://ugmproject.vercel.app/api/v1/event/getEventById/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setEvent(res.data.event);
-        if (res.data.event.address && res.data.event.address.trim() !== '') {
-          const success = await geocodeAddress(res.data.event.address.trim());
-          if (!success) showMapError();
-        } else {
-          showMapError();
+        
+        if (isMounted) {
+          setEvent(res.data.event);
+          if (res.data.event.address && res.data.event.address.trim() !== '') {
+            const success = await geocodeAddress(res.data.event.address.trim());
+            if (!success) showMapError();
+          } else {
+            showMapError();
+          }
         }
       } catch (err) {
-        toast.error('Failed to load event details');
+        if (isMounted) {
+          toast.error('Failed to load event details');
+          setEvent(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchEvent();
+
+    return () => {
+      isMounted = false;
+    };
   }, [id, token]);
 
   if (loading) {
     return (
-      <div className="tw-flex tw-items-center tw-justify-center tw-h-screen">
+      <div className="tw-flex tw-items-center tw-justify-center tw-h-screen tw-w-screen tw-fixed tw-top-0 tw-left-0 tw-bg-white dark:tw-bg-gray-800 tw-z-50">
         <div className="tw-w-12 tw-h-12 tw-border-4 tw-border-blue-500 tw-border-t-transparent tw-rounded-full tw-animate-spin"></div>
       </div>
     );
@@ -136,7 +164,7 @@ const { t, i18n } = useTranslation('eventDetails');
   });
 
   return (
-    <div className={`${darkMode ? 'tw-dark' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`${darkMode ? 'tw-dark' : ''}`} dir={isRTL ? 'rtl' : 'ltr'} key={id}>
       <div className="container-fluid dark:tw-bg-gray-800">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -301,7 +329,7 @@ const { t, i18n } = useTranslation('eventDetails');
                   {event.phone}
                 </p>
               </div>
-               <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">
+              <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">
                 <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3 tw-flex tw-items-center tw-gap-2">
                   <FaMapMarkerAlt /> {t('eventDetails.address')}
                 </h2>
@@ -313,25 +341,25 @@ const { t, i18n } = useTranslation('eventDetails');
 
             <div className="tw-space-y-6">
               {/* Booking Card */}
-             <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-xl tw-rounded-2xl tw-p-6 tw-h-fit tw-top-4">
-  <h2 className="tw-text-2xl tw-font-bold tw-text-blue-700 dark:tw-text-blue-300 tw-mb-4">
-    {t('eventDetails.startBooking')}
-  </h2>
-  <p className={`tw-text-4xl tw-font-extrabold tw-mb-6 ${event.price === 0 ? 'tw-text-green-600 dark:tw-text-green-400' : 'tw-text-gray-500 dark:tw-text-gray-400'}`}>
-    {event.price === 0 ? t('eventDetails.freeEvent') : `${event.price} ${t('eventDetails.currency')}`}
-  </p>
-  <button
-    onClick={() => navigate(`/book/${event._id}`)}
-    disabled={event.price === 0}
-    className={`tw-w-full tw-font-semibold tw-py-2 tw-rounded-xl tw-transition-all tw-shadow-md ${
-      event.price === 0 
-        ? 'tw-bg-gray-300 dark:tw-bg-gray-600 tw-text-gray-500 dark:tw-text-gray-400 tw-cursor-not-allowed' 
-        : 'tw-bg-blue-600 hover:tw-bg-blue-700 tw-text-white'
-    }`}
-  >
-    {event.price === 0 ? t('eventDetails.freeEvent') : t('eventDetails.bookNow')}
-  </button>
-</div>
+              <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-xl tw-rounded-2xl tw-p-6 tw-h-fit tw-top-4">
+                <h2 className="tw-text-2xl tw-font-bold tw-text-blue-700 dark:tw-text-blue-300 tw-mb-4">
+                  {t('eventDetails.startBooking')}
+                </h2>
+                <p className={`tw-text-4xl tw-font-extrabold tw-mb-6 ${event.price === 0 ? 'tw-text-green-600 dark:tw-text-green-400' : 'tw-text-gray-500 dark:tw-text-gray-400'}`}>
+                  {event.price === 0 ? t('eventDetails.freeEvent') : `${event.price} ${t('eventDetails.currency')}`}
+                </p>
+                <button
+                  onClick={() => navigate(`/book/${event._id}`)}
+                  disabled={event.price === 0}
+                  className={`tw-w-full tw-font-semibold tw-py-2 tw-rounded-xl tw-transition-all tw-shadow-md ${
+                    event.price === 0 
+                      ? 'tw-bg-gray-300 dark:tw-bg-gray-600 tw-text-gray-500 dark:tw-text-gray-400 tw-cursor-not-allowed' 
+                      : 'tw-bg-blue-600 hover:tw-bg-blue-700 tw-text-white'
+                  }`}
+                >
+                  {event.price === 0 ? t('eventDetails.freeEvent') : t('eventDetails.bookNow')}
+                </button>
+              </div>
 
               {/* Date */}
               <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">
@@ -342,8 +370,6 @@ const { t, i18n } = useTranslation('eventDetails');
                   {formattedDate}
                 </p>
               </div>
-
-             
 
               {/* Map Section */}
               <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-overflow-hidden">
