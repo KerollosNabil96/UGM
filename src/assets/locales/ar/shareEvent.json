@@ -11,9 +11,13 @@
         "options": {
           "select": "اختر التصنيف",
           "event": "فعالية",
-          "trip": "رحلة"
+          "trip": "رحلة",
+            "busCapacity": "سعة الأتوبيس"
         }
       },
+      "busCapacity": "سعة الأتوبيس",
+"busCapacityHint": "اكتب عدد المقاعد المتاحة (من 1 إلى 400)",
+      "needsBus": "هل يحتاج إلى أتوبيس؟",
       "address": "العنوان (اختر الموقع بدقة من الخريطة)",
       "shortDescription": "وصف مختصر (سيظهر على البطاقات)",
       "fullDescription": "الوصف الكامل",
@@ -45,7 +49,8 @@
       "maxImages": "يمكنك رفع 3 صور كحد أقصى",
       "missingFields": "الحقول المطلوبة ناقصة:",
       "requiredFields": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح",
-      "locationPrecision": "يجب تحديد الموقع بدقة من الخريطة"
+      "locationPrecision": "يجب تحديد الموقع بدقة من الخريطة",
+        "maxCapacity": "أقصى عدد هو {{max}} مقعدًا"
     },
     "locationNotFound": "الموقع غير موجود",
     "failedFetchAddress": "فشل جلب العنوان",

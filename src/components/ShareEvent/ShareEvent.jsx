@@ -23,6 +23,7 @@ export default function VenueForm() {
   const [imageFiles, setImageFiles] = useState(Array(3).fill(null));
   const [addressSource, setAddressSource] = useState('manual');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [needsBus, setNeedsBus] = useState(false);
   const phoneRegExp = /^01[0125][0-9]{8}$/;
   const { i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
@@ -63,6 +64,9 @@ export default function VenueForm() {
       date: "",
       shortDescription: "",
       fullDescription: "",
+      needsBus: false,
+      busCapacity: "",
+      reservedUsers: []
     },
     validationSchema: Yup.object({
       category: Yup.string()
@@ -84,33 +88,48 @@ export default function VenueForm() {
       date: Yup.date()
         .typeError(t('shareEvent.validation.required', { field: t('shareEvent.form.date') }))
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.date') })),
-shortDescription: Yup.string()
-  .required(t('shareEvent.validation.required', { field: t('shareEvent.form.shortDescription') }))
-  .max(100, t('shareEvent.validation.maxChars', { field: t('shareEvent.form.shortDescription'), max: 100 })),
+      shortDescription: Yup.string()
+        .required(t('shareEvent.validation.required', { field: t('shareEvent.form.shortDescription') }))
+        .max(100, t('shareEvent.validation.maxChars', { field: t('shareEvent.form.shortDescription'), max: 100 })),
       fullDescription: Yup.string()
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.fullDescription') })),
+busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
+  return needsBus
+    ? schema.required(t('shareEvent.validation.required', { field: t('shareEvent.form.busCapacity') }))
+        .min(1, t('shareEvent.validation.minCapacity', { min: 1 }))
+        .max(400, t('shareEvent.validation.maxCapacity', { max: 400 }))
+    : schema.notRequired();
+})
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
         setIsSubmitting(true);
         const token = localStorage.getItem('token');
+         console.log("🔍 Submitted Values:", values)
         if (!token) {
           toast.error(t('shareEvent.authError'));
           setIsSubmitting(false);
           return;
         }
 
+        // Prepare the data to be sent
         const formData = new FormData();
         
         Object.keys(values).forEach(key => {
-          formData.append(key, values[key]);
+          if (key !== 'reservedUsers') {
+            formData.append(key, values[key]);
+          }
         });
         
+        // Add images
         imageFiles.forEach((file, index) => {
           if (file) {
             formData.append('images', file);
           }
         });
+
+        // Add empty reservedUsers array
+        formData.append('reservedUsers', JSON.stringify([]));
 
         const res = await axios.post(
           'https://ugmproject.vercel.app/api/v1/event/addEvent',
@@ -122,11 +141,11 @@ shortDescription: Yup.string()
             }
           }
         );
-
         toast.success(t('shareEvent.successMessage'));
         resetForm();
         setImages(Array(3).fill(null));
         setImageFiles(Array(3).fill(null));
+        setNeedsBus(false);
 
         fileInputsRef.forEach(ref => {
           if (ref.current) {
@@ -152,11 +171,15 @@ shortDescription: Yup.string()
 
     requiredFields.forEach(field => {
       if (formik.values[field] === null || formik.values[field] === undefined || formik.values[field] === '') {
-  errors[field] = true;
-}
-
+        errors[field] = true;
+      }
     });
 
+    // Check bus capacity if bus is needed
+    if (formik.values.needsBus && (!formik.values.busCapacity || formik.values.busCapacity < 1)) {
+      errors.busCapacity = true;
+    }
+    
     if (imageFiles.filter(Boolean).length < 3) {
       errors.images = true;
     }
@@ -183,6 +206,7 @@ shortDescription: Yup.string()
     if (missingFields.date) missingFieldsList.push(t('shareEvent.form.date'));
     if (missingFields.shortDescription) missingFieldsList.push(t('shareEvent.form.shortDescription'));
     if (missingFields.fullDescription) missingFieldsList.push(t('shareEvent.form.fullDescription'));
+    if (missingFields.busCapacity) missingFieldsList.push(t('shareEvent.form.busCapacity'));
     if (missingFields.images) missingFieldsList.push(t('shareEvent.form.images.label'));
     
     return (
@@ -214,6 +238,7 @@ shortDescription: Yup.string()
         date: true,
         shortDescription: true,
         fullDescription: true,
+        busCapacity: true
       });
 
       toast.error(t('shareEvent.validation.requiredFields'));
@@ -339,6 +364,16 @@ shortDescription: Yup.string()
     formik.setFieldValue("address", "");
     setAddressSource('manual');
   }
+
+  const handleBusToggle = (e) => {
+    const needsBus = e.target.checked;
+    setNeedsBus(needsBus);
+    formik.setFieldValue("needsBus", needsBus);
+    
+    if (!needsBus) {
+      formik.setFieldValue("busCapacity", "");
+    }
+  };
 
   const allImagesUploaded = imageFiles.every(img => img !== null);
 
@@ -547,6 +582,45 @@ shortDescription: Yup.string()
                 />
                 {formik.touched.date && formik.errors.date && (
                   <div className="tw-text-red-500 tw-text-sm tw-mt-1">{formik.errors.date}</div>
+                )}
+              </div>
+
+              {/* Bus Requirements */}
+              <div className="tw-space-y-2">
+                <div className="tw-flex tw-items-center">
+                  <input
+                    type="checkbox"
+                    id="needsBus"
+                    name="needsBus"
+                    checked={needsBus}
+                    onChange={handleBusToggle}
+                    className="tw-mr-2 tw-h-4 tw-w-4 tw-text-indigo-600 tw-rounded"
+                  />
+                  <label htmlFor="needsBus" className="tw-text-gray-700 dark:tw-text-gray-300">
+                    {t('shareEvent.form.needsBus')}
+                  </label>
+                </div>
+
+                {needsBus && (
+                  <div>
+                    <input
+                      type="number"
+                      name="busCapacity"
+                      placeholder={t('shareEvent.form.busCapacity')}
+                      className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.busCapacity && formik.errors.busCapacity ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.busCapacity}
+                      min="1"
+                      max="100"
+                    />
+                    {formik.touched.busCapacity && formik.errors.busCapacity && (
+                      <div className="tw-text-red-500 tw-text-sm tw-mt-1">{formik.errors.busCapacity}</div>
+                    )}
+                    <p className="tw-text-xs tw-text-gray-500 dark:tw-text-gray-300 tw-mt-1">
+                      {t('shareEvent.form.busCapacityHint')}
+                    </p>
+                  </div>
                 )}
               </div>
 

@@ -11,9 +11,13 @@
         "options": {
           "select": "Select Category",
           "event": "Event",
-          "trip": "Trip"
+          "trip": "Trip",
+            "busCapacity": "Bus Capacity"
         }
       },
+      "needsBus": "Needs a bus?",
+      "busCapacity": "Bus Capacity",
+"busCapacityHint": "Enter the number of available seats (1 - 400)",
       "address": "Address (Select precise location from map)",
       "shortDescription": "Short description (will appear on cards)",
       "fullDescription": "Full description",
@@ -45,7 +49,8 @@
       "maxImages": "You can upload maximum 3 images",
       "missingFields": "Missing required fields:",
       "requiredFields": "Please fill all required fields correctly",
-      "locationPrecision": "Location must be selected precisely from the map"
+      "locationPrecision": "Location must be selected precisely from the map",
+      "maxCapacity": "Maximum allowed is {{max}} seats"
     },
     "locationNotFound": "Location not found",
     "failedFetchAddress": "Failed to retrieve address",
