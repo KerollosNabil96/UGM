@@ -300,6 +300,14 @@ const { t, i18n } = useTranslation('eventDetails');
                   {event.phone}
                 </p>
               </div>
+               <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">
+                <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3 tw-flex tw-items-center tw-gap-2">
+                  <FaMapMarkerAlt /> {t('eventDetails.address')}
+                </h2>
+                <p className="tw-text-gray-700 dark:tw-text-gray-200">
+                  {event.address}
+                </p>
+              </div>
             </div>
 
             <div className="tw-space-y-6">
@@ -311,6 +319,12 @@ const { t, i18n } = useTranslation('eventDetails');
                 <p className="tw-text-green-600 dark:tw-text-green-400 tw-text-4xl tw-font-extrabold tw-mb-6">
                   {event.price} {t('eventDetails.currency')}
                 </p>
+                  <button
+    onClick={() => navigate(`/book/${event._id}`)}
+    className="tw-w-full tw-bg-blue-600 hover:tw-bg-blue-700 tw-text-white tw-font-semibold tw-py-2 tw-rounded-xl tw-transition-all tw-shadow-md"
+  >
+    {t('eventDetails.bookNow')}
+  </button>
               </div>
 
               {/* Date */}
@@ -323,14 +337,7 @@ const { t, i18n } = useTranslation('eventDetails');
                 </p>
               </div>
 
-              <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-p-6">
-                <h2 className="tw-text-xl tw-font-semibold tw-text-blue-600 dark:tw-text-blue-300 tw-mb-3 tw-flex tw-items-center tw-gap-2">
-                  <FaMapMarkerAlt /> {t('eventDetails.address')}
-                </h2>
-                <p className="tw-text-gray-700 dark:tw-text-gray-200">
-                  {event.address}
-                </p>
-              </div>
+             
 
               {/* Map Section */}
               <div className="tw-bg-white dark:tw-bg-gray-900 tw-shadow-md tw-rounded-2xl tw-overflow-hidden">

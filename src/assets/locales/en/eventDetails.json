@@ -12,6 +12,7 @@
     "noLocation": "No precise location determined for this event",
     "eventNotFound": "Event not found",
     "locationError": "Could not determine event location. Showing default location.",
-      "currency": "ُEGP"
+      "currency": "ُEGP",
+      "bookNow" : "Book Now"
   }
 }

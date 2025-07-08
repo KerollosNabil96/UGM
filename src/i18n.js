@@ -48,6 +48,8 @@ import arVerify from './assets/locales/ar/verify.json'
 import enVerify from './assets/locales/en/verify.json'
 import enWalletManagement from './assets/locales/en/walletManagement.json'
 import arWalletManagement from './assets/locales/ar/walletManagement.json'
+import arEventBooking from './assets/locales/ar/eventBooking.json'
+import enEventBooking from './assets/locales/en/eventBooking.json'
 i18n
   .use(LanguageDetector) 
   .use(initReactI18next) 
@@ -77,6 +79,7 @@ i18n
          faqs : enFaqs , 
          verify : enVerify, 
          walletManagement: enWalletManagement,
+         eventBooking : enEventBooking
         
 
 
@@ -104,7 +107,8 @@ i18n
         memoryDetails : arMemoryDetails , 
         faqs : arFaqs,
         verify : arVerify,
-         walletManagement: arWalletManagement,
+        walletManagement: arWalletManagement,
+        eventBooking : arEventBooking
        },
     },
     fallbackLng: 'en',

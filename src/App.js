@@ -36,6 +36,7 @@ import { I18nextProvider } from 'react-i18next';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Messages from './components/messages/messages';
 import FAQs from './components/FAQs/FAQs'
+import EventBooking from './components/EventBooking/EventBooking'
 
 function App() {
   const router = createBrowserRouter([
@@ -96,6 +97,14 @@ function App() {
             </ProtectedRoute>
           ),
         },
+        {
+  path: 'book/:id',
+  element: (
+    <ProtectedRoute>
+      <EventBooking />
+    </ProtectedRoute>
+  ),
+},
 
         // Admin-only routes (Admin or SuperAdmin)
         {
