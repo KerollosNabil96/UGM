@@ -32,7 +32,6 @@ export default function VenueForm() {
   const mapModalRef = useRef(null);
   const formContainerRef = useRef(null);
 
-  // Check screen size on mount and resize
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -46,7 +45,6 @@ export default function VenueForm() {
     };
   }, []);
 
-  // Handle clicks outside the map modal to close it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (mapModalRef.current && !mapModalRef.current.contains(event.target)) {
@@ -63,7 +61,6 @@ export default function VenueForm() {
     };
   }, [locationModal]);
 
-  // Auto-scroll to top of form on mobile when keyboard appears
   useEffect(() => {
     if (!isMobile) return;
 
@@ -132,12 +129,13 @@ export default function VenueForm() {
         .max(100, t('shareEvent.validation.maxChars', { field: t('shareEvent.form.shortDescription'), max: 100 })),
       fullDescription: Yup.string()
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.fullDescription') })),
-      busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
-        return needsBus
-          ? schema.required(t('shareEvent.validation.required', { field: t('shareEvent.form.busCapacity') }))
-              .min(1, t('shareEvent.validation.minCapacity', { min: 1 }))
-              .max(400, t('shareEvent.validation.maxCapacity', { max: 400 }))
-          : schema.notRequired();
+      busCapacity: Yup.number().when('needsBus', {
+        is: true,
+        then: schema => schema
+          .required(t('shareEvent.validation.required', { field: t('shareEvent.form.busCapacity') }))
+          .min(1, t('shareEvent.validation.minCapacity', { min: 1 }))
+          .max(400, t('shareEvent.validation.maxCapacity', { max: 400 })),
+        otherwise: schema => schema.notRequired()
       })
     }),
     onSubmit: async (values, { resetForm }) => {
@@ -206,12 +204,12 @@ export default function VenueForm() {
     ];
 
     requiredFields.forEach(field => {
-      if (formik.values[field] === null || formik.values[field] === undefined || formik.values[field] === '') {
+      if (!formik.values[field]) {
         errors[field] = true;
       }
     });
 
-    if (formik.values.needsBus && (!formik.values.busCapacity || formik.values.busCapacity < 1)) {
+    if (formik.values.needsBus && !formik.values.busCapacity) {
       errors.busCapacity = true;
     }
     
@@ -651,7 +649,7 @@ export default function VenueForm() {
                       onBlur={formik.handleBlur}
                       value={formik.values.busCapacity}
                       min="1"
-                      max="100"
+                      max="400"
                     />
                     {formik.touched.busCapacity && formik.errors.busCapacity && (
                       <div className="tw-text-red-500 tw-text-sm tw-mt-1">{formik.errors.busCapacity}</div>
