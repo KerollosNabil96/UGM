@@ -89,6 +89,7 @@ const { t, i18n } = useTranslation('eventDetails');
   };
 
   useEffect(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     const fetchEvent = async () => {
       try {
         setLoading(true);
