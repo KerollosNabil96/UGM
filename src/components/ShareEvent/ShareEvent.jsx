@@ -24,11 +24,27 @@ export default function VenueForm() {
   const [addressSource, setAddressSource] = useState('manual');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [needsBus, setNeedsBus] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const phoneRegExp = /^01[0125][0-9]{8}$/;
   const { i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
   const mapRef = useRef(null);
   const mapModalRef = useRef(null);
+  const formContainerRef = useRef(null);
+
+  // Check screen size on mount and resize
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
 
   // Handle clicks outside the map modal to close it
   useEffect(() => {
@@ -46,6 +62,29 @@ export default function VenueForm() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [locationModal]);
+
+  // Auto-scroll to top of form on mobile when keyboard appears
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const formInputs = formContainerRef.current?.querySelectorAll('input, textarea');
+    
+    const handleFocus = (e) => {
+      setTimeout(() => {
+        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    };
+
+    formInputs?.forEach(input => {
+      input.addEventListener('focus', handleFocus);
+    });
+
+    return () => {
+      formInputs?.forEach(input => {
+        input.removeEventListener('focus', handleFocus);
+      });
+    };
+  }, [isMobile]);
 
   const fileInputsRef = [
     useRef(null),
@@ -93,26 +132,24 @@ export default function VenueForm() {
         .max(100, t('shareEvent.validation.maxChars', { field: t('shareEvent.form.shortDescription'), max: 100 })),
       fullDescription: Yup.string()
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.fullDescription') })),
-busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
-  return needsBus
-    ? schema.required(t('shareEvent.validation.required', { field: t('shareEvent.form.busCapacity') }))
-        .min(1, t('shareEvent.validation.minCapacity', { min: 1 }))
-        .max(400, t('shareEvent.validation.maxCapacity', { max: 400 }))
-    : schema.notRequired();
-})
+      busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
+        return needsBus
+          ? schema.required(t('shareEvent.validation.required', { field: t('shareEvent.form.busCapacity') }))
+              .min(1, t('shareEvent.validation.minCapacity', { min: 1 }))
+              .max(400, t('shareEvent.validation.maxCapacity', { max: 400 }))
+          : schema.notRequired();
+      })
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
         setIsSubmitting(true);
         const token = localStorage.getItem('token');
-         console.log("🔍 Submitted Values:", values)
         if (!token) {
           toast.error(t('shareEvent.authError'));
           setIsSubmitting(false);
           return;
         }
 
-        // Prepare the data to be sent
         const formData = new FormData();
         
         Object.keys(values).forEach(key => {
@@ -121,14 +158,12 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
           }
         });
         
-        // Add images
         imageFiles.forEach((file, index) => {
           if (file) {
             formData.append('images', file);
           }
         });
 
-        // Add empty reservedUsers array
         formData.append('reservedUsers', JSON.stringify([]));
 
         const res = await axios.post(
@@ -141,7 +176,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
             }
           }
         );
-        console.log(res)
+        
         toast.success(t('shareEvent.successMessage'));
         resetForm();
         setImages(Array(3).fill(null));
@@ -176,7 +211,6 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
       }
     });
 
-    // Check bus capacity if bus is needed
     if (formik.values.needsBus && (!formik.values.busCapacity || formik.values.busCapacity < 1)) {
       errors.busCapacity = true;
     }
@@ -380,20 +414,24 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
 
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`}>
-      <div className="container-fluid dark:tw-bg-gray-800 py-4">
+      <div className={`container-fluid dark:tw-bg-gray-800 py-4 ${isMobile ? 'tw-px-2' : ''}`}>
         <motion.div
           initial={{ opacity: 0, x: isRTL ? 100 : -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         >
-          <h1 className="text-center mainColor dark:tw-text-indigo-600 mt-2 fw-bolder">
+          <h1 className={`text-center mainColor dark:tw-text-indigo-600 mt-2 fw-bolder ${isMobile ? 'tw-text-xl' : ''}`}>
             {t('shareEvent.title')}
           </h1>
-          <p className="text-center mb-4 fs-4 tw-text-gray-600 dark:tw-text-gray-300 text-sm">
+          <p className={`text-center mb-4 tw-text-gray-600 dark:tw-text-gray-300 ${isMobile ? 'tw-text-sm' : 'tw-text-base'}`}>
             {t('shareEvent.description')}
           </p>
 
-          <div className={`tw-bg-gray-100 dark:tw-bg-gray-900 tw-text-gray-900 dark:tw-text-gray-100 tw-p-8 w-75 tw-mx-auto tw-rounded-lg ${styles.shad}`}>
+          <div 
+            ref={formContainerRef}
+            className={`tw-bg-gray-100 dark:tw-bg-gray-900 tw-text-gray-900 dark:tw-text-gray-100 tw-p-4 ${isMobile ? 'tw-w-full' : 'tw-w-full md:tw-w-3/4 lg:tw-w-2/3'} tw-mx-auto tw-rounded-lg ${styles.shad} tw-overflow-y-auto ${isMobile ? 'tw-max-h-[80vh]' : ''}`}
+            style={isMobile ? { maxHeight: 'calc(100vh - 150px)' } : {}}
+          >
             <form onSubmit={handleFormSubmit} className="tw-space-y-4">
               {/* Event Name */}
               <div>
@@ -401,7 +439,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                   type="text"
                   name="eventName"
                   placeholder={t('shareEvent.form.eventName')}
-                  className={`tw-w-full tw-p-3 rounded-3 tw-bg-white dark:tw-text-white dark:tw-bg-gray-800 tw-border ${formik.touched.eventName && formik.errors.eventName ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                  className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} rounded-3 tw-bg-white dark:tw-text-white dark:tw-bg-gray-800 tw-border ${formik.touched.eventName && formik.errors.eventName ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.eventName}
@@ -415,7 +453,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
               <div>
                 <select
                   name="category"
-                  className={`tw-w-full tw-p-3 rounded-3 tw-text-gray-600 tw-bg-white dark:tw-text-white dark:tw-bg-gray-800 tw-border ${formik.touched.category && formik.errors.category ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                  className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} rounded-3 tw-text-gray-600 tw-bg-white dark:tw-text-white dark:tw-bg-gray-800 tw-border ${formik.touched.category && formik.errors.category ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.category}
@@ -436,7 +474,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                     type="text"
                     name="address"
                     placeholder={`${t('shareEvent.form.address')}`}
-                    className="tw-flex-1 tw-p-3 dark:tw-text-white rounded-3 tw-bg-transparent"
+                    className={`tw-flex-1 ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-transparent`}
                     onChange={handleAddressChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.address}
@@ -447,7 +485,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                       <button
                         type="button"
                         onClick={clearMapSelection}
-                        className="tw-px-3 tw-text-gray-500 hover:tw-text-gray-700 dark:hover:tw-text-gray-300"
+                        className={`${isMobile ? 'tw-px-2' : 'tw-px-3'} tw-text-gray-500 hover:tw-text-gray-700 dark:hover:tw-text-gray-300`}
                       >
                         ✕
                       </button>
@@ -455,7 +493,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                     <button
                       type="button"
                       onClick={() => setLocationModal(true)}
-                      className="tw-p-3 dark:tw-bg-indigo-600 tw-rounded-r bg-main tw-transition tw-text-white"
+                      className={`${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-bg-indigo-600 tw-rounded-r bg-main tw-transition tw-text-white`}
                     >
                       {addressSource === 'map' ? '📍' : '🗺️'}
                     </button>
@@ -476,7 +514,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                 <textarea
                   name="shortDescription"
                   placeholder={t('shareEvent.form.shortDescription')}
-                  className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.shortDescription && formik.errors.shortDescription ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"} tw-resize-none`}
+                  className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.shortDescription && formik.errors.shortDescription ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"} tw-resize-none`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.shortDescription}
@@ -502,7 +540,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                 <textarea
                   name="fullDescription"
                   placeholder={t('shareEvent.form.fullDescription')}
-                  className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.fullDescription && formik.errors.fullDescription ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"} tw-resize-none`}
+                  className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.fullDescription && formik.errors.fullDescription ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"} tw-resize-none`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.fullDescription}
@@ -528,7 +566,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                   type="number"
                   name="price"
                   placeholder={t('shareEvent.form.price')}
-                  className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.price && formik.errors.price ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                  className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.price && formik.errors.price ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.price}
@@ -545,7 +583,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                   type="text"
                   name="phone"
                   placeholder={t('shareEvent.form.phone')}
-                  className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.phone && formik.errors.phone ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                  className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.phone && formik.errors.phone ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.phone}
@@ -561,7 +599,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                   type="text"
                   name="responsiblePerson"
                   placeholder={t('shareEvent.form.responsiblePerson')}
-                  className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.responsiblePerson && formik.errors.responsiblePerson ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                  className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.responsiblePerson && formik.errors.responsiblePerson ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.responsiblePerson}
@@ -576,7 +614,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                 <input
                   type="date"
                   name="date"
-                  className={`tw-w-full dark:tw-text-white tw-p-3 rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.date && formik.errors.date ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                  className={`tw-w-full dark:tw-text-white ${isMobile ? 'tw-p-2' : 'tw-p-3'} rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.date && formik.errors.date ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.date}
@@ -608,7 +646,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                       type="number"
                       name="busCapacity"
                       placeholder={t('shareEvent.form.busCapacity')}
-                      className={`tw-w-full tw-p-3 dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.busCapacity && formik.errors.busCapacity ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                      className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.busCapacity && formik.errors.busCapacity ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.busCapacity}
@@ -664,7 +702,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
                 <button
                   type="submit"
                   disabled={!isComplete || isSubmitting}
-                  className={`tw-bg-[#4B0082] w-100 tw-text-white tw-py-3 tw-px-6 tw-rounded tw-border-none tw-font-medium ${!isComplete || isSubmitting ? "tw-cursor-not-allowed tw-opacity-60" : "tw-cursor-pointer hover:tw-bg-[#3a0063]"}`}
+                  className={`tw-bg-[#4B0082] w-100 tw-text-white ${isMobile ? 'tw-py-2 tw-px-4' : 'tw-py-3 tw-px-6'} tw-rounded tw-border-none tw-font-medium ${!isComplete || isSubmitting ? "tw-cursor-not-allowed tw-opacity-60" : "tw-cursor-pointer hover:tw-bg-[#3a0063]"}`}
                   data-tooltip-id="submit-tooltip"
                   data-tooltip-place="top"
                   data-tooltip-variant={darkMode ? "dark" : "light"}
@@ -684,7 +722,7 @@ busCapacity: Yup.number().when('needsBus', (needsBus, schema) => {
         {locationModal && (
           <div className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
             <div 
-              className="tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-p-4 tw-w-96"
+              className={`tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-p-4 ${isMobile ? 'tw-w-11/12' : 'tw-w-96'}`}
               ref={mapModalRef}
             >
               <button
