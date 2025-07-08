@@ -254,15 +254,16 @@ export default function ServantDetails() {
     navigate(-1);
   }
 
-  const InfoItem = ({ label, value }) => (
-    <div className="col-12 col-md-6">
-      <div className="tw-bg-gray-100 dark:tw-bg-gray-700 tw-rounded-md tw-p-3 tw-shadow-sm">
-        <span className="tw-font-semibold">{label}:</span>
-        <span className="tw-ml-2">{value || 'N/A'}</span>
-      </div>
+const InfoItem = ({ label, value }) => (
+  <div className="col-12 col-md-6">
+    <div className="tw-bg-gray-100 dark:tw-bg-gray-700 tw-rounded-md tw-p-3 tw-shadow-sm tw-break-words">
+      <span className="tw-font-semibold">{label}:</span>
+      <span className="tw-ml-2 tw-break-all">
+        {value || 'N/A'}
+      </span>
     </div>
-  );
-
+  </div>
+);
   return (
     <>
       <Toaster />
@@ -295,37 +296,40 @@ export default function ServantDetails() {
                           {initialData.firstName} {initialData.secName} {initialData.familyName}
                         </h2>
 
-                        <div className="row g-4">
-                          <InfoItem label="Email" value={initialData.email} />
-                          <InfoItem
-                            label="Birthdate"
-                            value={`${initialData.birthDay}/${initialData.birthMonth}/${initialData.birthYear}`}
-                          />
-                          <InfoItem label="Address 1" value={initialData.Address} />
-                          {initialData.Address2 && <InfoItem label="Address 2" value={initialData.Address2} />}
-                          <InfoItem label="Is expatriate?" value={initialData.isExpatriate ? 'Yes' : 'No'} />
-                          <InfoItem label="Mobile 1" value={initialData.mobileNumber1} />
-                          {initialData.mobileNumber2 && <InfoItem label="Mobile 2" value={initialData.mobileNumber2} />}
-                          {initialData.landline && <InfoItem label="Landline" value={initialData.landline} />}
-                          <InfoItem label="Church" value={initialData.church} />
-                          <InfoItem label="Priest Name" value={initialData.priestName} />
-                          <InfoItem label="College / Institute" value={initialData.college} />
-                          <InfoItem label="Governorate of birth" value={initialData.governorateOfBirth} />
-                          <InfoItem label="Marital Status" value={initialData.maritalStatus} />
-                          <InfoItem label="Cohort" value={initialData.cohort} />
-                          {initialData.profession && <InfoItem label="Profession" value={initialData.profession} />}
-                          {initialData.dayOff?.length > 0 && (
-                            <InfoItem label="Days off" value={initialData.dayOff.join(' - ')} />
-                          )}
+<div className="row g-4">
+  <InfoItem 
+    label="Email" 
+    value={initialData.email} 
+  />
+  <InfoItem
+    label="Birthdate"
+    value={`${initialData.birthDay}/${initialData.birthMonth}/${initialData.birthYear}`}
+  />
+  <InfoItem label="Address 1" value={initialData.Address} />
+  {initialData.Address2 && <InfoItem label="Address 2" value={initialData.Address2} />}
+  <InfoItem label="Is expatriate?" value={initialData.isExpatriate ? 'Yes' : 'No'} />
+  <InfoItem label="Mobile 1" value={initialData.mobileNumber1} />
+  {initialData.mobileNumber2 && <InfoItem label="Mobile 2" value={initialData.mobileNumber2} />}
+  {initialData.landline && <InfoItem label="Landline" value={initialData.landline} />}
+  <InfoItem label="Church" value={initialData.church} />
+  <InfoItem label="Priest Name" value={initialData.priestName} />
+  <InfoItem label="College / Institute" value={initialData.college} />
+  <InfoItem label="Governorate of birth" value={initialData.governorateOfBirth} />
+  <InfoItem label="Marital Status" value={initialData.maritalStatus} />
+  <InfoItem label="Cohort" value={initialData.cohort} />
+  {initialData.profession && <InfoItem label="Profession" value={initialData.profession} />}
+  {initialData.dayOff?.length > 0 && (
+    <InfoItem label="Days off" value={initialData.dayOff.join(' - ')} />
+  )}
 
-                          <button
-                            type="button"
-                            className="bg-main mb-3 dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
-                            onClick={() => setUpdate(true)}
-                          >
-                            Update
-                          </button>
-                        </div>
+  <button
+    type="button"
+    className="bg-main mb-3 dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
+    onClick={() => setUpdate(true)}
+  >
+    Update
+  </button>
+</div>
                       </motion.div>
                     ) : (
                       <motion.div

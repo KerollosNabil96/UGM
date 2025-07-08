@@ -42,24 +42,33 @@ export default function ServantList() {
     }
   };
 
-  const deleteServant = async (id) => {
-    const token = localStorage.getItem('token');
-    try {
-      await axios.delete(
-        `https://projectelkhdma-projectelkhdma.up.railway.app/api/v1/served/deleteServed/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+ const deleteServant = async (id) => {
+  const token = localStorage.getItem('token');
+  console.log("Deleting ID:", id); 
+  console.log("Using Token:", token); 
+
+  try {
+    const response = await axios.delete(
+      `https://ugmproject.vercel.app/api/v1/served/deleteServed/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      );
-      toast.success(t('deleteSuccess'));
-      getData();
-    } catch (error) {
-      toast.error(t('deleteError'));
-    }
-  };
+      }
+    );
+    
+    console.log("Delete Response:", response.data);
+    toast.success(t('deleteSuccess'));
+    getData();
+    return response.data; 
+  } catch (error) {
+    console.error("Full Error:", error);
+    console.error("Error Response:", error.response?.data);
+    toast.error(error.response?.data?.message || t('deleteError'));
+    throw error; 
+  }
+};
 
   const handleDelete = (person) => {
     setSelectedUser(person);
