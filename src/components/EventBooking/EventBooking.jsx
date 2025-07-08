@@ -195,6 +195,11 @@ export default function EventBooking() {
     );
   }
 
+  // Handle back navigation
+  const handleBack = () => {
+    navigate(-1); // Go back to previous page
+  };
+
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container-fluid dark:tw-bg-gray-800 tw-min-h-[80vh]">
@@ -204,10 +209,10 @@ export default function EventBooking() {
           transition={{ duration: 0.6 }}
           className="tw-container tw-max-w-3xl tw-mx-auto tw-p-6 tw-bg-gradient-to-b tw-from-white tw-to-gray-50 dark:tw-from-gray-800 dark:tw-to-gray-850"
         >
-          {/* Back Button */}
+          {/* Back Button - Fixed the onClick handler */}
           <div className="tw-mb-6">
             <button
-              onClick={() => navigate(-1)}
+              onClick={handleBack}
               className={`tw-flex tw-items-center tw-gap-2 tw-text-blue-600 hover:tw-text-blue-800 dark:tw-text-blue-400 dark:hover:tw-text-blue-200 tw-font-medium tw-bg-blue-50 dark:tw-bg-gray-800 tw-px-4 tw-py-2 tw-rounded-xl tw-shadow-sm hover:tw-shadow-md tw-transition-all ${
                 isRTL ? 'tw-flex-row-reverse' : ''
               }`}
@@ -216,6 +221,7 @@ export default function EventBooking() {
             </button>
           </div>
 
+          {/* Rest of your component remains the same */}
           {/* Event Details */}
           <div className="tw-bg-white dark:tw-bg-gray-900 tw-rounded-xl tw-shadow-md tw-p-6 tw-mb-8">
             <h1 className="tw-text-2xl tw-font-bold tw-mb-4 tw-text-blue-700 dark:tw-text-blue-300">
@@ -409,69 +415,75 @@ export default function EventBooking() {
                     </button>
                   </div>
 
-                  <div className="tw-p-6 tw-space-y-4">
-                    <div className="tw-p-4 tw-bg-yellow-50 dark:tw-bg-yellow-900 tw-rounded-lg tw-text-yellow-800 dark:tw-text-yellow-200 tw-text-sm">
-                      <p className="tw-font-medium tw-flex tw-items-center tw-gap-2">
-                        <FaClock /> {t('eventBooking.adminApprovalNote')}
-                      </p>
-                      <p className="tw-mt-2">{t('eventBooking.processingTimeNote')}</p>
-                    </div>
-
-                    <label className="tw-block">
-                      <span className="tw-text-lg tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 tw-mb-2 tw-block">
-                        {t('eventBooking.uploadScreenshot')}
-                      </span>
-                      <div className="tw-relative tw-border-2 tw-border-dashed tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-p-6 tw-text-center hover:tw-border-blue-500 tw-transition upload-container">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleUpload}
-                          className="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-opacity-0 tw-cursor-pointer"
-                        />
-                        {screenshot ? (
-                          <div className="tw-text-green-600 dark:tw-text-green-300 tw-max-w-full">
-                            <FaPaperPlane className="tw-text-3xl tw-mx-auto tw-mb-2" />
-                            <p className="tw-truncate tw-px-2">{displayFileName(screenshot.name)}</p>
-                            <p className="tw-text-sm tw-text-gray-500 dark:tw-text-gray-400">
-                              {t('eventBooking.fileSelected')}
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="tw-text-gray-500 dark:tw-text-gray-400">
-                            <FaPaperPlane className="tw-text-3xl tw-mx-auto tw-mb-2" />
-                            <p>{t('eventBooking.uploadInstructions')}</p>
-                            <p className="tw-text-sm">(JPG, PNG, etc.)</p>
-                          </div>
-                        )}
+                  {/* Scrollable content container */}
+                  <div className="tw-max-h-[70vh] tw-overflow-y-auto tw-px-6">
+                    <div className="tw-space-y-4 tw-py-4">
+                      <div className="tw-p-4 tw-bg-yellow-50 dark:tw-bg-yellow-900 tw-rounded-lg tw-text-yellow-800 dark:tw-text-yellow-200 tw-text-sm">
+                        <p className="tw-font-medium tw-flex tw-items-center tw-gap-2">
+                          <FaClock /> {t('eventBooking.adminApprovalNote')}
+                        </p>
+                        <p className="tw-mt-2">{t('eventBooking.processingTimeNote')}</p>
                       </div>
-                    </label>
 
-                    <label className="tw-block">
-                      <span className="tw-text-lg tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 tw-mb-2 tw-block">
-                        {t('eventBooking.selectResponsible')}
-                      </span>
-                      <select
-                        value={responsible}
-                        onChange={(e) => setResponsible(e.target.value)}
-                        className="tw-w-full dark:tw-text-white tw-px-4 tw-py-3 tw-rounded-lg tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-800 focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
-                      >
-                        <option value="">{t('eventBooking.selectOption')}</option>
-                        <option value="Beshoy Gerges">Beshoy Gerges</option>
-                        <option value="Rafayl Zaher">Rafayl Zaher</option>
-                        <option value="Mina Adel">Mina Adel</option>
-                      </select>
-                    </label>
+                      <label className="tw-block">
+                        <span className="tw-text-lg tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 tw-mb-2 tw-block">
+                          {t('eventBooking.uploadScreenshot')}
+                        </span>
+                        <div className="tw-relative tw-border-2 tw-border-dashed tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-p-6 tw-text-center hover:tw-border-blue-500 tw-transition upload-container">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleUpload}
+                            className="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-opacity-0 tw-cursor-pointer"
+                          />
+                          {screenshot ? (
+                            <div className="tw-text-green-600 dark:tw-text-green-300 tw-max-w-full">
+                              <FaPaperPlane className="tw-text-3xl tw-mx-auto tw-mb-2" />
+                              <p className="tw-truncate tw-px-2">{displayFileName(screenshot.name)}</p>
+                              <p className="tw-text-sm tw-text-gray-500 dark:tw-text-gray-400">
+                                {t('eventBooking.fileSelected')}
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="tw-text-gray-500 dark:tw-text-gray-400">
+                              <FaPaperPlane className="tw-text-3xl tw-mx-auto tw-mb-2" />
+                              <p>{t('eventBooking.uploadInstructions')}</p>
+                              <p className="tw-text-sm">(JPG, PNG, etc.)</p>
+                            </div>
+                          )}
+                        </div>
+                      </label>
 
-                    <div className="tw-p-4 tw-bg-gray-50 dark:tw-bg-gray-700 tw-rounded-lg">
-                      <h4 className="tw-font-medium tw-mb-2 dark:tw-text-white">{t('eventBooking.yourInformation')}</h4>
-                      <p className="tw-text-sm dark:tw-text-white">
-                        <span className="tw-font-medium dark:tw-text-white">ID:</span>  {Id}
-                      </p>
-                      <p className="tw-text-sm dark:tw-text-white">
-                        <span className="tw-font-medium dark:tw-text-white">{t('eventBooking.name')}:</span> {userName}
-                      </p>
+                      <label className="tw-block">
+                        <span className="tw-text-lg tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 tw-mb-2 tw-block">
+                          {t('eventBooking.selectResponsible')}
+                        </span>
+                        <select
+                          value={responsible}
+                          onChange={(e) => setResponsible(e.target.value)}
+                          className="tw-w-full dark:tw-text-white tw-px-4 tw-py-3 tw-rounded-lg tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-800 focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
+                        >
+                          <option value="">{t('eventBooking.selectOption')}</option>
+                          <option value="Beshoy Gerges">Beshoy Gerges</option>
+                          <option value="Rafayl Zaher">Rafayl Zaher</option>
+                          <option value="Mina Adel">Mina Adel</option>
+                        </select>
+                      </label>
+
+                      <div className="tw-p-4 tw-bg-gray-50 dark:tw-bg-gray-700 tw-rounded-lg">
+                        <h4 className="tw-font-medium tw-mb-2 dark:tw-text-white">{t('eventBooking.yourInformation')}</h4>
+                        <p className="tw-text-sm dark:tw-text-white">
+                          <span className="tw-font-medium dark:tw-text-white">ID:</span>  {Id}
+                        </p>
+                        <p className="tw-text-sm dark:tw-text-white">
+                          <span className="tw-font-medium dark:tw-text-white">{t('eventBooking.name')}:</span> {userName}
+                        </p>
+                      </div>
                     </div>
+                  </div>
 
+                  {/* Fixed footer with submit button */}
+                  <div className="tw-sticky tw-bottom-0 tw-left-0 tw-right-0 tw-bg-white dark:tw-bg-gray-800 tw-p-4 tw-border-t dark:tw-border-gray-700">
                     <button
                       onClick={handleSubmitProof}
                       disabled={sending || !screenshot || !responsible}
