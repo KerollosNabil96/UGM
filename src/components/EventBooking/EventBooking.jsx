@@ -2,20 +2,26 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
-import { FaWallet, FaPaperPlane, FaArrowLeft, FaTimes, FaClock, FaCheck, FaUser } from 'react-icons/fa';
+import {
+  FaWallet,
+  FaPaperPlane,
+  FaArrowLeft,
+  FaTimes,
+  FaClock,
+  FaCheck,
+  FaUser,
+} from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { useTranslation } from 'react-i18next';
 
 export default function EventBooking() {
-  // Context and hooks
   const { darkMode } = useContext(darkModeContext);
   const { t, i18n } = useTranslation('eventBooking');
   const { id } = useParams();
   const navigate = useNavigate();
   const isRTL = i18n.language === 'ar';
 
-  // State management
   const [event, setEvent] = useState(null);
   const [activeModal, setActiveModal] = useState(null);
   const [responsible, setResponsible] = useState('');
@@ -23,13 +29,11 @@ export default function EventBooking() {
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Get user data from localStorage
   const wallet = parseFloat(localStorage.getItem('wallet')) || 0;
   const token = localStorage.getItem('token');
   const Id = localStorage.getItem('Id');
   const userName = localStorage.getItem('userName');
 
-  // Helper function to display shortened file names
   const displayFileName = (name) => {
     if (name.length > 24) {
       return `${name.substring(0, 10)}...${name.substring(name.length - 10)}`;
@@ -37,12 +41,10 @@ export default function EventBooking() {
     return name;
   };
 
-  // Scroll to top on initial render
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Validate user ID
   useEffect(() => {
     if (!Id) {
       toast.error(t('eventBooking.userIdMissing'));
@@ -50,7 +52,6 @@ export default function EventBooking() {
     }
   }, [Id, navigate, t]);
 
-  // Fetch event data
   const fetchEvent = async () => {
     if (!Id) return;
 
@@ -71,26 +72,27 @@ export default function EventBooking() {
 
   useEffect(() => {
     fetchEvent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // Handle wallet booking
   const handleWalletBooking = async () => {
     if (!Id) {
       toast.error(t('eventBooking.userIdMissing'));
       return;
     }
 
-    if (wallet < event.price) {
+    const price = parseFloat(event.price);
+
+    if (wallet < price) {
       toast.error(t('eventBooking.walletError'));
       return;
     }
 
     try {
-      await axios.put(
+      // 1. Update wallet
+      const walletResponse = await axios.put(
         `https://ugmproject.vercel.app/api/v1/user/updateWallet/${Id}`,
         {
-          amount: event.price,
+          amount: price,
           operation: 'remove',
           description: `Booking for event: ${event.eventName}`,
         },
@@ -99,30 +101,40 @@ export default function EventBooking() {
         }
       );
 
+      // 2. Create booking
       const bookingData = {
         eventId: event._id,
-        userId: Id,
-        userName,
         eventName: event.eventName,
-        price: event.price,
-        paymentMethod: 'wallet',
-        status: 'approved',
+        price: price.toString(),
+        userName,
       };
 
-      console.log('Booking data to be sent:', bookingData);
+      const bookingResponse = await axios.post(
+        'https://ugmproject.vercel.app/api/v1/booking/bookingByWallet',
+        bookingData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
-      const newWalletBalance = wallet - event.price;
+      // Log the response from the booking API
+      console.log('Booking API Response:', bookingResponse.data);
+
+      // 3. Update local wallet balance
+      const newWalletBalance = wallet - price;
       localStorage.setItem('wallet', newWalletBalance.toString());
 
       toast.success(t('eventBooking.walletSuccess'));
       navigate('/events');
     } catch (err) {
-      toast.error(err.response?.data?.message || t('eventBooking.bookingError'));
-      console.error('Wallet Booking Error:', err);
+      console.error('Booking API Error:', err.response?.data);
+      toast.error(err.response?.data?.err || t('eventBooking.bookingError'));
     }
   };
 
-  // Handle file upload
   const handleUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -132,7 +144,6 @@ export default function EventBooking() {
     }
   };
 
-  // Handle proof submission
   const handleSubmitProof = async () => {
     if (!Id) {
       toast.error(t('eventBooking.userIdMissing'));
@@ -156,7 +167,7 @@ export default function EventBooking() {
         paymentMethod: 'proof',
         responsiblePerson: responsible,
         status: 'pending',
-        screenshot: screenshot.name
+        screenshot: screenshot.name,
       };
 
       console.log('Proof submission data:', formData);
@@ -164,8 +175,8 @@ export default function EventBooking() {
       toast.success(t('eventBooking.proofSuccess'));
       navigate('/events');
     } catch (err) {
+      console.error('Proof Submission Error:', err.response?.data);
       toast.error(err.response?.data?.message || t('eventBooking.bookingError'));
-      console.error('Proof Submission Error:', err);
     } finally {
       setSending(false);
     }
@@ -173,7 +184,11 @@ export default function EventBooking() {
 
   if (loading) {
     return (
-      <div className={`${darkMode ? 'tw-dark' : ''} tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800 tw-z-50`}>
+      <div
+        className={`${
+          darkMode ? 'tw-dark' : ''
+        } tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800 tw-z-50`}
+      >
         <div className="tw-w-12 tw-h-12 tw-border-4 tw-border-blue-500 tw-border-t-transparent tw-rounded-full tw-animate-spin"></div>
       </div>
     );
@@ -181,9 +196,15 @@ export default function EventBooking() {
 
   if (!event) {
     return (
-      <div className={`${darkMode ? 'tw-dark' : ''} tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800`}>
+      <div
+        className={`${
+          darkMode ? 'tw-dark' : ''
+        } tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800`}
+      >
         <div className="tw-text-center">
-          <p className="tw-text-lg tw-text-gray-700 dark:tw-text-gray-300">{t('eventBooking.eventNotFound')}</p>
+          <p className="tw-text-lg tw-text-gray-700 dark:tw-text-gray-300">
+            {t('eventBooking.eventNotFound')}
+          </p>
           <button
             onClick={() => navigate('/events')}
             className="tw-mt-4 tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-lg hover:tw-bg-blue-700"
@@ -195,9 +216,8 @@ export default function EventBooking() {
     );
   }
 
-  // Handle back navigation
   const handleBack = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
 
   return (
@@ -209,7 +229,7 @@ export default function EventBooking() {
           transition={{ duration: 0.6 }}
           className="tw-container tw-max-w-3xl tw-mx-auto tw-p-6 tw-bg-gradient-to-b tw-from-white tw-to-gray-50 dark:tw-from-gray-800 dark:tw-to-gray-850"
         >
-          {/* Back Button - Fixed the onClick handler */}
+          {/* Back Button */}
           <div className="tw-mb-6">
             <button
               onClick={handleBack}
@@ -221,7 +241,6 @@ export default function EventBooking() {
             </button>
           </div>
 
-          {/* Rest of your component remains the same */}
           {/* Event Details */}
           <div className="tw-bg-white dark:tw-bg-gray-900 tw-rounded-xl tw-shadow-md tw-p-6 tw-mb-8">
             <h1 className="tw-text-2xl tw-font-bold tw-mb-4 tw-text-blue-700 dark:tw-text-blue-300">
