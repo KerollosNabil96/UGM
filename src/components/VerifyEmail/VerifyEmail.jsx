@@ -39,7 +39,7 @@ export default function VerifyEmail() {
 
       } catch (err) {
         console.error("Verification Error:", err);
-        setError(t('tryLater')); // الرسالة الجديدة
+        setError(t('tryLater')); 
         setTimeout(() => {
           window.location.href = 'https://ugm-family.vercel.app/';
         }, 3000);

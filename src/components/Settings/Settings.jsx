@@ -5,6 +5,7 @@ import { darkModeContext } from '../../Context/DarkModeContext';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Settings() {
   const { darkMode } = useContext(darkModeContext);
@@ -12,7 +13,10 @@ export default function Settings() {
   const isRTL = i18n.language === 'ar';
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const { t } = useTranslation('settings');
-
+  const [passwordUpdateStatus, setPasswordUpdateStatus] = useState({ success: null, message: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
+  const [profileUpdateStatus, setProfileUpdateStatus] = useState({ success: null, message: '' });
 
   const daysOfWeek = [
     t('days.saturday'),
@@ -70,8 +74,35 @@ export default function Settings() {
       isExpatriate: false
     },
     validate,
-    onSubmit: (values) => {
-      console.log('Form submitted with values:', values);
+    onSubmit: async (values) => {
+      setIsProfileLoading(true);
+      setProfileUpdateStatus({ success: null, message: '' });
+      
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setShouldRedirect(true);
+          return;
+        }
+
+        // هنا يمكنك إضافة استدعاء API لتحديث الملف الشخصي
+        console.log('Form submitted with values:', values);
+        
+        // محاكاة لاستجابة API
+        setTimeout(() => {
+          setProfileUpdateStatus({ 
+            success: true, 
+            message: t('settings.profileUpdateSuccess') 
+          });
+          setIsProfileLoading(false);
+        }, 1000);
+      } catch (error) {
+        setProfileUpdateStatus({ 
+          success: false, 
+          message: t('settings.profileUpdateError') 
+        });
+        setIsProfileLoading(false);
+      }
     }
   });
 
@@ -106,9 +137,66 @@ export default function Settings() {
       rePassword: ''
     },
     validate: validate2,
-    onSubmit: (values2) => {
-      console.log('Password Update Submitted:', values2);
+   onSubmit: async (values2, { resetForm }) => {
+  setIsLoading(true);
+  setPasswordUpdateStatus({ success: null, message: '' });
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setShouldRedirect(true);
+      return;
     }
+
+    const response = await axios.put(
+      'https://ugmproject.vercel.app/api/v1/user/changePassword',
+      {
+        oldPassword: values2.oldPassword,
+        newPassword: values2.newPassword
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log('Response from API:', response.data);
+
+    if (response.data?.message?.toLowerCase().includes("password")) {
+      setPasswordUpdateStatus({
+        success: true,
+        message: t('settings.passwordUpdateSuccess')
+      });
+      resetForm();
+    } else {
+      setPasswordUpdateStatus({
+        success: false,
+        message: t('settings.passwordUpdateFailed')
+      });
+    }
+
+  } catch (error) {
+    let errorMessage = t('settings.passwordUpdateError');
+
+    if (error.response) {
+      if (error.response.status === 400) {
+        errorMessage = t('settings.errors.invalidCredentials');
+      } else if (error.response.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+    }
+
+    setPasswordUpdateStatus({
+      success: false,
+      message: errorMessage
+    });
+  } finally {
+    setIsLoading(false);
+  }
+}
+
   });
 
   useEffect(() => {
@@ -142,6 +230,11 @@ export default function Settings() {
               <h2 className="mb-4 mainColor dark:tw-text-indigo-600">{t('settings.profileInfo')}</h2>
 
               <div className={`profInfo ${styles.shad} dark:tw-bg-gray-900 p-4 mx-auto w-75 tw-bg-gray-300 rounded-2`}>
+                {profileUpdateStatus.success !== null && (
+                  <div className={`alert ${profileUpdateStatus.success ? 'alert-success' : 'alert-danger'}`}>
+                    {profileUpdateStatus.message}
+                  </div>
+                )}
                 <form onSubmit={formik.handleSubmit}>
                   <div className="parent md:tw-flex gap-2">
                     <div className="Emailchild w-100">
@@ -363,9 +456,9 @@ export default function Settings() {
                       <button
                         type="submit"
                         className="bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2"
-                        disabled={!formik.dirty}
+                        disabled={!formik.dirty || isProfileLoading}
                       >
-                        {formik.isSubmitting ? 'Updating...' : t('settings.update')}
+                        {isProfileLoading ? t('settings.updating') : t('settings.update')}
                       </button>
                     </div>
                   </div>
@@ -375,6 +468,12 @@ export default function Settings() {
               <h2 className="my-4 mainColor dark:tw-text-indigo-600">{t('settings.updatePassword')}</h2>
 
               <div className={`profInfo ${styles.shad} dark:tw-bg-gray-900 mx-auto p-4 w-75 tw-bg-gray-300 rounded-2`}>
+                {passwordUpdateStatus.success !== null && (
+                  <div className={`alert ${passwordUpdateStatus.success ? 'alert-success' : 'alert-danger'}`}>
+                    {passwordUpdateStatus.message}
+                  </div>
+                )}
+                
                 <form onSubmit={formik2.handleSubmit}>
                   <div className="parent md:tw-flex gap-2">
                     <div className="oldchild w-100">
@@ -432,16 +531,15 @@ export default function Settings() {
                       )}
                       <button
                         type="submit"
-                        disabled={!(formik2.dirty && formik2.isValid)}
+                        disabled={!(formik2.dirty && formik2.isValid) || isLoading}
                         className="bg-main dark:tw-bg-indigo-600 text-white w-100 py-2 rounded-2 mt-4"
                       >
-                        {t('settings.submitPassword')}
+                        {isLoading ? t('settings.updating') : t('settings.submitPassword')}
                       </button>
                     </div>
                   </div>
                 </form>
               </div>
-
             </div>
           </div>
         </motion.div>

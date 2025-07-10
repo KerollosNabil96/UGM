@@ -2,8 +2,9 @@
   "settings": {
     "title": "Settings",
     "description": "In this section, you can edit your personal information and update your password.",
-    "profileInfo": "Profile Information:",
+    "profileInfo": "Profile Information",
     "update": "Update",
+    "updating": "Updating...",
     "updateEmail": "Update Email",
     "updateChurch": "Update Church",
     "updateCollege": "Update college or Institute",
@@ -17,11 +18,16 @@
     "selectCohort": "Select cohort",
     "selectStatus": "Select status",
     "dayOffLabel": "Day off (Press Ctrl and select):",
-    "updatePassword": "Update Password:",
+    "updatePassword": "Update Password",
     "oldPassword": "Enter old Password",
     "newPassword": "Enter new Password",
     "rePassword": "Enter Repassword",
     "submitPassword": "Update Password",
+    "passwordUpdateSuccess": "Password updated successfully!",
+    "passwordUpdateFailed": "Password update failed. Please try again.",
+    "passwordUpdateError": "An error occurred while updating password",
+    "profileUpdateSuccess": "Profile updated successfully!",
+    "profileUpdateError": "An error occurred while updating profile",
     "errors": {
       "email": "Invalid email address",
       "mobile": "Invalid mobile number",
@@ -30,7 +36,17 @@
       "requiredNewPassword": "New Password is required",
       "requiredRePassword": "Repassword is required",
       "passwordMismatch": "Password and repassword must be the same",
-      "passwordPattern": "New password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character"
+      "passwordPattern": "New password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character",
+      "invalidCredentials": "Current password is incorrect"
+    },
+    "days": {
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday"
     }
   }
 }
