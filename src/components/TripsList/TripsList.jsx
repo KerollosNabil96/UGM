@@ -382,14 +382,6 @@
 
 
 
-
-
-
-
-
-
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { 
@@ -612,17 +604,17 @@ export default function TripsList() {
     switch (method) {
       case 'wallet':
         return (
-          <span className="tw-flex tw-items-center tw-gap-1">
+          <span className="tw-flex tw-items-center tw-gap-1 dark:tw-text-white">
             <FaWallet className="tw-text-purple-500" />
             Wallet
           </span>
         );
       case 'cash':
-        return 'Cash';
+        return <span className="dark:tw-text-white">Cash</span>;
       case 'card':
-        return 'Credit Card';
+        return <span className="dark:tw-text-white">Credit Card</span>;
       default:
-        return method || 'N/A';
+        return <span className="dark:tw-text-white">{method || 'N/A'}</span>;
     }
   };
 
@@ -660,16 +652,16 @@ export default function TripsList() {
                 <>
                   <div className="tw-flex tw-justify-between tw-items-start tw-mb-6">
                     <div>
-                      <h3 className="tw-text-2xl tw-font-bold tw-flex tw-items-center tw-gap-2">
+                      <h3 className="tw-text-2xl tw-font-bold tw-flex tw-items-center tw-gap-2 dark:tw-text-white">
                         <FaUsers className="tw-text-blue-600" />
                         {selectedEvent.eventName}
                       </h3>
                       <div className="tw-flex tw-items-center tw-gap-4 tw-mt-2 tw-text-gray-600 dark:tw-text-gray-300">
-                        <span className="tw-flex tw-items-center tw-gap-1">
+                        <span className="tw-flex tw-items-center tw-gap-1 dark:tw-text-white">
                           <FaCalendarAlt />
                           {formatDate(selectedEvent.date)}
                         </span>
-                        <span className="tw-flex tw-items-center tw-gap-1">
+                        <span className="tw-flex tw-items-center tw-gap-1 dark:tw-text-white">
                           <FaTicketAlt />
                           {selectedEvent.price} EGP
                         </span>
@@ -690,7 +682,7 @@ export default function TripsList() {
 
                   {selectedEvent.images?.length > 0 && (
                     <div className="tw-mb-6">
-                      <h4 className="tw-text-lg tw-font-semibold tw-mb-2">Event Images</h4>
+                      <h4 className="tw-text-lg tw-font-semibold tw-mb-2 dark:tw-text-white">Event Images</h4>
                       <div className="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-2">
                         {selectedEvent.images.map((img, index) => (
                           <img
@@ -705,7 +697,7 @@ export default function TripsList() {
                   )}
 
                   <div className="tw-mb-6">
-                    <h4 className="tw-text-lg tw-font-semibold tw-mb-4 tw-flex tw-items-center tw-gap-2">
+                    <h4 className="tw-text-lg tw-font-semibold tw-mb-4 tw-flex tw-items-center tw-gap-2 dark:tw-text-white">
                       <RiUserFill className="tw-text-blue-600" />
                       Registered Participants ({selectedEvent.reservedUsers?.length || 0})
                     </h4>
@@ -769,11 +761,11 @@ export default function TripsList() {
                           <tbody className="tw-bg-white dark:tw-bg-gray-800 tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
                             {sortUsers(selectedEvent.reservedUsers).map((user, index) => (
                               <tr key={user._id || index} className="hover:tw-bg-gray-50 dark:hover:tw-bg-gray-700">
-                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{index + 1}</td>
-                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{user.userName}</td>
-                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{user.phone}</td>
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap dark:tw-text-white">{index + 1}</td>
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap dark:tw-text-white">{user.userName}</td>
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap dark:tw-text-white">{user.phone}</td>
                                 <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">
-                                  <div className="tw-flex tw-items-center tw-gap-1">
+                                  <div className="tw-flex tw-items-center tw-gap-1 dark:tw-text-white">
                                     <FaRegClock className="tw-text-gray-400" />
                                     {formatDateTime(
                                       user.bookingInfo?.createdAt || 
@@ -786,7 +778,7 @@ export default function TripsList() {
                                   {renderPaymentMethod(user.bookingInfo?.paymentMethod)}
                                 </td>
                                 <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">
-                                  <div className="tw-flex tw-items-center tw-gap-1 tw-capitalize">
+                                  <div className="tw-flex tw-items-center tw-gap-1 tw-capitalize dark:tw-text-white">
                                     {renderStatusIcon(user.bookingInfo?.status)}
                                     {user.bookingInfo?.status || 'pending'}
                                   </div>
@@ -799,7 +791,7 @@ export default function TripsList() {
                     ) : (
                       <div className="tw-text-center tw-py-8 tw-text-gray-500 dark:tw-text-gray-400">
                         <MdEventBusy className="tw-text-4xl tw-mx-auto tw-mb-2" />
-                        <p>No participants registered yet</p>
+                        <p className="dark:tw-text-white">No participants registered yet</p>
                       </div>
                     )}
                   </div>
@@ -832,7 +824,7 @@ export default function TripsList() {
             <input
               type="text"
               placeholder="Search events..."
-              className="tw-pl-10 tw-pr-4 tw-py-2 tw-w-full tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-bg-white dark:tw-bg-gray-800 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500"
+              className="tw-pl-10 tw-pr-4 tw-py-2 tw-w-full tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-bg-white dark:tw-bg-gray-800 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 dark:tw-text-white"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -846,7 +838,7 @@ export default function TripsList() {
         ) : filteredEvents.length === 0 ? (
           <div className="tw-text-center tw-py-12 tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow">
             <MdEventBusy className="tw-text-5xl tw-mx-auto tw-text-gray-400 tw-mb-4" />
-            <h3 className="tw-text-xl tw-font-medium tw-text-gray-600 dark:tw-text-gray-300">
+            <h3 className="tw-text-xl tw-font-medium tw-text-gray-600 dark:tw-text-white">
               {searchTerm ? 'No events match your search' : 'No events available'}
             </h3>
             {searchTerm && (
@@ -907,21 +899,21 @@ export default function TripsList() {
                     <tr key={event._id} className="hover:tw-bg-gray-50 dark:hover:tw-bg-gray-700">
                       <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                         <div className="tw-font-medium dark:tw-text-white">{event.eventName}</div>
-                        <div className="tw-text-sm tw-text-gray-500 dark:tw-text-gray-400">
+                        <div className="tw-text-sm tw-text-gray-500 dark:tw-text-gray-300">
                           {event.price} EGP
                         </div>
                       </td>
                       <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                        <div className="tw-flex tw-items-center tw-gap-2">
-                          <FaCalendarAlt className="tw-text-gray-400" />
+                        <div className="tw-flex tw-items-center tw-gap-2 dark:tw-text-white">
+                          <FaCalendarAlt className="tw-text-gray-400 dark:tw-text-gray-300" />
                           {formatDate(event.date)}
                         </div>
                       </td>
-                      <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                      <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap dark:tw-text-white">
                         {event.capacity}
                       </td>
                       <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                        <div className="tw-flex tw-items-center tw-gap-2">
+                        <div className="tw-flex tw-items-center tw-gap-2 dark:tw-text-white">
                           <RiUserFill className="tw-text-blue-500" />
                           {event.reservedCount}
                         </div>

@@ -101,7 +101,7 @@ export default function VenueForm() {
       shortDescription: "",
       fullDescription: "",
       needsBus: false,
-      busCapacity: "",
+      capacity: "",
       reservedUsers: []
     },
     validationSchema: Yup.object({
@@ -129,7 +129,7 @@ export default function VenueForm() {
         .max(100, t('shareEvent.validation.maxChars', { field: t('shareEvent.form.shortDescription'), max: 100 })),
       fullDescription: Yup.string()
         .required(t('shareEvent.validation.required', { field: t('shareEvent.form.fullDescription') })),
-      busCapacity: Yup.number().when('needsBus', {
+      capacity: Yup.number().when('needsBus', {
         is: true,
         then: schema => schema
           .required(t('shareEvent.validation.required', { field: t('shareEvent.form.busCapacity') }))
@@ -161,6 +161,7 @@ export default function VenueForm() {
             formData.append('images', file);
           }
         });
+    console.log("Form Values:", values);
 
         formData.append('reservedUsers', JSON.stringify([]));
 
@@ -175,6 +176,7 @@ export default function VenueForm() {
           }
         );
         
+        console.log(res)
         toast.success(t('shareEvent.successMessage'));
         resetForm();
         setImages(Array(3).fill(null));
@@ -209,8 +211,8 @@ export default function VenueForm() {
       }
     });
 
-    if (formik.values.needsBus && !formik.values.busCapacity) {
-      errors.busCapacity = true;
+    if (formik.values.needsBus && !formik.values.capacity) {
+      errors.capacity = true;
     }
     
     if (imageFiles.filter(Boolean).length < 3) {
@@ -239,7 +241,7 @@ export default function VenueForm() {
     if (missingFields.date) missingFieldsList.push(t('shareEvent.form.date'));
     if (missingFields.shortDescription) missingFieldsList.push(t('shareEvent.form.shortDescription'));
     if (missingFields.fullDescription) missingFieldsList.push(t('shareEvent.form.fullDescription'));
-    if (missingFields.busCapacity) missingFieldsList.push(t('shareEvent.form.busCapacity'));
+    if (missingFields.capacity) missingFieldsList.push(t('shareEvent.form.busCapacity'));
     if (missingFields.images) missingFieldsList.push(t('shareEvent.form.images.label'));
     
     return (
@@ -271,7 +273,7 @@ export default function VenueForm() {
         date: true,
         shortDescription: true,
         fullDescription: true,
-        busCapacity: true
+        capacity: true
       });
 
       toast.error(t('shareEvent.validation.requiredFields'));
@@ -404,7 +406,7 @@ export default function VenueForm() {
     formik.setFieldValue("needsBus", needsBus);
     
     if (!needsBus) {
-      formik.setFieldValue("busCapacity", "");
+      formik.setFieldValue("capacity", "");
     }
   };
 
@@ -642,17 +644,17 @@ export default function VenueForm() {
                   <div>
                     <input
                       type="number"
-                      name="busCapacity"
+                      name="capacity"
                       placeholder={t('shareEvent.form.busCapacity')}
-                      className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.busCapacity && formik.errors.busCapacity ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
+                      className={`tw-w-full ${isMobile ? 'tw-p-2' : 'tw-p-3'} dark:tw-text-white rounded-3 tw-bg-white dark:tw-bg-gray-800 tw-border ${formik.touched.capacity && formik.errors.capacity ? "tw-border-red-500" : "tw-border-gray-300 dark:tw-border-gray-600"}`}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.busCapacity}
+                      value={formik.values.capacity}
                       min="1"
                       max="400"
                     />
-                    {formik.touched.busCapacity && formik.errors.busCapacity && (
-                      <div className="tw-text-red-500 tw-text-sm tw-mt-1">{formik.errors.busCapacity}</div>
+                    {formik.touched.capacity && formik.errors.capacity && (
+                      <div className="tw-text-red-500 tw-text-sm tw-mt-1">{formik.errors.capacity}</div>
                     )}
                     <p className="tw-text-xs tw-text-gray-500 dark:tw-text-gray-300 tw-mt-1">
                       {t('shareEvent.form.busCapacityHint')}
