@@ -390,28 +390,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { 
@@ -424,7 +402,11 @@ import {
   FaUserClock,
   FaSort,
   FaSortUp,
-  FaSortDown
+  FaSortDown,
+  FaWallet,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaClock
 } from 'react-icons/fa';
 import { MdEventAvailable, MdEventBusy } from 'react-icons/md';
 import { RiUserFill } from 'react-icons/ri';
@@ -435,8 +417,14 @@ export default function TripsList() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [eventLoading, setEventLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [eventSortConfig, setEventSortConfig] = useState({ key: 'date', direction: 'asc' });
-  const [userSortConfig, setUserSortConfig] = useState({ key: 'reservationDate', direction: 'desc' });
+  const [userSortConfig, setUserSortConfig] = useState({ 
+    key: 'createdAt', 
+    direction: 'desc',
+    type: 'date' 
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -444,6 +432,7 @@ export default function TripsList() {
     const fetchEvents = async () => {
       try {
         setLoading(true);
+        setError(null);
         const res = await axios.get(
           'https://ugmproject.vercel.app/api/v1/event/getAllEventsReserveds',
           {
@@ -454,15 +443,38 @@ export default function TripsList() {
         );
         setEvents(res.data.events);
         setFilteredEvents(res.data.events);
-        setLoading(false);
       } catch (err) {
         console.error('Error fetching events:', err);
+        setError('Failed to load events. Please try again later.');
+      } finally {
         setLoading(false);
       }
     };
 
     fetchEvents();
   }, []);
+
+  const fetchEventDetails = async (eventId) => {
+    const token = localStorage.getItem('token');
+    try {
+      setEventLoading(true);
+      setError(null);
+      const res = await axios.get(
+        `https://ugmproject.vercel.app/api/v1/event/getEventReservedsById/${eventId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSelectedEvent(res.data.event);
+    } catch (err) {
+      console.error('Error fetching event details:', err);
+      setError('Failed to load event details. Please try again.');
+    } finally {
+      setEventLoading(false);
+    }
+  };
 
   useEffect(() => {
     const results = events.filter(event =>
@@ -488,27 +500,55 @@ export default function TripsList() {
     setFilteredEvents(sortedEvents);
   };
 
-  const handleUserSort = (key) => {
+  const handleUserSort = (key, type = 'string') => {
     let direction = 'desc';
     if (userSortConfig.key === key && userSortConfig.direction === 'desc') {
       direction = 'asc';
     }
-    setUserSortConfig({ key, direction });
+    setUserSortConfig({ key, direction, type });
   };
 
   const sortUsers = (users) => {
-    if (!users) return [];
+    if (!users || !Array.isArray(users)) return [];
     
     return [...users].sort((a, b) => {
-      // Fallback logic: reservationDate -> createdAt -> event date
-      const aValue = a.reservationDate || a.createdAt || selectedEvent?.date;
-      const bValue = b.reservationDate || b.createdAt || selectedEvent?.date;
+      // Handle bookingInfo if it exists
+      const aBooking = a.bookingInfo || {};
+      const bBooking = b.bookingInfo || {};
+      
+      let aValue, bValue;
+      
+      if (userSortConfig.key === 'createdAt') {
+        aValue = aBooking.createdAt || a.createdAt || selectedEvent?.date;
+        bValue = bBooking.createdAt || b.createdAt || selectedEvent?.date;
+      } else if (userSortConfig.key === 'userName') {
+        aValue = a.userName?.toLowerCase() || '';
+        bValue = b.userName?.toLowerCase() || '';
+      } else if (userSortConfig.key === 'phone') {
+        aValue = a.phone || '';
+        bValue = b.phone || '';
+      } else if (userSortConfig.key === 'status') {
+        aValue = aBooking.status || '';
+        bValue = bBooking.status || '';
+      } else if (userSortConfig.key === 'paymentMethod') {
+        aValue = aBooking.paymentMethod || '';
+        bValue = bBooking.paymentMethod || '';
+      } else {
+        aValue = a[userSortConfig.key] || '';
+        bValue = b[userSortConfig.key] || '';
+      }
       
       if (!aValue || !bValue) return 0;
       
-      if (aValue < bValue) return userSortConfig.direction === 'asc' ? -1 : 1;
-      if (aValue > bValue) return userSortConfig.direction === 'asc' ? 1 : -1;
-      return 0;
+      if (userSortConfig.type === 'date') {
+        const aDate = new Date(aValue).getTime();
+        const bDate = new Date(bValue).getTime();
+        return userSortConfig.direction === 'asc' ? aDate - bDate : bDate - aDate;
+      } else {
+        if (aValue < bValue) return userSortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return userSortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      }
     });
   };
 
@@ -551,8 +591,57 @@ export default function TripsList() {
       : <FaSortDown className="tw-ml-1" />;
   };
 
+  const handleViewEvent = (eventId) => {
+    fetchEventDetails(eventId);
+  };
+
+  const renderStatusIcon = (status) => {
+    switch (status) {
+      case 'approved':
+        return <FaCheckCircle className="tw-text-green-500" />;
+      case 'rejected':
+        return <FaTimesCircle className="tw-text-red-500" />;
+      case 'pending':
+        return <FaClock className="tw-text-yellow-500" />;
+      default:
+        return <FaClock className="tw-text-gray-400" />;
+    }
+  };
+
+  const renderPaymentMethod = (method) => {
+    switch (method) {
+      case 'wallet':
+        return (
+          <span className="tw-flex tw-items-center tw-gap-1">
+            <FaWallet className="tw-text-purple-500" />
+            Wallet
+          </span>
+        );
+      case 'cash':
+        return 'Cash';
+      case 'card':
+        return 'Credit Card';
+      default:
+        return method || 'N/A';
+    }
+  };
+
   return (
     <div className="tw-min-h-screen tw-bg-gray-50 dark:tw-bg-gray-900 tw-p-4 md:tw-p-8">
+      {error && (
+        <div className="tw-fixed tw-top-4 tw-right-4 tw-z-50">
+          <div className="tw-bg-red-100 tw-border-l-4 tw-border-red-500 tw-text-red-700 tw-p-4 tw-rounded tw-shadow-lg tw-max-w-md">
+            <div className="tw-flex tw-justify-between">
+              <div className="tw-flex tw-items-center">
+                <span className="tw-font-bold">Error</span>
+              </div>
+              <button onClick={() => setError(null)} className="tw-font-bold tw-text-xl">&times;</button>
+            </div>
+            <p className="tw-mt-2">{error}</p>
+          </div>
+        </div>
+      )}
+
       {selectedEvent && (
         <div
           onClick={() => setSelectedEvent(null)}
@@ -563,116 +652,159 @@ export default function TripsList() {
             className="tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow-xl tw-w-full tw-max-w-4xl tw-max-h-[90vh] tw-overflow-y-auto"
           >
             <div className="tw-p-6">
-              <div className="tw-flex tw-justify-between tw-items-start tw-mb-6">
-                <div>
-                  <h3 className="tw-text-2xl tw-font-bold tw-flex tw-items-center tw-gap-2">
-                    <FaUsers className="tw-text-blue-600" />
-                    {selectedEvent.eventName}
-                  </h3>
-                  <div className="tw-flex tw-items-center tw-gap-4 tw-mt-2 tw-text-gray-600 dark:tw-text-gray-300">
-                    <span className="tw-flex tw-items-center tw-gap-1">
-                      <FaCalendarAlt />
-                      {formatDate(selectedEvent.date)}
-                    </span>
-                    <span className="tw-flex tw-items-center tw-gap-1">
-                      <FaTicketAlt />
-                      {selectedEvent.price} EGP
-                    </span>
-                    {selectedEvent.needsBus && (
-                      <span className="tw-flex tw-items-center tw-gap-1 tw-text-orange-500">
-                        <FaBus />
-                        Bus required
+              {eventLoading ? (
+                <div className="tw-flex tw-justify-center tw-items-center tw-py-12">
+                  <div className="tw-animate-spin tw-rounded-full tw-h-12 tw-w-12 tw-border-t-2 tw-border-b-2 tw-border-blue-500"></div>
+                </div>
+              ) : (
+                <>
+                  <div className="tw-flex tw-justify-between tw-items-start tw-mb-6">
+                    <div>
+                      <h3 className="tw-text-2xl tw-font-bold tw-flex tw-items-center tw-gap-2">
+                        <FaUsers className="tw-text-blue-600" />
+                        {selectedEvent.eventName}
+                      </h3>
+                      <div className="tw-flex tw-items-center tw-gap-4 tw-mt-2 tw-text-gray-600 dark:tw-text-gray-300">
+                        <span className="tw-flex tw-items-center tw-gap-1">
+                          <FaCalendarAlt />
+                          {formatDate(selectedEvent.date)}
+                        </span>
+                        <span className="tw-flex tw-items-center tw-gap-1">
+                          <FaTicketAlt />
+                          {selectedEvent.price} EGP
+                        </span>
+                        {selectedEvent.needsBus && (
+                          <span className="tw-flex tw-items-center tw-gap-1 tw-text-orange-500">
+                            <FaBus />
+                            Bus required
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="tw-bg-blue-100 dark:tw-bg-blue-900 tw-p-2 tw-rounded-lg">
+                      <span className="tw-text-blue-800 dark:tw-text-blue-200 tw-font-medium">
+                        {selectedEvent.reservedCount} / {selectedEvent.capacity}
                       </span>
+                    </div>
+                  </div>
+
+                  {selectedEvent.images?.length > 0 && (
+                    <div className="tw-mb-6">
+                      <h4 className="tw-text-lg tw-font-semibold tw-mb-2">Event Images</h4>
+                      <div className="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-2">
+                        {selectedEvent.images.map((img, index) => (
+                          <img
+                            key={index}
+                            src={img}
+                            alt={`Event ${index + 1}`}
+                            className="tw-rounded-lg tw-object-cover tw-h-32 tw-w-full"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="tw-mb-6">
+                    <h4 className="tw-text-lg tw-font-semibold tw-mb-4 tw-flex tw-items-center tw-gap-2">
+                      <RiUserFill className="tw-text-blue-600" />
+                      Registered Participants ({selectedEvent.reservedUsers?.length || 0})
+                    </h4>
+
+                    {selectedEvent.reservedUsers?.length > 0 ? (
+                      <div className="tw-overflow-x-auto">
+                        <table className="tw-min-w-full tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
+                          <thead className="tw-bg-gray-50 dark:tw-bg-gray-700">
+                            <tr>
+                              <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
+                                #
+                              </th>
+                              <th 
+                                className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
+                                onClick={() => handleUserSort('userName', 'string')}
+                              >
+                                <div className="tw-flex tw-items-center">
+                                  Name
+                                  {renderSortIcon('userName', userSortConfig)}
+                                </div>
+                              </th>
+                              <th 
+                                className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
+                                onClick={() => handleUserSort('phone', 'string')}
+                              >
+                                <div className="tw-flex tw-items-center">
+                                  Phone
+                                  {renderSortIcon('phone', userSortConfig)}
+                                </div>
+                              </th>
+                              <th 
+                                className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
+                                onClick={() => handleUserSort('createdAt', 'date')}
+                              >
+                                <div className="tw-flex tw-items-center">
+                                  <FaUserClock className="tw-mr-1" />
+                                  Reservation Time
+                                  {renderSortIcon('createdAt', userSortConfig)}
+                                </div>
+                              </th>
+                              <th 
+                                className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
+                                onClick={() => handleUserSort('paymentMethod', 'string')}
+                              >
+                                <div className="tw-flex tw-items-center">
+                                  Payment
+                                  {renderSortIcon('paymentMethod', userSortConfig)}
+                                </div>
+                              </th>
+                              <th 
+                                className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
+                                onClick={() => handleUserSort('status', 'string')}
+                              >
+                                <div className="tw-flex tw-items-center">
+                                  Status
+                                  {renderSortIcon('status', userSortConfig)}
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="tw-bg-white dark:tw-bg-gray-800 tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
+                            {sortUsers(selectedEvent.reservedUsers).map((user, index) => (
+                              <tr key={user._id || index} className="hover:tw-bg-gray-50 dark:hover:tw-bg-gray-700">
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{index + 1}</td>
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{user.userName}</td>
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{user.phone}</td>
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">
+                                  <div className="tw-flex tw-items-center tw-gap-1">
+                                    <FaRegClock className="tw-text-gray-400" />
+                                    {formatDateTime(
+                                      user.bookingInfo?.createdAt || 
+                                      user.createdAt || 
+                                      selectedEvent.date
+                                    )}
+                                  </div>
+                                </td>
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">
+                                  {renderPaymentMethod(user.bookingInfo?.paymentMethod)}
+                                </td>
+                                <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">
+                                  <div className="tw-flex tw-items-center tw-gap-1 tw-capitalize">
+                                    {renderStatusIcon(user.bookingInfo?.status)}
+                                    {user.bookingInfo?.status || 'pending'}
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div className="tw-text-center tw-py-8 tw-text-gray-500 dark:tw-text-gray-400">
+                        <MdEventBusy className="tw-text-4xl tw-mx-auto tw-mb-2" />
+                        <p>No participants registered yet</p>
+                      </div>
                     )}
                   </div>
-                </div>
-                <div className="tw-bg-blue-100 dark:tw-bg-blue-900 tw-p-2 tw-rounded-lg">
-                  <span className="tw-text-blue-800 dark:tw-text-blue-200 tw-font-medium">
-                    {selectedEvent.reservedCount} / {selectedEvent.capacity}
-                  </span>
-                </div>
-              </div>
-
-              {selectedEvent.images?.length > 0 && (
-                <div className="tw-mb-6">
-                  <h4 className="tw-text-lg tw-font-semibold tw-mb-2">Event Images</h4>
-                  <div className="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-2">
-                    {selectedEvent.images.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`Event ${index + 1}`}
-                        className="tw-rounded-lg tw-object-cover tw-h-32 tw-w-full"
-                      />
-                    ))}
-                  </div>
-                </div>
+                </>
               )}
-
-              <div className="tw-mb-6">
-                <h4 className="tw-text-lg tw-font-semibold tw-mb-4 tw-flex tw-items-center tw-gap-2">
-                  <RiUserFill className="tw-text-blue-600" />
-                  Registered Participants ({selectedEvent.reservedUsers.length})
-                </h4>
-
-                {selectedEvent.reservedUsers.length > 0 ? (
-                  <div className="tw-overflow-x-auto">
-                    <table className="tw-min-w-full tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
-                      <thead className="tw-bg-gray-50 dark:tw-bg-gray-700">
-                        <tr>
-                          <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
-                            #
-                          </th>
-                          <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
-                            Name
-                          </th>
-                          <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
-                            Email
-                          </th>
-                          <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
-                            Phone
-                          </th>
-                          <th 
-                            className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
-                            onClick={() => handleUserSort('reservationDate')}
-                          >
-                            <div className="tw-flex tw-items-center">
-                              <FaUserClock className="tw-mr-1" />
-                              Reservation Time
-                              {renderSortIcon('reservationDate', userSortConfig)}
-                            </div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="tw-bg-white dark:tw-bg-gray-800 tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
-                        {sortUsers(selectedEvent.reservedUsers).map((user, index) => (
-                          <tr key={user._id || index} className="hover:tw-bg-gray-50 dark:hover:tw-bg-gray-700">
-                            <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{index + 1}</td>
-                            <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{user.userName}</td>
-                            <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{user.email}</td>
-                            <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">{user.phone}</td>
-                            <td className="tw-px-4 tw-py-3 tw-whitespace-nowrap">
-                              <div className="tw-flex tw-items-center tw-gap-1">
-                                <FaRegClock className="tw-text-gray-400" />
-                                {formatDateTime(
-                                  user.reservationDate || 
-                                  user.createdAt || 
-                                  selectedEvent.date
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <div className="tw-text-center tw-py-8 tw-text-gray-500 dark:tw-text-gray-400">
-                    <MdEventBusy className="tw-text-4xl tw-mx-auto tw-mb-2" />
-                    <p>No participants registered yet</p>
-                  </div>
-                )}
-              </div>
 
               <div className="tw-flex tw-justify-end">
                 <button
@@ -811,11 +943,18 @@ export default function TripsList() {
                       </td>
                       <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                         <button
-                          onClick={() => setSelectedEvent(event)}
+                          onClick={() => handleViewEvent(event._id)}
                           className="tw-px-3 tw-py-1 tw-bg-blue-600 hover:tw-bg-blue-700 tw-text-white tw-rounded-lg tw-transition tw-duration-200 tw-flex tw-items-center tw-gap-1"
+                          disabled={eventLoading}
                         >
-                          <FaUsers />
-                          View
+                          {eventLoading && selectedEvent?._id === event._id ? (
+                            <span className="tw-inline-block tw-h-4 tw-w-4 tw-border-2 tw-border-white tw-border-t-transparent tw-rounded-full tw-animate-spin"></span>
+                          ) : (
+                            <>
+                              <FaUsers />
+                              View
+                            </>
+                          )}
                         </button>
                       </td>
                     </tr>

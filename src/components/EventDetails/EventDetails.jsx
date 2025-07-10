@@ -113,7 +113,7 @@ export default function EventDetails() {
         const res = await axios.get(`https://ugmproject.vercel.app/api/v1/event/getEventById/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        
+        console.log(res.data.event)
         if (isMounted) {
           setEvent(res.data.event);
           if (res.data.event.address && res.data.event.address.trim() !== '') {
