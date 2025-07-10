@@ -24,6 +24,7 @@ import EventDetails from './components/EventDetails/EventDetails';
 import MemoryDetails from './components/MemoryDetails/MemoryDetails'
 import VerifyEmail from './components/VerifyEmail/VerifyEmail'
 import WalletManagement from './components/WalletManagement/WalletManagement'
+import TripsList from './components/TripsList/TripsList';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -129,6 +130,8 @@ function App() {
               })(),
             },
             { path: 'wallet-managment', element: <WalletManagement /> },
+            { path: 'trip-list', element: <TripsList /> },
+
 
           ],
         },

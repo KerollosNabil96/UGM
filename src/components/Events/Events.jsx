@@ -35,6 +35,7 @@ export default function Events() {
         const res = await axios.get('https://ugmproject.vercel.app/api/v1/event/getAllEvents', {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(res.data)
         setEvents(res.data.events);
         setFilteredEvents(res.data.events);
       } catch (error) {

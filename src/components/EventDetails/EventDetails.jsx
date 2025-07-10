@@ -88,7 +88,6 @@ export default function EventDetails() {
     updateMap(position);
   };
 
-  // حل مشكلة التمرير عند العودة
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, [id, token]);
