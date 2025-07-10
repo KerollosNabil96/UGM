@@ -164,7 +164,8 @@ export default function EventDetails() {
 
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`} dir={isRTL ? 'rtl' : 'ltr'} key={id}>
-      <div className="container-fluid dark:tw-bg-gray-800">
+      <div  className="container-fluid dark:tw-bg-gray-800 
+"   >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

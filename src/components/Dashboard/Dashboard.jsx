@@ -45,6 +45,17 @@ export default function Dashboard() {
                     <i className="fa-solid fa-wallet me-1"></i>{t('dashboard.walletManagment')}
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink
+  to="trip-list"
+  className={({ isActive }) =>
+    `nav-link text-white d-flex align-items-center ${isActive ? 'active' : ''}`
+  }
+>
+  <i className="fa-solid fa-wallet me-1"></i>
+  <span>Trip List</span>
+</NavLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -95,7 +106,7 @@ export default function Dashboard() {
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link active text-white" to="trip-list">
-                  <i className="fa-solid fa-wallet me-1"></i> <span>Trip List</span>
+                  <i className="fa-solid fa-route me-1"></i> <span>Trip List</span>
                 </NavLink>
               </li>
             </ul>
