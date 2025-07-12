@@ -49,7 +49,7 @@ export default function UpdateReq() {
 const handleApprove = async (bookingId) => {
   try {
     console.log("جاري إرسال طلب الموافقة...");
-    const response = await fetch(`https://ugmproject.vercel.app/api/v1/bookings/updateStatus/${bookingId}`, {
+    const response = await fetch(`https://ugmproject.vercel.app/api/v1/booking/updateStatus/${bookingId}`, {
       method: 'PATCH',
       mode: 'cors',
       headers: {
