@@ -554,8 +554,6 @@
 //   );
 // }
 
-
-
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -588,6 +586,7 @@ export default function EventBooking() {
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const [admins, setAdmins] = useState([]);
+  const [fetchingAdmins, setFetchingAdmins] = useState(false);
 
   const wallet = parseFloat(localStorage.getItem('wallet')) || 0;
   const token = localStorage.getItem('token');
@@ -631,24 +630,31 @@ export default function EventBooking() {
 
   const fetchAdmins = async () => {
     try {
-      const role = localStorage.getItem('role');
-      if (role === 'SuperAdmin') {
-        const adminsResponse = await axios.get(
-          'https://ugmproject.vercel.app/api/v1/user/gitAllAdmins',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const adminsData = adminsResponse.data?.users || [];
-        setAdmins(Array.isArray(adminsData) ? adminsData : []);
+      setFetchingAdmins(true);
+      const res = await axios.get(
+        'https://ugmproject.vercel.app/api/v1/user/gitAllAdmins',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      // Handle both possible response structures
+      const adminsData = res.data?.admins || res.data?.users || [];
+      if (Array.isArray(adminsData)) {
+        setAdmins(adminsData);
+        console.log('Admins fetched successfully:', adminsData);
+      } else {
+        console.error('Invalid admins data format:', adminsData);
+        toast.error(t('eventBooking.adminDataError'));
       }
     } catch (err) {
       console.error('Error fetching admins:', err);
+      toast.error(t('eventBooking.adminFetchError'));
       setAdmins([]);
     } finally {
-      setLoading(false);
+      setFetchingAdmins(false);
     }
   };
 
@@ -656,6 +662,7 @@ export default function EventBooking() {
     const fetchData = async () => {
       await fetchEvent();
       await fetchAdmins();
+      setLoading(false);
     };
     
     fetchData();
@@ -1104,22 +1111,29 @@ export default function EventBooking() {
                         <span className="tw-text-lg tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 tw-mb-2 tw-block">
                           {t('eventBooking.selectResponsible')}
                         </span>
-                        <select
-                          value={responsible}
-                          onChange={(e) => setResponsible(e.target.value)}
-                          className="tw-w-full dark:tw-text-white tw-px-4 tw-py-3 tw-rounded-lg tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-800 focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
-                        >
-                          <option value="">{t('eventBooking.selectOption')}</option>
-                          {admins && admins.length > 0 ? (
-                            admins.map((admin) => (
-                              <option key={admin._id} value={admin.userName}>
-                                {admin.userName}
-                              </option>
-                            ))
-                          ) : (
-                            <option disabled>{t('eventBooking.noAdminsAvailable')}</option>
-                          )}
-                        </select>
+                        {fetchingAdmins ? (
+                          <div className="tw-flex tw-items-center tw-justify-center tw-py-4">
+                            <Spinner size="small" />
+                          </div>
+                        ) : (
+                          <select
+                            value={responsible}
+                            onChange={(e) => setResponsible(e.target.value)}
+                            className="tw-w-full dark:tw-text-white tw-px-4 tw-py-3 tw-rounded-lg tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-800 focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
+                            disabled={admins.length === 0}
+                          >
+                            <option value="">{t('eventBooking.selectOption')}</option>
+                            {admins.length > 0 ? (
+                              admins.map((admin) => (
+                                <option key={admin._id} value={admin.userName}>
+                                  {admin.userName} ({admin.role})
+                                </option>
+                              ))
+                            ) : (
+                              <option disabled>{t('eventBooking.noAdminsAvailable')}</option>
+                            )}
+                          </select>
+                        )}
                       </label>
 
                       <div className="tw-p-4 tw-bg-gray-50 dark:tw-bg-gray-700 tw-rounded-lg">
@@ -1138,9 +1152,9 @@ export default function EventBooking() {
                   <div className="tw-sticky tw-bottom-0 tw-left-0 tw-right-0 tw-bg-white dark:tw-bg-gray-800 tw-p-4 tw-border-t dark:tw-border-gray-700">
                     <button
                       onClick={handleSubmitProof}
-                      disabled={sending || !screenshot || !responsible}
+                      disabled={sending || !screenshot || !responsible || admins.length === 0}
                       className={`tw-w-full tw-py-3 tw-rounded-xl tw-font-semibold tw-text-white tw-transition tw-flex tw-items-center tw-justify-center tw-gap-2 ${
-                        !sending && screenshot && responsible
+                        !sending && screenshot && responsible && admins.length > 0
                           ? 'tw-bg-green-600 hover:tw-bg-green-700 dark:tw-bg-green-700 dark:hover:tw-bg-green-800'
                           : 'tw-bg-gray-400 dark:tw-bg-gray-600 tw-cursor-not-allowed'
                       }`}
