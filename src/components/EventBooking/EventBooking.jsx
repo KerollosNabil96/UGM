@@ -553,8 +553,6 @@
 //     </div>
 //   );
 // }
-
-
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -571,6 +569,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { useTranslation } from 'react-i18next';
+import Spinner from '../Spinner/Spinner';
 
 export default function EventBooking() {
   const { darkMode } = useContext(darkModeContext);
@@ -614,6 +613,7 @@ export default function EventBooking() {
     if (!Id) return;
 
     try {
+      setLoading(true);
       const res = await axios.get(
         `https://ugmproject.vercel.app/api/v1/event/getEventById/${id}`,
         {
@@ -623,8 +623,6 @@ export default function EventBooking() {
       setEvent(res.data.event);
     } catch (err) {
       toast.error(t('eventBooking.fetchError'));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -646,12 +644,18 @@ export default function EventBooking() {
     } catch (err) {
       console.error('Error fetching admins:', err);
       setAdmins([]);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEvent();
-    fetchAdmins();
+    const fetchData = async () => {
+      await fetchEvent();
+      await fetchAdmins();
+    };
+    
+    fetchData();
   }, [id]);
 
   const handleWalletBooking = async () => {
@@ -669,7 +673,7 @@ export default function EventBooking() {
 
     try {
       // 1. Update wallet
-      const walletResponse = await axios.put(
+      await axios.put(
         `https://ugmproject.vercel.app/api/v1/user/updateWallet/${Id}`,
         {
           amount: price,
@@ -689,7 +693,7 @@ export default function EventBooking() {
         userName,
       };
 
-      const bookingResponse = await axios.post(
+      await axios.post(
         'https://ugmproject.vercel.app/api/v1/booking/bookingByWallet',
         bookingData,
         {
@@ -699,8 +703,6 @@ export default function EventBooking() {
           },
         }
       );
-
-      console.log('Booking API Response:', bookingResponse.data);
 
       // 3. Update local wallet balance
       const newWalletBalance = wallet - price;
@@ -723,133 +725,124 @@ export default function EventBooking() {
     }
   };
 
- const handleSubmitProof = async () => {
-  if (!Id) {
-    toast.error(t('eventBooking.userIdMissing'));
-    return;
-  }
-
-  if (!screenshot || !responsible) {
-    toast.error(t('eventBooking.requiredFields'));
-    return;
-  }
-
-  setSending(true);
-
-  try {
-    const selectedAdmin = admins.find(admin => admin.userName === responsible);
-    
-    if (!selectedAdmin) {
-      toast.error(t('eventBooking.adminNotFound'));
+  const handleSubmitProof = async () => {
+    if (!Id) {
+      toast.error(t('eventBooking.userIdMissing'));
       return;
     }
 
-    const formData = new FormData();
-    formData.append('eventId', event._id);
-    formData.append('userId', Id);
-    formData.append('userName', userName);
-    formData.append('eventName', event.eventName);
-    formData.append('price', event.price);
-    formData.append('paymentMethod', 'proof');
-    formData.append('responsiblePerson', responsible);
-    formData.append('adminId', selectedAdmin._id);
-    formData.append('status', 'pending');
-    formData.append('screenshot', screenshot);
-
-    const response = await axios.post(
-      'https://ugmproject.vercel.app/api/v1/booking/bookingByProof',
-      formData,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-
-    // عرض رسالة النجاح من السيرفر
-    toast.success(response.data.message, {
-      duration: 5000,
-      style: {
-        background: '#10B981',
-        color: '#FFFFFF',
-        fontSize: '16px',
-        padding: '16px',
-        borderRadius: '8px',
-      },
-    });
-
-    navigate('/events');
-  } catch (err) {
-    console.error('Proof Submission Error:', err.response?.data);
-    
-    // التحقق من نوع الخطأ وعرض الرسالة المناسبة
-    if (err.response?.data?.err === 'You have already booked this event') {
-      toast.error(err.response.data.err, {
-        duration: 5000,
-        style: {
-          background: '#EF4444',
-          color: '#FFFFFF',
-          fontSize: '16px',
-          padding: '16px',
-          borderRadius: '8px',
-        },
-      });
-    } else {
-      // عرض رسالة الخطأ العامة إذا لم يكن الخطأ معروفاً
-      toast.error(err.response?.data?.message || t('eventBooking.bookingError'), {
-        duration: 5000,
-        style: {
-          background: '#EF4444',
-          color: '#FFFFFF',
-          fontSize: '16px',
-          padding: '16px',
-          borderRadius: '8px',
-        },
-      });
+    if (!screenshot || !responsible) {
+      toast.error(t('eventBooking.requiredFields'));
+      return;
     }
-  } finally {
-    setSending(false);
-  }
-};
+
+    setSending(true);
+
+    try {
+      const selectedAdmin = admins.find(admin => admin.userName === responsible);
+      
+      if (!selectedAdmin) {
+        toast.error(t('eventBooking.adminNotFound'));
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('eventId', event._id);
+      formData.append('userId', Id);
+      formData.append('userName', userName);
+      formData.append('eventName', event.eventName);
+      formData.append('price', event.price);
+      formData.append('paymentMethod', 'proof');
+      formData.append('responsiblePerson', responsible);
+      formData.append('adminId', selectedAdmin._id);
+      formData.append('status', 'pending');
+      formData.append('screenshot', screenshot);
+
+      const response = await axios.post(
+        'https://ugmproject.vercel.app/api/v1/booking/bookingByProof',
+        formData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      toast.success(response.data.message, {
+        duration: 5000,
+        style: {
+          background: '#10B981',
+          color: '#FFFFFF',
+          fontSize: '16px',
+          padding: '16px',
+          borderRadius: '8px',
+        },
+      });
+
+      navigate('/events');
+    } catch (err) {
+      console.error('Proof Submission Error:', err.response?.data);
+      
+      if (err.response?.data?.err === 'You have already booked this event') {
+        toast.error(err.response.data.err, {
+          duration: 5000,
+          style: {
+            background: '#EF4444',
+            color: '#FFFFFF',
+            fontSize: '16px',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+        });
+      } else {
+        toast.error(err.response?.data?.message || t('eventBooking.bookingError'), {
+          duration: 5000,
+          style: {
+            background: '#EF4444',
+            color: '#FFFFFF',
+            fontSize: '16px',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+        });
+      }
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   if (loading) {
     return (
-      <div
-        className={`${
-          darkMode ? 'tw-dark' : ''
-        } tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800 tw-z-50`}
-      >
-        <div className="tw-w-12 tw-h-12 tw-border-4 tw-border-blue-500 tw-border-t-transparent tw-rounded-full tw-animate-spin"></div>
+      <div className={`${darkMode ? 'tw-dark' : ''}`}>
+        <div className="container-fluid dark:tw-bg-gray-800" style={{ minHeight: '80vh' }}>
+          <div className="container">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="tw-py-10 tw-flex tw-flex-col tw-items-center tw-justify-center"
+              style={{ minHeight: '70vh' }}
+            >
+              <Spinner />
+            </motion.div>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!event) {
     return (
-      <div
-        className={`${
-          darkMode ? 'tw-dark' : ''
-        } tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800`}
-      >
-        <div className="tw-text-center">
-          <p className="tw-text-lg tw-text-gray-700 dark:tw-text-gray-300">
-            {t('eventBooking.eventNotFound')}
-          </p>
-          <button
-            onClick={() => navigate('/events')}
-            className="tw-mt-4 tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-lg hover:tw-bg-blue-700"
-          >
-            {t('eventBooking.backToEvents')}
-          </button>
-        </div>
+      <div className="tw-text-center tw-mt-20 tw-text-red-600 tw-font-bold tw-text-xl">
+        {t('eventBooking.eventNotFound')}
       </div>
     );
   }
-
-  const handleBack = () => {
-    navigate(-1);
-  };
 
   return (
     <div className={`${darkMode ? 'tw-dark' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
