@@ -555,13 +555,6 @@
 // }
 
 
-
-
-
-
-
-
-
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -647,7 +640,6 @@ export default function EventBooking() {
             },
           }
         );
-        // استجابة ال API تحتوي على users بدلاً من admins
         const adminsData = adminsResponse.data?.users || [];
         setAdmins(Array.isArray(adminsData) ? adminsData : []);
       }
@@ -731,51 +723,95 @@ export default function EventBooking() {
     }
   };
 
-  const handleSubmitProof = async () => {
-    if (!Id) {
-      toast.error(t('eventBooking.userIdMissing'));
+ const handleSubmitProof = async () => {
+  if (!Id) {
+    toast.error(t('eventBooking.userIdMissing'));
+    return;
+  }
+
+  if (!screenshot || !responsible) {
+    toast.error(t('eventBooking.requiredFields'));
+    return;
+  }
+
+  setSending(true);
+
+  try {
+    const selectedAdmin = admins.find(admin => admin.userName === responsible);
+    
+    if (!selectedAdmin) {
+      toast.error(t('eventBooking.adminNotFound'));
       return;
     }
 
-    if (!screenshot || !responsible) {
-      toast.error(t('eventBooking.requiredFields'));
-      return;
-    }
+    const formData = new FormData();
+    formData.append('eventId', event._id);
+    formData.append('userId', Id);
+    formData.append('userName', userName);
+    formData.append('eventName', event.eventName);
+    formData.append('price', event.price);
+    formData.append('paymentMethod', 'proof');
+    formData.append('responsiblePerson', responsible);
+    formData.append('adminId', selectedAdmin._id);
+    formData.append('status', 'pending');
+    formData.append('screenshot', screenshot);
 
-    setSending(true);
-
-    try {
-      // Find the selected admin to get their ID
-      const selectedAdmin = admins.find(admin => admin.userName === responsible);
-      
-      if (!selectedAdmin) {
-        toast.error(t('eventBooking.adminNotFound'));
-        return;
+    const response = await axios.post(
+      'https://ugmproject.vercel.app/api/v1/booking/bookingByProof',
+      formData,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
       }
+    );
 
-      const formData = {
-        eventId: event._id,
-        userId: Id,
-        userName,
-        eventName: event.eventName,
-        price: event.price,
-        paymentMethod: 'proof',
-        responsiblePerson: responsible,
-        adminId: selectedAdmin._id,
-        status: 'pending',
-        screenshot: screenshot.name,
-      };
+    // عرض رسالة النجاح من السيرفر
+    toast.success(response.data.message, {
+      duration: 5000,
+      style: {
+        background: '#10B981',
+        color: '#FFFFFF',
+        fontSize: '16px',
+        padding: '16px',
+        borderRadius: '8px',
+      },
+    });
 
-      console.log('Proof submission data:', formData);
-      toast.success(t('eventBooking.proofSuccess'));
-      navigate('/events');
-    } catch (err) {
-      console.error('Proof Submission Error:', err.response?.data);
-      toast.error(err.response?.data?.message || t('eventBooking.bookingError'));
-    } finally {
-      setSending(false);
+    navigate('/events');
+  } catch (err) {
+    console.error('Proof Submission Error:', err.response?.data);
+    
+    // التحقق من نوع الخطأ وعرض الرسالة المناسبة
+    if (err.response?.data?.err === 'You have already booked this event') {
+      toast.error(err.response.data.err, {
+        duration: 5000,
+        style: {
+          background: '#EF4444',
+          color: '#FFFFFF',
+          fontSize: '16px',
+          padding: '16px',
+          borderRadius: '8px',
+        },
+      });
+    } else {
+      // عرض رسالة الخطأ العامة إذا لم يكن الخطأ معروفاً
+      toast.error(err.response?.data?.message || t('eventBooking.bookingError'), {
+        duration: 5000,
+        style: {
+          background: '#EF4444',
+          color: '#FFFFFF',
+          fontSize: '16px',
+          padding: '16px',
+          borderRadius: '8px',
+        },
+      });
     }
-  };
+  } finally {
+    setSending(false);
+  }
+};
 
   if (loading) {
     return (

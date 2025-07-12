@@ -1,14 +1,20 @@
-.UpdateReq {}
-.shad{
-    box-shadow: 5px 5px 10px 2px rgba(128, 128, 128, 0.618);
-    background-color: white;
+.shad {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 .popupWidth {
-    width: 25%; 
-  }
-  
-  @media (max-width: 768px) {
-    .popupWidth {
-      width: 90%;
-    }
-  }
+  width: 500px;
+  max-width: 90%;
+}
+
+.crsr {
+  cursor: pointer;
+}
+
+.bg-main {
+  background-color: #4e73df;
+}
+
+.mainColor {
+  color: #4e73df;
+}

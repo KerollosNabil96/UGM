@@ -1,35 +1,24 @@
 {
-    "updateRequest": {
-      "title": "طلبات التحديث",
-      "requestDetails": "تفاصيل الطلب:",
-      "tableHeaders": {
-        "id": "#",
-        "name": "الاسم",
-        "cohort": "الدفعة",
-        "request": "الطلب",
-        "action": "إجراء"
-      },
-      "buttons": {
-        "cancel": "إلغاء",
-        "confirm": "تأكيد",
-        "confirmRejection": "تأكيد الرفض"
-      },
-      "popups": {
-        "approve": {
-          "title": "تأكيد طلب التحديث",
-          "message": "هل أنت متأكد أنك تريد إرسال طلب تحديث لبيانات هذا المستخدم؟"
-        },
-        "reject": {
-          "title": "رفض طلب التحديث",
-          "message": "هل أنت متأكد أنك تريد رفض طلب التحديث هذا؟ لا يمكن التراجع عن هذا الإجراء."
-        },
-        "details": {
-          "title": "تفاصيل الطلب",
-          "message": "{name} يريد تغيير رقمه من {oldValue} إلى {newValue}"
-        }
-      },
-      "badges": {
-        "graduate": "خريج-{number}"
+  "updateRequest": {
+    "requestDetails": "طلبات الحجز",
+    "tableHeaders": {
+      "id": "رقم",
+      "tripName": "اسم الرحلة",
+      "user": "المستخدم",
+      "screenshot": "إثبات الدفع",
+      "action": "إجراء"
+    },
+    "buttons": {
+      "cancel": "إلغاء",
+      "confirm": "موافقة",
+      "confirmRejection": "رفض"
+    },
+    "popups": {
+      "approve": {
+        "title": "الموافقة على طلب الحجز",
+        "message": "هل أنت متأكد أنك تريد الموافقة على طلب الحجز هذا؟"
       }
-    }
+    },
+    "viewScreenshot": "عرض الإثبات"
   }
+}
