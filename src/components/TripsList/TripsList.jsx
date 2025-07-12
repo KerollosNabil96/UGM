@@ -18,6 +18,7 @@ import {
 } from 'react-icons/fa';
 import { MdEventAvailable, MdEventBusy } from 'react-icons/md';
 import { RiUserFill } from 'react-icons/ri';
+import Spinner from '../Spinner/Spinner';
 
 export default function TripsList() {
   const [events, setEvents] = useState([]);
@@ -247,6 +248,14 @@ export default function TripsList() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="tw-min-h-[80vh] tw-flex tw-items-center tw-justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className="tw-min-h-[80vh] tw-bg-gray-50 dark:tw-bg-gray-900 tw-p-3 md:tw-p-6">
       {error && (
@@ -272,8 +281,8 @@ export default function TripsList() {
           >
             <div className="tw-p-4">
               {eventLoading ? (
-                <div className="tw-flex tw-justify-center tw-items-center tw-py-6">
-                  <div className="tw-animate-spin tw-rounded-full tw-h-10 tw-w-10 tw-border-t-2 tw-border-b-2 tw-border-blue-500"></div>
+                <div className="tw-min-h-[60vh] tw-flex tw-items-center tw-justify-center">
+                  <Spinner />
                 </div>
               ) : (
                 <>
@@ -420,11 +429,7 @@ export default function TripsList() {
           </div>
         </div>
 
-        {loading ? (
-          <div className="tw-flex tw-justify-center tw-items-center tw-py-12">
-            <div className="tw-animate-spin tw-rounded-full tw-h-20 tw-w-20 tw-border-t-4 tw-border-b-4 tw-border-blue-500"></div>
-          </div>
-        ) : filteredEvents.length === 0 ? (
+        {filteredEvents.length === 0 ? (
           <div className="tw-text-center tw-py-12 tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow">
             <MdEventBusy className="tw-text-5xl tw-mx-auto tw-text-gray-400 tw-mb-4" />
             <h3 className="tw-text-xl tw-font-medium tw-text-gray-600 dark:tw-text-white">
@@ -583,15 +588,6 @@ export default function TripsList() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
 
 
 
