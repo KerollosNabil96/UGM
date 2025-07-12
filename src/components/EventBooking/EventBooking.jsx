@@ -554,6 +554,13 @@
 //   );
 // }
 
+
+
+
+
+
+
+
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -702,6 +709,7 @@ export default function EventBooking() {
         eventName: event.eventName,
         price: price.toString(),
         userName,
+        
       };
 
       await axios.post(
