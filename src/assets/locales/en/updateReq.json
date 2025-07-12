@@ -17,6 +17,10 @@
       "approve": {
         "title": "Approve Booking Request",
         "message": "Are you sure you want to approve this booking request?"
+      },
+      "reject": {
+        "title": "Reject Booking Request",
+        "message": "Are you sure you want to reject this booking request?"
       }
     },
     "viewScreenshot": "View Proof"

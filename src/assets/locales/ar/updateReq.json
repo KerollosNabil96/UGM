@@ -2,21 +2,25 @@
   "updateRequest": {
     "requestDetails": "طلبات الحجز",
     "tableHeaders": {
-      "id": "رقم",
+      "id": "المعرف",
       "tripName": "اسم الرحلة",
       "user": "المستخدم",
       "screenshot": "إثبات الدفع",
-      "action": "إجراء"
+      "action": "الإجراء"
     },
     "buttons": {
       "cancel": "إلغاء",
-      "confirm": "موافقة",
+      "confirm": "الموافقة",
       "confirmRejection": "رفض"
     },
     "popups": {
       "approve": {
-        "title": "الموافقة على طلب الحجز",
-        "message": "هل أنت متأكد أنك تريد الموافقة على طلب الحجز هذا؟"
+        "title": "تأكيد الموافقة على طلب الحجز",
+        "message": "هل أنت متأكد أنك تريد الموافقة على هذا الطلب؟"
+      },
+      "reject": {
+        "title": "تأكيد رفض طلب الحجز",
+        "message": "هل أنت متأكد أنك تريد رفض هذا الطلب؟"
       }
     },
     "viewScreenshot": "عرض الإثبات"

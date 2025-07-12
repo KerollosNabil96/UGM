@@ -558,6 +558,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import Spinner from '../Spinner/Spinner';
+
 import {
   FaWallet,
   FaPaperPlane,
@@ -570,7 +572,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import { useTranslation } from 'react-i18next';
-import Spinner from '../Spinner/Spinner';
 
 export default function EventBooking() {
   const { darkMode } = useContext(darkModeContext);
