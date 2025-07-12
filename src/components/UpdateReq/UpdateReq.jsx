@@ -269,6 +269,31 @@
 // }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './UpdateReq.module.css';
 import { useTranslation } from 'react-i18next';
@@ -369,13 +394,13 @@ export default function UpdateReq() {
   );
   
   if (error) return (
-    <div className={`tw-text-center tw-py-5 ${darkMode ? 'dark:tw-bg-gray-900 dark:tw-text-white' : ''}`}>
+    <div className={`tw-text-center tw-py-5 tw-h-[80vh] ${darkMode ? 'dark:tw-bg-gray-900 dark:tw-text-white' : ''}`}>
       Error: {error}
     </div>
   );
 
   return (
-    <div className={`tw-min-h-screen ${darkMode ? 'dark:tw-bg-gray-900 dark:tw-text-white' : ''}`}>
+    <div className={`tw-min-h-[80vh] ${darkMode ? 'dark:tw-bg-gray-900 dark:tw-text-white' : ''}`}>
       {/* Confirmation Popup */}
       {isActive && (
         <div 
@@ -425,7 +450,7 @@ export default function UpdateReq() {
         </div>
       )}
 
-      {/* Screenshot Preview Popup - Updated with better responsive handling */}
+      {/* Screenshot Preview Popup */}
       {selectedImage && (
         <div 
           onClick={() => setSelectedImage(null)} 
@@ -468,7 +493,7 @@ export default function UpdateReq() {
               {t('updateRequest.requestDetails')}
             </h3>
             
-            <div className="tw-overflow-auto">
+            <div className="tw-overflow-auto" style={{ maxHeight: 'calc(80vh - 200px)' }}>
               <table className={`tw-w-full ${darkMode ? 'dark:tw-bg-gray-800 dark:tw-text-white' : ''}`}>
                 <thead className={darkMode ? 'dark:tw-bg-gray-700' : 'tw-bg-gray-100'}>
                   <tr>
