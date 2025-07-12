@@ -38,7 +38,7 @@ export default function Users() {
             },
           }
         );
-
+console.log(adminsResponse)
         const adminUsers = adminsResponse.data.users || [];
         const allUsers = [
           ...adminUsers,
