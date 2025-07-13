@@ -326,9 +326,6 @@
 
 
 
-
-
-
 import React, { useContext, useEffect, useState } from 'react';
 import styles from './Events.module.css';
 import { darkModeContext } from '../../Context/DarkModeContext';
@@ -617,19 +614,94 @@ export default function Events() {
         </div>
       </div>
 
-      {showModal && selectedEvent && (
-        <div className="modal-backdrop">
-          <div className="modal-box">
-            <h4 className="text-danger fw-bold">⚠️ Delete Event</h4>
-            <p>Are you sure you want to delete <b>{selectedEvent.eventName}</b>?</p>
-            <p className="text-danger">This action cannot be undone.</p>
-            <div className="d-flex justify-content-end gap-2 mt-4">
-              <button onClick={() => setShowModal(false)} className="btn btn-secondary">Cancel</button>
-              <button onClick={() => handleDelete(selectedEvent._id)} className="btn btn-danger">Delete</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal for Delete Confirmation */}
+      <AnimatePresence>
+        {showModal && selectedEvent && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50 tw-p-4"
+            onClick={() => setShowModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25 }}
+              className={`tw-relative tw-max-w-md tw-w-full tw-rounded-lg tw-shadow-lg tw-p-6 ${darkMode ? 'tw-bg-gray-800' : 'tw-bg-white'}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowModal(false)}
+                className="tw-absolute tw-top-4 tw-right-4 tw-text-gray-500 hover:tw-text-gray-700 dark:hover:tw-text-gray-300"
+              >
+                <svg className="tw-w-6 tw-h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              <div className="tw-text-center">
+                <div className="tw-mx-auto tw-flex tw-items-center tw-justify-center tw-h-12 tw-w-12 tw-rounded-full tw-bg-red-100 dark:tw-bg-red-900/50">
+                  <svg className="tw-h-6 tw-w-6 tw-text-red-600 dark:tw-text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h3 className={`tw-mt-3 tw-text-lg tw-font-medium ${darkMode ? 'tw-text-white' : 'tw-text-gray-900'}`}>
+                  Delete Event
+                </h3>
+                <div className={`tw-mt-2 tw-text-sm ${darkMode ? 'tw-text-gray-300' : 'tw-text-gray-500'}`}>
+                  <p>Are you sure you want to delete <b>{selectedEvent.eventName}</b>?</p>
+                  <p className="tw-text-red-500 dark:tw-text-red-400">This action cannot be undone.</p>
+                </div>
+              </div>
+
+              <div className="tw-mt-5 tw-flex tw-justify-center tw-gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className={`tw-px-4 tw-py-2 tw-rounded-md tw-border tw-border-gray-300 tw-text-sm tw-font-medium ${darkMode ? 'tw-text-gray-300 tw-bg-gray-700 hover:tw-bg-gray-600' : 'tw-text-gray-700 tw-bg-white hover:tw-bg-gray-50'}`}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(selectedEvent._id)}
+                  className="tw-px-4 tw-py-2 tw-rounded-md tw-border tw-border-transparent tw-text-sm tw-font-medium tw-text-white tw-bg-red-600 hover:tw-bg-red-700 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-red-500"
+                >
+                  Delete
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Add this CSS to your Events.module.css or global CSS */}
+      <style jsx>{`
+        .modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+        
+        .modal-box {
+          background: ${darkMode ? '#1f2937' : 'white'};
+          padding: 2rem;
+          border-radius: 0.5rem;
+          max-width: 500px;
+          width: 90%;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          color: ${darkMode ? 'white' : 'inherit'};
+        }
+      `}</style>
     </motion.div>
   );
 }
