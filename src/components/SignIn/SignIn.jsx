@@ -75,13 +75,16 @@ export default function SignIn() {
           "https://ugmproject.vercel.app/api/v1/user/login",
           values
         );
-        console.log(response)
+        console.log(response.data.Bookings)
+        const bookings = response.data.Bookings
         const userName = response.data.userName;
         const token = response.data.token;
         const Id = response.data.Id;
         localStorage.setItem('wallet', JSON.stringify(response.data.wallet));
         localStorage.setItem("userName", userName);
         localStorage.setItem("Id", Id);
+localStorage.setItem("bookings", JSON.stringify(bookings));
+        console.log(localStorage.getItem('bookings'))
         login(token);
         localStorage.setItem("role", response.data.Role);
         toast.success(t("signIn.success"));
