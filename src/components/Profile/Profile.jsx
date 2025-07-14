@@ -255,7 +255,6 @@ export default function Profile() {
         }
       );
       const balance = localStorage.getItem('wallet')
-      
       setWallet(balance || response.data.balance);
     } catch (err) {
       console.error('Error fetching wallet balance:', err);
@@ -275,6 +274,7 @@ export default function Profile() {
           }
         }
       );
+      console.log(response.data)
       setWalletHistory(response.data.walletHistory || []);
     } catch (err) {
       console.error('Error fetching wallet history:', err);
@@ -561,7 +561,7 @@ export default function Profile() {
                               </p>
                             )}
                             <p className={`tw-text-xs ${darkMode ? 'tw-text-gray-400' : 'tw-text-gray-500'}`}>
-                              {t('previousBalance')}: {item.previousBalance} EGP
+                              {t('previousBalance')}: {item.newBalance} EGP
                             </p>
                           </div>
                         </div>

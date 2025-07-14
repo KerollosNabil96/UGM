@@ -677,63 +677,49 @@ export default function EventBooking() {
   }, [id]);
 
   const handleWalletBooking = async () => {
-    if (!Id) {
-      toast.error(t('eventBooking.userIdMissing'));
-      return;
-    }
+  if (!Id) {
+    toast.error(t('eventBooking.userIdMissing'));
+    return;
+  }
 
-    const price = parseFloat(event.price);
+  const price = parseFloat(event.price);
 
-    if (wallet < price) {
-      toast.error(t('eventBooking.walletError'));
-      return;
-    }
+  if (wallet < price) {
+    toast.error(t('eventBooking.walletError'));
+    return;
+  }
 
-    try {
-      // 1. Update wallet
-      await axios.put(
-        `https://ugmproject.vercel.app/api/v1/user/updateWallet/${Id}`,
-        {
-          amount: price,
-          operation: 'remove',
-          description: `Booking for event: ${event.eventName}`,
+  try {
+    const bookingData = {
+      eventId: event._id,
+      eventName: event.eventName,
+      price: price.toString(),
+      userName,
+    };
+
+    const response = await axios.post(
+      'https://ugmproject.vercel.app/api/v1/booking/bookingByWallet',
+      bookingData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      }
+    );
 
-      // 2. Create booking
-      const bookingData = {
-        eventId: event._id,
-        eventName: event.eventName,
-        price: price.toString(),
-        userName,
-        
-      };
+    // اختياري: تحدّث المحفظة محليًا (لو متأكد من الخصم)
+    const newWalletBalance = wallet - price;
+    localStorage.setItem('wallet', newWalletBalance.toString());
 
-      await axios.post(
-        'https://ugmproject.vercel.app/api/v1/booking/bookingByWallet',
-        bookingData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+    toast.success(t('eventBooking.walletSuccess'));
+    navigate('/events');
+  } catch (err) {
+    console.error('Booking API Error:', err.response?.data);
+    toast.error(err.response?.data?.err || t('eventBooking.bookingError'));
+  }
+};
 
-      // 3. Update local wallet balance
-      const newWalletBalance = wallet - price;
-      localStorage.setItem('wallet', newWalletBalance.toString());
-
-      toast.success(t('eventBooking.walletSuccess'));
-      navigate('/events');
-    } catch (err) {
-      console.error('Booking API Error:', err.response?.data);
-      toast.error(err.response?.data?.err || t('eventBooking.bookingError'));
-    }
-  };
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
