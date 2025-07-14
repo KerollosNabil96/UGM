@@ -11,7 +11,7 @@ export default function Profile() {
   const isRTL = i18n.language === 'ar';
   const userName = localStorage.getItem('userName');
   const token = localStorage.getItem('token');
-  const userId = localStorage.getItem('Id'); // استخراج userId من localStorage
+  const userId = localStorage.getItem('Id'); 
   
 
 
@@ -36,8 +36,7 @@ export default function Profile() {
           }
         }
       );
-      const balance = localStorage.getItem('wallet')
-      setWallet(balance || response.data.balance);
+      setWallet( response.data.balance);
     } catch (err) {
       console.error('Error fetching wallet balance:', err);
       setWallet(0);

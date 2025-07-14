@@ -559,8 +559,6 @@
 
 
 
-
-
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -595,8 +593,8 @@ export default function EventBooking() {
   const [loading, setLoading] = useState(true);
   const [admins, setAdmins] = useState([]);
   const [fetchingAdmins, setFetchingAdmins] = useState(false);
+  const [wallet, setWallet] = useState(0); // تم التعديل هنا
 
-  const wallet = parseFloat(localStorage.getItem('wallet')) || 0;
   const token = localStorage.getItem('token');
   const Id = localStorage.getItem('Id');
   const userName = localStorage.getItem('userName');
@@ -618,6 +616,23 @@ export default function EventBooking() {
       navigate('/login');
     }
   }, [Id, navigate, t]);
+
+  const fetchWalletBalance = async () => {
+    try {
+      const response = await axios.get(
+        'https://ugmproject.vercel.app/api/v1/user/getMyWalletBalance',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      setWallet(parseFloat(response.data.balance) || 0);
+    } catch (err) {
+      console.error('Error fetching wallet balance:', err);
+      setWallet(0);
+    }
+  };
 
   const fetchEvent = async () => {
     if (!Id) return;
@@ -648,11 +663,9 @@ export default function EventBooking() {
         }
       );
       
-      // Handle both possible response structures
       const adminsData = res.data?.admins || res.data?.users || [];
       if (Array.isArray(adminsData)) {
         setAdmins(adminsData);
-        console.log('Admins fetched successfully:', adminsData);
       } else {
         console.error('Invalid admins data format:', adminsData);
         toast.error(t('eventBooking.adminDataError'));
@@ -670,6 +683,7 @@ export default function EventBooking() {
     const fetchData = async () => {
       await fetchEvent();
       await fetchAdmins();
+      await fetchWalletBalance(); // جلب رصيد المحفظة
       setLoading(false);
     };
     
@@ -677,48 +691,47 @@ export default function EventBooking() {
   }, [id]);
 
   const handleWalletBooking = async () => {
-  if (!Id) {
-    toast.error(t('eventBooking.userIdMissing'));
-    return;
-  }
+    if (!Id) {
+      toast.error(t('eventBooking.userIdMissing'));
+      return;
+    }
 
-  const price = parseFloat(event.price);
+    const price = parseFloat(event.price);
 
-  if (wallet < price) {
-    toast.error(t('eventBooking.walletError'));
-    return;
-  }
+    if (wallet < price) {
+      toast.error(t('eventBooking.walletError'));
+      return;
+    }
 
-  try {
-    const bookingData = {
-      eventId: event._id,
-      eventName: event.eventName,
-      price: price.toString(),
-      userName,
-    };
+    try {
+      const bookingData = {
+        eventId: event._id,
+        eventName: event.eventName,
+        price: price.toString(),
+        userName,
+      };
 
-    const response = await axios.post(
-      'https://ugmproject.vercel.app/api/v1/booking/bookingByWallet',
-      bookingData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+      const response = await axios.post(
+        'https://ugmproject.vercel.app/api/v1/booking/bookingByWallet',
+        bookingData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
-    // اختياري: تحدّث المحفظة محليًا (لو متأكد من الخصم)
-    const newWalletBalance = wallet - price;
-    localStorage.setItem('wallet', newWalletBalance.toString());
+      const newWalletBalance = wallet - price;
+      setWallet(newWalletBalance);
 
-    toast.success(t('eventBooking.walletSuccess'));
-    navigate('/events');
-  } catch (err) {
-    console.error('Booking API Error:', err.response?.data);
-    toast.error(err.response?.data?.err || t('eventBooking.bookingError'));
-  }
-};
+      toast.success(t('eventBooking.walletSuccess'));
+      navigate('/events');
+    } catch (err) {
+      console.error('Booking API Error:', err.response?.data);
+      toast.error(err.response?.data?.err || t('eventBooking.bookingError'));
+    }
+  };
 
 
   const handleUpload = (e) => {

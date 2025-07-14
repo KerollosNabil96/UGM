@@ -80,7 +80,7 @@ export default function SignIn() {
         const userName = response.data.userName;
         const token = response.data.token;
         const Id = response.data.Id;
-        localStorage.setItem('wallet', JSON.stringify(response.data.wallet));
+        // localStorage.setItem('wallet', JSON.stringify(response.data.wallet));
         localStorage.setItem("userName", userName);
         localStorage.setItem("Id", Id);
 localStorage.setItem("bookings", JSON.stringify(bookings));
