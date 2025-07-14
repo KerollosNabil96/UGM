@@ -292,13 +292,12 @@
 
 
 
-
-
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './UpdateReq.module.css';
 import { useTranslation } from 'react-i18next';
 import Spinner from '../Spinner/Spinner';
 import { darkModeContext } from '../../Context/DarkModeContext';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function UpdateReq() {
   const [isActive, setIsActive] = useState(false);
@@ -372,11 +371,36 @@ export default function UpdateReq() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-        throw new Error(errorData?.message || `Failed to update status to ${status}`);
+        const errorMessage = errorData?.message || `Failed to update status to ${status}`;
+        
+        // Show toast notification for no available seats
+        if (errorMessage.includes('no available seats') || errorMessage.includes('Failed to update status to approved')) {
+          toast.error('No available seats for this trip', {
+            position: 'top-center',
+            style: {
+              background: darkMode ? '#1f2937' : '#fff',
+              color: darkMode ? '#fff' : '#000',
+              boxShadow: darkMode ? '0 4px 10px rgba(0, 0, 0, 0.3)' : '0 4px 10px rgba(0, 0, 0, 0.1)',
+            }
+          });
+        } else {
+          throw new Error(errorMessage);
+        }
+        return;
       }
 
       setBookingRequests(prev => prev.filter(booking => booking._id !== bookingId));
       setIsActive(false);
+      
+      // Show success toast
+      toast.success(`Booking ${status} successfully`, {
+        position: 'top-center',
+        style: {
+          background: darkMode ? '#1f2937' : '#fff',
+          color: darkMode ? '#fff' : '#000',
+          boxShadow: darkMode ? '0 4px 10px rgba(0, 0, 0, 0.3)' : '0 4px 10px rgba(0, 0, 0, 0.1)',
+        }
+      });
       
     } catch (err) {
       console.error("Error updating status:", {
@@ -401,6 +425,18 @@ export default function UpdateReq() {
 
   return (
     <div className={`tw-min-h-[80vh] ${darkMode ? 'dark:tw-bg-gray-900 dark:tw-text-white' : ''}`}>
+      {/* Toaster Component */}
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: darkMode ? '#1f2937' : '#fff',
+            color: darkMode ? '#fff' : '#000',
+            boxShadow: darkMode ? '0 4px 10px rgba(0, 0, 0, 0.3)' : '0 4px 10px rgba(0, 0, 0, 0.1)',
+          },
+        }}
+      />
+
       {/* Confirmation Popup */}
       {isActive && (
         <div 
