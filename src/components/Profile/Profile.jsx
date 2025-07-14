@@ -324,7 +324,7 @@ export default function Profile() {
   useEffect(() => {
     const interval = setInterval(() => {
       refreshData();
-    }, 30000);
+    }, 60000);
 
     return () => clearInterval(interval);
   }, [refreshData]);
@@ -560,9 +560,9 @@ export default function Profile() {
                                 {t('performedBy')}: {item.performedBy.adminName}
                               </p>
                             )}
-                            <p className={`tw-text-xs ${darkMode ? 'tw-text-gray-400' : 'tw-text-gray-500'}`}>
-                              {t('previousBalance')}: {item.newBalance} EGP
-                            </p>
+                            {/* <p className={`tw-text-xs ${darkMode ? 'tw-text-gray-400' : 'tw-text-gray-500'}`}>
+                              {t('previousBalance')}: {item.previousBalance} EGP
+                            </p> */}
                           </div>
                         </div>
                       </div>
