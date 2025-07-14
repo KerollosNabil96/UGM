@@ -50,6 +50,8 @@ import enWalletManagement from './assets/locales/en/walletManagement.json'
 import arWalletManagement from './assets/locales/ar/walletManagement.json'
 import arEventBooking from './assets/locales/ar/eventBooking.json'
 import enEventBooking from './assets/locales/en/eventBooking.json'
+import entripsManagement from './assets/locales/en/tripsManagement.json'
+import artripsManagement from './assets/locales/ar/tripsManagement.json'
 i18n
   .use(LanguageDetector) 
   .use(initReactI18next) 
@@ -79,7 +81,8 @@ i18n
          faqs : enFaqs , 
          verify : enVerify, 
          walletManagement: enWalletManagement,
-         eventBooking : enEventBooking
+         eventBooking : enEventBooking , 
+         tripsManagement : entripsManagement
         
 
 
@@ -108,7 +111,9 @@ i18n
         faqs : arFaqs,
         verify : arVerify,
         walletManagement: arWalletManagement,
-        eventBooking : arEventBooking
+        eventBooking : arEventBooking , 
+        tripsManagement : artripsManagement
+
        },
     },
     fallbackLng: 'en',

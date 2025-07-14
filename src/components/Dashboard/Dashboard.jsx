@@ -53,7 +53,7 @@ export default function Dashboard() {
   }
 >
   <i className="fa-solid fa-wallet me-1"></i>
-  <span>Trip List</span>
+  <span>{t('dashboard.tripList')}</span>
 </NavLink>
                 </li>
               </ul>
@@ -106,7 +106,7 @@ export default function Dashboard() {
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link active text-white" to="trip-list">
-                  <i className="fa-solid fa-route me-1"></i> <span>Trip List</span>
+                  <i className="fa-solid fa-route me-1"></i> <span>{t('dashboard.tripList')}</span>
                 </NavLink>
               </li>
             </ul>

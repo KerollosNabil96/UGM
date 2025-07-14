@@ -1,0 +1,47 @@
+
+   {
+    "title": "Trips Management",
+    "searchPlaceholder": "Search trips...",
+    "clearSearch": "Clear search",
+    "noTrips": "No trips available",
+    "noMatch": "No trips match your search",
+    "tableHeaders": {
+      "tripName": "Trip Name",
+      "date": "Date",
+      "capacity": "Capacity",
+      "registered": "Registered",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "fullyBooked": "Fully Booked",
+      "limitedSpots": "Limited Spots",
+      "available": "Available"
+    },
+    "viewButton": "View",
+    "participantsModal": {
+      "title": "Registered Participants ({{count}})",
+      "noParticipants": "No participants registered yet",
+      "headers": {
+        "index": "#",
+        "user": "User",
+        "phone": "Phone",
+        "bookingDate": "Booking Date",
+        "payment": "Payment",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "paymentMethods": {
+        "wallet": "Wallet",
+        "cash": "Cash",
+        "creditCard": "Credit Card"
+      },
+      "deleteButton": "Delete",
+      "deleting": "Deleting...",
+      "closeButton": "Close"
+    },
+    "errors": {
+      "loadError": "Failed to load events. Please try again later.",
+      "deleteError": "Failed to delete booking. Please try again."
+    }
+  }
