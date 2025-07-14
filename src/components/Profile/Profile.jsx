@@ -254,7 +254,9 @@ export default function Profile() {
           }
         }
       );
-      setWallet(response.data.balance || 0);
+      const balance = localStorage.getItem('wallet')
+      
+      setWallet(balance || response.data.balance);
     } catch (err) {
       console.error('Error fetching wallet balance:', err);
       setWallet(0);
