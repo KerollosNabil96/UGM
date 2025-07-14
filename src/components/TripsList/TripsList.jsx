@@ -374,7 +374,7 @@ export default function TripsList() {
                                 <td className="tw-px-4 tw-py-2 tw-whitespace-nowrap">
                                   <button
                                     onClick={() => handleDeleteBooking(
-                                      user.bookingInfo?._id,
+                                      user.bookingInfo?.bookingId,
                                       selectedEvent._id,
                                       user.userName
                                     )}
