@@ -38,6 +38,7 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Messages from './components/messages/messages';
 import FAQs from './components/FAQs/FAQs'
 import EventBooking from './components/EventBooking/EventBooking'
+import RedirectIfAuthenticated from './components/RedirectIfAuthenticated/RedirectIfAuthenticated';
 
 function App() {
   const router = createBrowserRouter([
@@ -51,11 +52,25 @@ function App() {
         { path: 'events', element: <Events /> },
         { path: 'event/:id', element: <EventDetails /> }, 
         { path: 'contact', element: <Contact /> },
-        { path: 'signin', element: <SignIn /> },
-        { path: 'signup', element: <SignUp /> },
         { path: 'not-found', element: <NotFound /> },
         { path: 'faqs', element: <FAQs /> },
         { path: 'verifyEmail', element: <VerifyEmail /> },
+         {
+          path: 'signin',
+          element: (
+            <RedirectIfAuthenticated>
+              <SignIn />
+            </RedirectIfAuthenticated>
+          ),
+        },
+        {
+          path: 'signup',
+          element: (
+            <RedirectIfAuthenticated>
+              <SignUp />
+            </RedirectIfAuthenticated>
+          ),
+        },
 
         // Protected Routes accessible to all authenticated users
         {
