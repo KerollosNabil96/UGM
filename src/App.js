@@ -202,7 +202,7 @@ function App() {
     <>
       <DarkModeProvider>
         <Offline>
-          <div className="fixed-bottom offlineDiv">You are offline!</div>
+          <div className="fixed-bottom offlineDiv">Your internet connection is unstable !</div>
         </Offline>
 
         <I18nextProvider i18n={i18n}>
