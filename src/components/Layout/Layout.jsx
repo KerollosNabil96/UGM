@@ -50,29 +50,29 @@ export default function Layout() {
   const [lastValidToken, setLastValidToken] = useState(token);
 
   const checkToken = (newToken) => {
-    const currentToken = newToken || localStorage.getItem('token');
-    
-    // إذا لم يكن هناك توكن أو انتهت صلاحيته
-    if (!currentToken || isTokenExpired(currentToken)) {
-      logout();
-      navigate('/signin');
-      return false;
-    }
-    
-    // إذا كان التوكن الجديد مختلفًا عن الأخير الصالح
-    if (currentToken !== lastValidToken) {
-      // لا نحتاج لاستدعاء setToken هنا
-      setLastValidToken(currentToken); // تحديث التوكن الأخير الصالح فقط
-    }
-    
+  const currentToken = newToken || localStorage.getItem('token');
+
+  if (!currentToken) {
     return true;
-  };
+  }
+
+  if (isTokenExpired(currentToken)) {
+    logout();
+    navigate('/signin'); 
+    return false;
+  }
+
+  if (currentToken !== lastValidToken) {
+    setLastValidToken(currentToken);
+  }
+
+  return true;
+};
+
 
   useEffect(() => {
-    // التحقق الأولي
     checkToken();
 
-    // الاستماع لتغييرات localStorage
     const handleStorageChange = (event) => {
       if (event.key === 'token') {
         checkToken(event.newValue);
