@@ -21,9 +21,9 @@ import AnimatedCircle from './components/AnimatedCircle/AnimatedCircle';
 import ShareEvent from './components/ShareEvent/ShareEvent';
 import ShareMemory from './components/ShareMemory/ShareMemory';
 import EventDetails from './components/EventDetails/EventDetails';
-import MemoryDetails from './components/MemoryDetails/MemoryDetails'
-import VerifyEmail from './components/VerifyEmail/VerifyEmail'
-import WalletManagement from './components/WalletManagement/WalletManagement'
+import MemoryDetails from './components/MemoryDetails/MemoryDetails';
+import VerifyEmail from './components/VerifyEmail/VerifyEmail';
+import WalletManagement from './components/WalletManagement/WalletManagement';
 import TripsList from './components/TripsList/TripsList';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -36,11 +36,13 @@ import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Messages from './components/messages/messages';
-import FAQs from './components/FAQs/FAQs'
-import EventBooking from './components/EventBooking/EventBooking'
+import FAQs from './components/FAQs/FAQs';
+import EventBooking from './components/EventBooking/EventBooking';
 import RedirectIfAuthenticated from './components/RedirectIfAuthenticated/RedirectIfAuthenticated';
+import ResetPassword from './components/ResetPassword/ResetPassword';
 
 function App() {
+  
   const router = createBrowserRouter([
     {
       path: '/',
@@ -50,12 +52,16 @@ function App() {
         { index: true, element: <Home /> },
         { path: 'about', element: <About /> },
         { path: 'events', element: <Events /> },
-        { path: 'event/:id', element: <EventDetails /> }, 
+        { path: 'event/:id', element: <EventDetails /> },
         { path: 'contact', element: <Contact /> },
         { path: 'not-found', element: <NotFound /> },
         { path: 'faqs', element: <FAQs /> },
         { path: 'verifyEmail', element: <VerifyEmail /> },
-         {
+        {
+          path: 'resetPassword/:token',
+          element: <ResetPassword />,
+        },
+        {
           path: 'signin',
           element: (
             <RedirectIfAuthenticated>
@@ -114,13 +120,13 @@ function App() {
           ),
         },
         {
-  path: 'book/:id',
-  element: (
-    <ProtectedRoute>
-      <EventBooking />
-    </ProtectedRoute>
-  ),
-},
+          path: 'book/:id',
+          element: (
+            <ProtectedRoute>
+              <EventBooking />
+            </ProtectedRoute>
+          ),
+        },
 
         // Admin-only routes (Admin or SuperAdmin)
         {
@@ -146,8 +152,6 @@ function App() {
             },
             { path: 'wallet-managment', element: <WalletManagement /> },
             { path: 'trip-list', element: <TripsList /> },
-
-
           ],
         },
         {
@@ -181,7 +185,8 @@ function App() {
               <ShareEvent />
             </ProtectedRoute>
           ),
-        },{
+        },
+        {
           path: 'share-Memory',
           element: (
             <ProtectedRoute allowedRoles={['Admin', 'SuperAdmin']}>
@@ -233,5 +238,3 @@ function App() {
 }
 
 export default App;
-
-

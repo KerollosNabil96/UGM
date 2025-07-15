@@ -17,6 +17,7 @@ export default function SignIn() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
 
   useEffect(() => {
     if (location.state?.successMessage) {
@@ -62,6 +63,29 @@ export default function SignIn() {
     }
   };
 
+  const handleForgotPassword = async () => {
+    const email = formik.values.email;
+    if (!email) {
+      toast.error(t("signIn.email.errors.required"));
+      return;
+    }
+    setForgotPasswordLoading(true);
+    try {
+      const { data } = await axios.post(
+        "https://ugmproject.vercel.app/api/v1/user/forgotPassword",
+        { email },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      toast.success(data.message || t("signIn.forgotPasswordSuccess"));
+    } catch (error) {
+      const message =
+        error.response?.data?.err || t("signIn.forgotPasswordError");
+      toast.error(message);
+    } finally {
+      setForgotPasswordLoading(false);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -83,7 +107,7 @@ export default function SignIn() {
         // localStorage.setItem('wallet', JSON.stringify(response.data.wallet));
         localStorage.setItem("userName", userName);
         localStorage.setItem("Id", Id);
-localStorage.setItem("bookings", JSON.stringify(bookings));
+        localStorage.setItem("bookings", JSON.stringify(bookings));
         console.log(localStorage.getItem('bookings'))
         login(token);
         localStorage.setItem("role", response.data.Role);
@@ -177,19 +201,37 @@ localStorage.setItem("bookings", JSON.stringify(bookings));
                     )}
                   </button>
 
-                  {/* Resend Verification Email */}
-                  <div className="text-center mt-3">
-                    <button
-                      type="button"
-                      className="btn btn-link p-0 text-decoration-none text-primary"
-                      onClick={handleResendVerification}
-                      disabled={resendLoading}
-                    >
-                      {resendLoading ? (
-                        <i className="fa-solid fa-spinner fa-spin-pulse me-2"></i>
-                      ) : null}
-                      {t("signIn.resendVerification")}
-                    </button>
+                  {/* Additional Options */}
+                  <div className="d-flex justify-content-between mt-3">
+                    {/* Resend Verification Email */}
+                    <div>
+                      <button
+                        type="button"
+                        className="btn btn-link p-0 text-decoration-none text-primary"
+                        onClick={handleResendVerification}
+                        disabled={resendLoading}
+                      >
+                        {resendLoading ? (
+                          <i className="fa-solid fa-spinner fa-spin-pulse me-2"></i>
+                        ) : null}
+                        {t("signIn.resendVerification")}
+                      </button>
+                    </div>
+
+                    {/* Forgot Password */}
+                    <div>
+                      <button
+                        type="button"
+                        className="btn btn-link p-0 text-decoration-none text-primary"
+                        onClick={handleForgotPassword}
+                        disabled={forgotPasswordLoading}
+                      >
+                        {forgotPasswordLoading ? (
+                          <i className="fa-solid fa-spinner fa-spin-pulse me-2"></i>
+                        ) : null}
+                        {t("signIn.forgotPassword")}
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
