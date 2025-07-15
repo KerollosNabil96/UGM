@@ -139,17 +139,14 @@ function App() {
           children: [
             { index: true, element: <Users /> },
             { path: 'update-request', element: <UpdateReq /> },
-            {
-              path: 'messages',
-              element: (() => {
-                const role = localStorage.getItem('role');
-                if (role === 'SuperAdmin') {
-                  return <Messages />;
-                } else {
-                  return <NotFound />;
-                }
-              })(),
-            },
+         {
+  path: 'messages',
+  element: (
+    <ProtectedRoute allowedRoles={['SuperAdmin']}>
+      <Messages />
+    </ProtectedRoute>
+  ),
+},
             { path: 'wallet-managment', element: <WalletManagement /> },
             { path: 'trip-list', element: <TripsList /> },
           ],
