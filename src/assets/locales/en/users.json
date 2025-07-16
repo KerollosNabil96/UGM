@@ -1,0 +1,31 @@
+{
+  "usersManagement": "Users Management",
+  "searchPlaceholder": "Search by name...",
+  "loading": "Loading...",
+  "noUsersFound": "No users found.",
+  "columns": {
+    "number": "#",
+    "name": "Name",
+    "role": "Role",
+    "update": "Update",
+    "delete": "Delete"
+  },
+  "changeRole": {
+    "title": "Change User Role",
+    "message": "Are you sure you want to change {{userName}}'s role from {{currentRole}} to {{newRole}}?",
+    "cancel": "Cancel",
+    "confirm": "Confirm change"
+  },
+  "deleteUser": {
+    "title": "Delete User",
+    "message": "Are you sure you want to delete {{userName}}?",
+    "cancel": "Cancel",
+    "confirm": "Confirm delete"
+  },
+  "notAuthorized": "Not authorized",
+  "roleUpdated": "Role updated successfully",
+  "userDeleted": "User deleted successfully",
+  "errorUpdatingRole": "Error updating role",
+  "errorDeletingUser": "Error deleting user",
+  "errorLoadingUsers": "Error loading users"
+}

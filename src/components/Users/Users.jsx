@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import styles from './Users.module.css';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export default function Users() {
+  const { t } = useTranslation('users');
   const [isActive, setIsActive] = useState(false);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -38,7 +40,7 @@ export default function Users() {
           }
         );
 
-        const adminUsers = adminsResponse.data.admins || []; // 🔧 FIXED
+        const adminUsers = adminsResponse.data.admins || [];
         const allUsers = [
           ...adminUsers,
           ...usersResponse.data.users.filter(
@@ -52,7 +54,7 @@ export default function Users() {
         setUsers(nonAdmins);
       }
     } catch (error) {
-      toast.error('Error loading users');
+      toast.error(t('errorLoadingUsers'));
       console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
@@ -69,7 +71,7 @@ export default function Users() {
     const role = localStorage.getItem('role');
 
     if (!token || role !== 'SuperAdmin') {
-      toast.error('Not authorized');
+      toast.error(t('notAuthorized'));
       return;
     }
 
@@ -86,15 +88,15 @@ export default function Users() {
         }
       );
 
-      toast.success('Role updated successfully');
+      toast.success(t('roleUpdated'));
       setIsActive(false);
       setSelectedUser(null);
       fetchData();
     } catch (error) {
       const message =
         error.response?.status === 403
-          ? 'Not authorized'
-          : error.response?.data?.message || 'Error updating role';
+          ? t('notAuthorized')
+          : error.response?.data?.message || t('errorUpdatingRole');
       toast.error(message);
       console.error('Error updating role:', error);
     }
@@ -105,7 +107,7 @@ export default function Users() {
     const token = localStorage.getItem('token');
 
     if (role !== 'SuperAdmin') {
-      toast.error('Not authorized');
+      toast.error(t('notAuthorized'));
       setSelectedUserToDelete(null);
       return;
     }
@@ -119,11 +121,11 @@ export default function Users() {
           },
         }
       );
-      toast.success('User deleted successfully');
+      toast.success(t('userDeleted'));
       setSelectedUserToDelete(null);
       fetchData();
     } catch (error) {
-      toast.error('Error deleting user');
+      toast.error(t('errorDeletingUser'));
       console.error('Error deleting user:', error);
     }
   };
@@ -157,24 +159,27 @@ export default function Users() {
           <div
             onClick={(e) => e.stopPropagation()}
             className={`popUp bg-white position-absolute p-4 rounded-4 ${styles.popupWidth}`}
+            style={{ maxWidth: '95%', width: '500px' }}
           >
             <h3 className="pt-4">
-              <i className="fa-solid fa-user-shield mainColor"></i> Change User Role
+              <i className="fa-solid fa-user-shield mainColor"></i> {t('changeRole.title')}
             </h3>
             <p className="text-muted">
-              Are you sure you want to change <strong>{selectedUser.userName}</strong>'s role from{' '}
-              <strong>{selectedUser.role}</strong> to{' '}
-              <strong>{selectedUser.role === 'Admin' ? 'User' : 'Admin'}</strong>?
+              {t('changeRole.message', {
+                userName: selectedUser.userName,
+                currentRole: selectedUser.role,
+                newRole: selectedUser.role === 'Admin' ? 'User' : 'Admin'
+              })}
             </p>
-            <div className="btns mb-4 d-flex justify-content-end">
+            <div className="btns mb-4 d-flex justify-content-end flex-wrap gap-2">
               <button onClick={() => setIsActive(false)} className="btn btn-outline-dark">
-                Cancel
+                {t('changeRole.cancel')}
               </button>
               <button
                 onClick={handleRoleChange}
-                className="border-0 rounded-2 p-3 bg-main text-white mx-2"
+                className="border-0 rounded-2 p-2 p-md-3 bg-main text-white"
               >
-                Confirm change
+                {t('changeRole.confirm')}
               </button>
             </div>
           </div>
@@ -195,107 +200,118 @@ export default function Users() {
           <div
             onClick={(e) => e.stopPropagation()}
             className={`popUp bg-white position-absolute p-4 rounded-4 ${styles.popupWidth}`}
+            style={{ maxWidth: '95%', width: '500px' }}
           >
             <h3 className="pt-4">
-              <i className="fa-solid fa-trash mainColor"></i> Delete User
+              <i className="fa-solid fa-trash mainColor"></i> {t('deleteUser.title')}
             </h3>
             <p className="text-muted">
-              Are you sure you want to delete <strong>{selectedUserToDelete.userName}</strong>?
+              {t('deleteUser.message', { userName: selectedUserToDelete.userName })}
             </p>
-            <div className="btns mb-4 d-flex justify-content-end">
+            <div className="btns mb-4 d-flex justify-content-end flex-wrap gap-2">
               <button
                 onClick={() => setSelectedUserToDelete(null)}
                 className="btn btn-outline-dark"
               >
-                Cancel
+                {t('deleteUser.cancel')}
               </button>
               <button
                 onClick={handleDeleteUser}
-                className="border-0 rounded-2 p-3 bg-danger text-white mx-2"
+                className="border-0 rounded-2 p-2 p-md-3 bg-danger text-white"
               >
-                Confirm delete
+                {t('deleteUser.confirm')}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="container-fluid">
+      <div className="container-fluid px-3 px-md-4 px-lg-5">
         <div className="row d-flex justify-content-center">
           <div className={`col-12 ${styles.shad} mt-4 rounded-2 p-3 position-relative`}>
-            <h3>Users Management</h3>
+            <h3>{t('usersManagement')}</h3>
 
-            <input
-              type="text"
-              placeholder="Search by name..."
-              className="form-control mb-3"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-            />
+            <div className="row">
+              <div className="col-12 col-md-6 col-lg-4">
+                <input
+                  type="text"
+                  placeholder={t('searchPlaceholder')}
+                  className="form-control mb-3 w-100"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                />
+              </div>
+            </div>
 
             {loading ? (
               <div className="text-center my-5">
                 <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Loading...</span>
+                  <span className="visually-hidden">{t('loading')}</span>
                 </div>
               </div>
             ) : currentUsers.length === 0 ? (
-              <div className="text-center my-5 text-muted fs-5">No users found.</div>
+              <div className="text-center my-5 text-muted fs-5">{t('noUsersFound')}</div>
             ) : (
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Update</th>
-                    <th>Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentUsers.map((user, index) => (
-                    <tr key={user._id}>
-                      <th>{indexOfFirstUser + index + 1}</th>
-                      <td>{user.userName}</td>
-                      <td>
-                        <span
-                          className={`badge ${
-                            user.role === 'Admin' ? 'bg-success' : 'bg-secondary'
-                          } py-1`}
-                        >
-                          {user.role}
-                        </span>
-                      </td>
-                      <td>
-                        <i
-                          className="fa-solid fa-pen-to-square text-success ms-3 crsr"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => {
-                            setSelectedUser(user);
-                            setIsActive(true);
-                          }}
-                        ></i>
-                      </td>
-                      <td>
-                        <i
-                          className="fa-solid fa-trash text-danger ms-3 crsr"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => setSelectedUserToDelete(user)}
-                        ></i>
-                      </td>
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>{t('columns.number')}</th>
+                      <th>{t('columns.name')}</th>
+                      <th>{t('columns.role')}</th>
+                      <th>{t('columns.update')}</th>
+                      <th>{t('columns.delete')}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {currentUsers.map((user, index) => (
+                      <tr key={user._id}>
+                        <td>{indexOfFirstUser + index + 1}</td>
+                        <td>{user.userName}</td>
+                        <td>
+                          <span
+                            className={`badge ${
+                              user.role === 'Admin' ? 'bg-success' : 'bg-secondary'
+                            } py-1`}
+                          >
+                            {user.role}
+                          </span>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-link text-success p-0"
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setIsActive(true);
+                            }}
+                            aria-label={t('columns.update')}
+                          >
+                            <i className="fa-solid fa-pen-to-square"></i>
+                          </button>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-link text-danger p-0"
+                            onClick={() => setSelectedUserToDelete(user)}
+                            aria-label={t('columns.delete')}
+                          >
+                            <i className="fa-solid fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
 
             {totalPages > 1 && (
               <div className="d-flex justify-content-center mt-3">
                 <nav>
-                  <ul className="pagination">
+                  <ul className="pagination flex-wrap">
                     {Array.from({ length: totalPages }, (_, index) => (
                       <li
                         key={index}

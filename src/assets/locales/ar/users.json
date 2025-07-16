@@ -1,0 +1,31 @@
+{
+  "usersManagement": "إدارة المستخدمين",
+  "searchPlaceholder": "البحث بالاسم...",
+  "loading": "جاري التحميل...",
+  "noUsersFound": "لا يوجد مستخدمون.",
+  "columns": {
+    "number": "#",
+    "name": "الاسم",
+    "role": "الدور",
+    "update": "تحديث",
+    "delete": "حذف"
+  },
+  "changeRole": {
+    "title": "تغيير دور المستخدم",
+  "message": "هل أنت متأكد أنك تريد تغيير دور {{userName}} من {{currentRole}} إلى {{newRole}}؟",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد التغيير"
+  },
+  "deleteUser": {
+    "title": "حذف المستخدم",
+    "message": "هل أنت متأكد أنك تريد حذف {{userName}}؟",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد الحذف"
+  },
+  "notAuthorized": "غير مصرح",
+  "roleUpdated": "تم تحديث الدور بنجاح",
+  "userDeleted": "تم حذف المستخدم بنجاح",
+  "errorUpdatingRole": "خطأ في تحديث الدور",
+  "errorDeletingUser": "خطأ في حذف المستخدم",
+  "errorLoadingUsers": "خطأ في تحميل المستخدمين"
+}

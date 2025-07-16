@@ -31,7 +31,7 @@ export default function ServantList() {
           'Content-Type': 'application/json'
         }
       });
-
+ 
       const responseData = res.data.served || [];
       setData(responseData);
       setFilteredData(responseData);

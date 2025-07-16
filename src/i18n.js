@@ -54,6 +54,8 @@ import entripsManagement from './assets/locales/en/tripsManagement.json'
 import artripsManagement from './assets/locales/ar/tripsManagement.json'
 import arResetPassword from './assets/locales/ar/resetPassword.json'
 import enResetPassword from './assets/locales/en/resetPassword.json'
+import enUsers from './assets/locales/en/users.json'
+import arUsers from './assets/locales/ar/users.json'
 i18n
   .use(LanguageDetector) 
   .use(initReactI18next) 
@@ -85,7 +87,8 @@ i18n
          walletManagement: enWalletManagement,
          eventBooking : enEventBooking , 
          tripsManagement : entripsManagement,
-         resetPassword : enResetPassword
+         resetPassword : enResetPassword , 
+         users : enUsers
         
 
 
@@ -116,7 +119,8 @@ i18n
         walletManagement: arWalletManagement,
         eventBooking : arEventBooking , 
         tripsManagement : artripsManagement ,
-        resetPassword : arResetPassword
+        resetPassword : arResetPassword , 
+        users : arUsers
 
 
        },
