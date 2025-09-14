@@ -351,7 +351,6 @@ export default function UpdateReq() {
         }
 
         const data = await response.json();
-        console.log("API data:", data);
 
         const pendingBookings = Array.isArray(data?.bookings) 
           ? data.bookings.filter(booking => booking.status === 'pending') 
@@ -395,7 +394,6 @@ export default function UpdateReq() {
         };
       }
       
-      console.log(`Updating booking ${bookingId} to status: ${status}`, requestBody);
       
       const response = await fetch(`https://ugmproject.vercel.app/api/v1/booking/updateStatus/${bookingId}`, {
         method: 'PATCH',
