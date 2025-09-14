@@ -13,7 +13,7 @@ import {
   FaSort,
   FaSortUp,
   FaSortDown,
-  FaPencilAlt, // New icon for editing
+  FaPencilAlt,
 } from 'react-icons/fa';
 import { MdEventBusy } from 'react-icons/md';
 import Spinner from '../Spinner/Spinner';
@@ -34,7 +34,7 @@ export default function TripsList() {
     type: 'string'
   });
   const [deletingId, setDeletingId] = useState(null);
-  const [editingBooking, setEditingBooking] = useState(null); // New state for editing modal
+  const [editingBooking, setEditingBooking] = useState(null);
   const [editStatus, setEditStatus] = useState('');
   const [editComment, setEditComment] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
@@ -146,7 +146,7 @@ export default function TripsList() {
     setEditComment(user.bookingInfo?.comment || '');
   };
 
-  const handleUpdateBooking = async (eventId) => {
+  const handleUpdateBooking = async () => {
     const token = localStorage.getItem('token');
     try {
       setIsUpdating(true);
@@ -157,8 +157,9 @@ export default function TripsList() {
         comment: editComment,
       };
 
-      await axios.put(
-        `https://ugmproject.vercel.app/api/v1/booking/updateBooking/${editingBooking?.bookingId}`,
+      // استخدام PATCH بدلاً من PUT مع النقطة الجديدة
+      await axios.patch(
+        `https://ugmproject.vercel.app/api/v1/booking/updateBookingComment/${editingBooking?.bookingId}`,
         payload,
         {
           headers: {
@@ -167,7 +168,7 @@ export default function TripsList() {
         }
       );
 
-      // Update local state without refetching
+      // تحديث الحالة المحلية بدون الحاجة لإعادة جلب البيانات
       const updatedReservedUsers = selectedEvent.reservedUsers.map(user => {
         if (user.bookingInfo?.bookingId === editingBooking?.bookingId) {
           return {
@@ -183,7 +184,7 @@ export default function TripsList() {
       });
 
       setSelectedEvent({ ...selectedEvent, reservedUsers: updatedReservedUsers });
-      setEditingBooking(null); // Close the modal
+      setEditingBooking(null); // إغلاق النافذة المنبثقة
 
     } catch (err) {
       console.error('Error updating booking:', err);
@@ -297,7 +298,7 @@ export default function TripsList() {
         return <FaTimesCircle className="tw-text-red-500" />;
       case 'pending':
         return <FaClock className="tw-text-yellow-500" />;
-      case 'partial_approved':
+      case 'partiallyApproved':
         return <FaCheckCircle className="tw-text-blue-500" />;
       default:
         return <FaClock className="tw-text-gray-400" />;
@@ -412,7 +413,6 @@ export default function TripsList() {
                               <th className="tw-px-4 tw-py-2 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
                                 {t('participantsModal.headers.status')}
                               </th>
-                              {/* New column for Comment */}
                               <th className="tw-px-4 tw-py-2 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
                                 {t('participantsModal.headers.comment')}
                               </th>
@@ -448,7 +448,6 @@ export default function TripsList() {
                                     {user.bookingInfo?.status || 'pending'}
                                   </div>
                                 </td>
-                                {/* New column data for Comment */}
                                 <td className="tw-px-4 tw-py-2 tw-whitespace-nowrap">
                                   <div className="tw-flex tw-items-center tw-gap-2 dark:tw-text-white">
                                     <span className="tw-truncate tw-max-w-[150px]">
@@ -511,7 +510,6 @@ export default function TripsList() {
         </div>
       )}
 
-      {/* New Edit Booking Modal */}
       {editingBooking && (
         <div
           onClick={() => setEditingBooking(null)}
@@ -533,7 +531,7 @@ export default function TripsList() {
                 className="tw-w-full tw-p-2 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-bg-gray-50 dark:tw-bg-gray-700 dark:tw-text-white"
               >
                 <option value="approved">{t('editModal.statusOptions.approved')}</option>
-                <option value="partial_approved">{t('editModal.statusOptions.partialApproved')}</option>
+                <option value="partiallyApproved">{t('editModal.statusOptions.partiallyApproved')}</option>
               </select>
             </div>
             <div className="tw-mb-6">
@@ -557,7 +555,7 @@ export default function TripsList() {
                 {t('editModal.cancelButton')}
               </button>
               <button
-                onClick={() => handleUpdateBooking(selectedEvent._id)}
+                onClick={handleUpdateBooking}
                 className="tw-px-4 tw-py-2 tw-bg-blue-600 hover:tw-bg-blue-700 tw-text-white tw-rounded-md tw-flex tw-items-center tw-gap-2"
                 disabled={isUpdating}
               >

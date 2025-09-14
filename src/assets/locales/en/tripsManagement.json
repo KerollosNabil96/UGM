@@ -54,7 +54,7 @@
     "statusOptions": {
       "pending": "Pending",
       "approved": "Approved",
-      "partialApproved": "Partially Approved"
+      "partiallyApproved": "Partially Approved"
     },
     "saveButton": "Save",
     "saving": "Saving...",

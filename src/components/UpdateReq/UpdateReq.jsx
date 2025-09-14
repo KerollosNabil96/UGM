@@ -313,10 +313,6 @@
 
 
 
-
-
-
-
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './UpdateReq.module.css';
 import { useTranslation } from 'react-i18next';
@@ -389,7 +385,6 @@ export default function UpdateReq() {
         status = 'partiallyApproved';
         requestBody = { 
           status,
-          paidAmount: parseFloat(paidAmount),
           comment: comment || undefined
         };
       } else if (actionType === 'reject') {
@@ -527,22 +522,6 @@ export default function UpdateReq() {
               </div>
             )}
             
-            {actionType === 'partial' && (
-              <div className="tw-mb-4">
-                <label className="tw-block tw-mb-2">Paid Amount</label>
-                <input
-                  type="number"
-                  value={paidAmount}
-                  onChange={(e) => setPaidAmount(e.target.value)}
-                  className={`tw-w-full tw-p-2 tw-border tw-rounded ${
-                    darkMode ? 'dark:tw-bg-gray-700 dark:tw-border-gray-600' : 'tw-border-gray-300'
-                  }`}
-                  placeholder="Enter paid amount"
-                  required
-                />
-              </div>
-            )}
-            
             {actionType === 'approve' && (
               <p className={`tw-mb-4 ${darkMode ? 'dark:tw-text-gray-300' : 'tw-text-gray-600'}`}>
                 {t('updateRequest.popups.approve.message')}
@@ -568,16 +547,6 @@ export default function UpdateReq() {
               </button>
               <button 
                 onClick={() => {
-                  if (actionType === 'partial' && !paidAmount) {
-                    toast.error('Please enter paid amount', {
-                      position: 'top-center',
-                      style: {
-                        background: darkMode ? '#1f2937' : '#fff',
-                        color: darkMode ? '#fff' : '#000',
-                      }
-                    });
-                    return;
-                  }
                   handleStatusUpdate(selectedRequest._id, actionType);
                 }} 
                 className={`tw-border-0 tw-rounded-md tw-px-4 tw-py-2 tw-text-white ${

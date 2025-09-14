@@ -54,7 +54,7 @@
     "statusOptions": {
       "pending": "قيد الانتظار",
       "approved": "مقبول",
-      "partialApproved": "مقبول جزئياً"
+      "partiallyApproved": "مقبول جزئياً"
     },
     "saveButton": "حفظ",
     "saving": "جاري الحفظ...",
