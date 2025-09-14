@@ -1,46 +1,63 @@
- {
-    "title": "إدارة الرحلات",
-    "searchPlaceholder": "ابحث عن رحلات...",
-    "clearSearch": "مسح البحث",
-    "noTrips": "لا توجد رحلات متاحة",
-    "noMatch": "لا توجد رحلات تطابق بحثك",
-    "tableHeaders": {
-      "tripName": "اسم الرحلة",
-      "date": "التاريخ",
-      "capacity": "السعة",
-      "registered": "المسجلين",
+{
+  "title": "إدارة الرحلات",
+  "searchPlaceholder": "ابحث عن رحلات...",
+  "clearSearch": "مسح البحث",
+  "noTrips": "لا توجد رحلات متاحة",
+  "noMatch": "لا توجد رحلات تطابق بحثك",
+  "tableHeaders": {
+    "tripName": "اسم الرحلة",
+    "date": "التاريخ",
+    "capacity": "السعة",
+    "registered": "المسجلين",
+    "status": "الحالة",
+    "actions": "الإجراءات"
+  },
+  "status": {
+    "fullyBooked": "مكتمل",
+    "limitedSpots": "أماكن محدودة",
+    "available": "متاح"
+  },
+  "viewButton": "عرض",
+  "participantsModal": {
+    "title": "المشاركون المسجلون ({{count}})",
+    "noParticipants": "لا يوجد مشاركون مسجلون بعد",
+    "headers": {
+      "index": "م",
+      "user": "المستخدم",
+      "phone": "الهاتف",
+      "bookingDate": "تاريخ الحجز",
+      "payment": "طريقة الدفع",
       "status": "الحالة",
-      "actions": "الإجراءات"
+      "actions": "الإجراءات",
+      "comment": "التعليق"
     },
-    "status": {
-      "fullyBooked": "مكتمل",
-      "limitedSpots": "أماكن محدودة",
-      "available": "متاح"
+    "paymentMethods": {
+      "wallet": "المحفظة",
+      "cash": "نقدي",
+      "creditCard": "بطاقة ائتمان"
     },
-    "viewButton": "عرض",
-    "participantsModal": {
-      "title": "المشاركون المسجلون ({{count}})",
-      "noParticipants": "لا يوجد مشاركون مسجلون بعد",
-      "headers": {
-        "index": "م",
-        "user": "المستخدم",
-        "phone": "الهاتف",
-        "bookingDate": "تاريخ الحجز",
-        "payment": "طريقة الدفع",
-        "status": "الحالة",
-        "actions": "الإجراءات"
-      },
-      "paymentMethods": {
-        "wallet": "المحفظة",
-        "cash": "نقدي",
-        "creditCard": "بطاقة ائتمان"
-      },
-      "deleteButton": "حذف",
-      "deleting": "جاري الحذف...",
-      "closeButton": "إغلاق"
+    "deleteButton": "حذف",
+    "deleting": "جاري الحذف...",
+    "closeButton": "إغلاق",
+    "noComment": "لا يوجد تعليق"
+  },
+  "errors": {
+    "loadError": "فشل تحميل الأحداث. يرجى المحاولة مرة أخرى لاحقًا.",
+    "deleteError": "فشل حذف الحجز. يرجى المحاولة مرة أخرى.",
+    "updateError": "فشل تحديث الحجز. يرجى المحاولة مرة أخرى."
+  },
+  "editModal": {
+    "title": "تعديل حالة الحجز",
+    "statusLabel": "الحالة",
+    "commentLabel": "التعليق",
+    "commentPlaceholder": "اكتب تعليقًا هنا...",
+    "statusOptions": {
+      "pending": "قيد الانتظار",
+      "approved": "مقبول",
+      "partialApproved": "مقبول جزئياً"
     },
-    "errors": {
-      "loadError": "فشل تحميل الأحداث. يرجى المحاولة مرة أخرى لاحقًا.",
-      "deleteError": "فشل حذف الحجز. يرجى المحاولة مرة أخرى."
-    }
+    "saveButton": "حفظ",
+    "saving": "جاري الحفظ...",
+    "cancelButton": "إلغاء"
   }
+}

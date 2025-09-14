@@ -1,47 +1,63 @@
-
-   {
-    "title": "Trips Management",
-    "searchPlaceholder": "Search trips...",
-    "clearSearch": "Clear search",
-    "noTrips": "No trips available",
-    "noMatch": "No trips match your search",
-    "tableHeaders": {
-      "tripName": "Trip Name",
-      "date": "Date",
-      "capacity": "Capacity",
-      "registered": "Registered",
+{
+  "title": "Trips Management",
+  "searchPlaceholder": "Search trips...",
+  "clearSearch": "Clear search",
+  "noTrips": "No trips available",
+  "noMatch": "No trips match your search",
+  "tableHeaders": {
+    "tripName": "Trip Name",
+    "date": "Date",
+    "capacity": "Capacity",
+    "registered": "Registered",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "status": {
+    "fullyBooked": "Fully Booked",
+    "limitedSpots": "Limited Spots",
+    "available": "Available"
+  },
+  "viewButton": "View",
+  "participantsModal": {
+    "title": "Registered Participants ({{count}})",
+    "noParticipants": "No participants registered yet",
+    "headers": {
+      "index": "#",
+      "user": "User",
+      "phone": "Phone",
+      "bookingDate": "Booking Date",
+      "payment": "Payment",
       "status": "Status",
-      "actions": "Actions"
+      "actions": "Actions",
+      "comment": "Comment"
     },
-    "status": {
-      "fullyBooked": "Fully Booked",
-      "limitedSpots": "Limited Spots",
-      "available": "Available"
+    "paymentMethods": {
+      "wallet": "Wallet",
+      "cash": "Cash",
+      "creditCard": "Credit Card"
     },
-    "viewButton": "View",
-    "participantsModal": {
-      "title": "Registered Participants ({{count}})",
-      "noParticipants": "No participants registered yet",
-      "headers": {
-        "index": "#",
-        "user": "User",
-        "phone": "Phone",
-        "bookingDate": "Booking Date",
-        "payment": "Payment",
-        "status": "Status",
-        "actions": "Actions"
-      },
-      "paymentMethods": {
-        "wallet": "Wallet",
-        "cash": "Cash",
-        "creditCard": "Credit Card"
-      },
-      "deleteButton": "Delete",
-      "deleting": "Deleting...",
-      "closeButton": "Close"
+    "deleteButton": "Delete",
+    "deleting": "Deleting...",
+    "closeButton": "Close",
+    "noComment": "No Comment"
+  },
+  "errors": {
+    "loadError": "Failed to load events. Please try again later.",
+    "deleteError": "Failed to delete booking. Please try again.",
+    "updateError": "Failed to update booking. Please try again."
+  },
+  "editModal": {
+    "title": "Edit Booking Status",
+    "statusLabel": "Status",
+    "commentLabel": "Comment",
+    "commentPlaceholder": "Write a comment here...",
+    "statusOptions": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "partialApproved": "Partially Approved"
     },
-    "errors": {
-      "loadError": "Failed to load events. Please try again later.",
-      "deleteError": "Failed to delete booking. Please try again."
-    }
+    "saveButton": "Save",
+    "saving": "Saving...",
+    "cancelButton": "Cancel"
   }
+}

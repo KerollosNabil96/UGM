@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { 
-  FaUsers, 
-  FaCalendarAlt, 
-  FaSearch, 
-  FaRegClock, 
+import {
+  FaUsers,
+  FaCalendarAlt,
+  FaSearch,
+  FaRegClock,
   FaWallet,
   FaCheckCircle,
   FaTimesCircle,
@@ -12,7 +12,8 @@ import {
   FaTrash,
   FaSort,
   FaSortUp,
-  FaSortDown
+  FaSortDown,
+  FaPencilAlt, // New icon for editing
 } from 'react-icons/fa';
 import { MdEventBusy } from 'react-icons/md';
 import Spinner from '../Spinner/Spinner';
@@ -27,84 +28,82 @@ export default function TripsList() {
   const [loading, setLoading] = useState(true);
   const [eventLoading, setEventLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ 
-    key: 'eventName', 
+  const [sortConfig, setSortConfig] = useState({
+    key: 'eventName',
     direction: 'asc',
-    type: 'string' 
+    type: 'string'
   });
   const [deletingId, setDeletingId] = useState(null);
+  const [editingBooking, setEditingBooking] = useState(null); // New state for editing modal
+  const [editStatus, setEditStatus] = useState('');
+  const [editComment, setEditComment] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-const fetchEvents = async () => {
-  try {
-    setLoading(true);
-    setError(null);
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-    const res = await axios.get(
-      'https://ugmproject.vercel.app/api/v1/event/getAllEventsReserveds',
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        const res = await axios.get(
+          'https://ugmproject.vercel.app/api/v1/event/getAllEventsReserveds',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setEvents(res.data.events);
+        setFilteredEvents(res.data.events);
+      } catch (err) {
+        console.error("Error fetching events:", err);
+        setError(t("errors.loadError"));
+      } finally {
+        setLoading(false);
       }
-    );
-
-    setEvents(res.data.events);
-    setFilteredEvents(res.data.events);
-  } catch (err) {
-    console.error("Error fetching events:", err);
-    setError(t("errors.loadError"));
-  } finally {
-    setLoading(false);
-  }
-};
+    };
 
     fetchEvents();
   }, [t]);
-const fetchEventDetails = async (eventId) => {
-  const token = localStorage.getItem('token');
-  try {
-    setEventLoading(true);
-    setError(null);
 
-    const res = await axios.get(
-      `https://ugmproject.vercel.app/api/v1/event/getEventReservedsById/${eventId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const fetchEventDetails = async (eventId) => {
+    const token = localStorage.getItem('token');
+    try {
+      setEventLoading(true);
+      setError(null);
 
-    // 👇 اطبع الرد كامل
-    console.log("Full response بببب:", res);
+      const res = await axios.get(
+        `https://ugmproject.vercel.app/api/v1/event/getEventReservedsById/${eventId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    // 👇 لو عايز بس الداتا
-    console.log("Response data:", res.data);
+      setSelectedEvent(res.data.event);
+    } catch (err) {
+      console.error("Error fetching event details:", err);
+      setError(t("errors.loadError"));
+    } finally {
+      setEventLoading(false);
+    }
+  };
 
-    setSelectedEvent(res.data.event);
-  } catch (err) {
-    console.error("Error fetching event details:", err);
-    setError(t("errors.loadError"));
-  } finally {
-    setEventLoading(false);
-  }
-};
-
-  const handleDeleteBooking = async (bookingId, eventId, userName) => {
+  const handleDeleteBooking = async (bookingId, eventId) => {
     const token = localStorage.getItem('token');
     try {
       setDeletingId(bookingId);
       setError(null);
-      
+
       await axios.delete(
         `https://ugmproject.vercel.app/api/v1/booking/deleteBooking/${bookingId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          // Removed the `data` field to send only the bookingId in the URL
         }
       );
 
@@ -112,14 +111,14 @@ const fetchEventDetails = async (eventId) => {
         const updatedReservedUsers = selectedEvent.reservedUsers.filter(
           user => user.bookingInfo?.bookingId !== bookingId
         );
-        
+
         setSelectedEvent({
           ...selectedEvent,
           reservedCount: selectedEvent.reservedCount - 1,
           reservedUsers: updatedReservedUsers
         });
       }
-      
+
       const updatedEvents = events.map(event => {
         if (event._id === eventId) {
           return {
@@ -129,15 +128,68 @@ const fetchEventDetails = async (eventId) => {
         }
         return event;
       });
-      
+
       setEvents(updatedEvents);
       setFilteredEvents(updatedEvents);
-      
+
     } catch (err) {
       console.error('Error deleting booking:', err);
       setError(t('errors.deleteError'));
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const openEditModal = (user) => {
+    setEditingBooking(user.bookingInfo);
+    setEditStatus(user.bookingInfo?.status || 'pending');
+    setEditComment(user.bookingInfo?.comment || '');
+  };
+
+  const handleUpdateBooking = async (eventId) => {
+    const token = localStorage.getItem('token');
+    try {
+      setIsUpdating(true);
+      setError(null);
+
+      const payload = {
+        status: editStatus,
+        comment: editComment,
+      };
+
+      await axios.put(
+        `https://ugmproject.vercel.app/api/v1/booking/updateBooking/${editingBooking?.bookingId}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Update local state without refetching
+      const updatedReservedUsers = selectedEvent.reservedUsers.map(user => {
+        if (user.bookingInfo?.bookingId === editingBooking?.bookingId) {
+          return {
+            ...user,
+            bookingInfo: {
+              ...user.bookingInfo,
+              status: editStatus,
+              comment: editComment,
+            }
+          };
+        }
+        return user;
+      });
+
+      setSelectedEvent({ ...selectedEvent, reservedUsers: updatedReservedUsers });
+      setEditingBooking(null); // Close the modal
+
+    } catch (err) {
+      console.error('Error updating booking:', err);
+      setError(t('errors.updateError'));
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -159,10 +211,10 @@ const fetchEventDetails = async (eventId) => {
 
   const sortEvents = (eventsToSort) => {
     if (!eventsToSort || !Array.isArray(eventsToSort)) return [];
-    
+
     return [...eventsToSort].sort((a, b) => {
       let aValue, bValue;
-      
+
       if (sortConfig.key === 'eventName') {
         aValue = a.eventName?.toLowerCase() || '';
         bValue = b.eventName?.toLowerCase() || '';
@@ -176,14 +228,17 @@ const fetchEventDetails = async (eventId) => {
         aValue = a[sortConfig.key] || '';
         bValue = b[sortConfig.key] || '';
       }
-      
-      if (!aValue || !bValue) return 0;
-      
+
       if (sortConfig.type === 'date') {
         const aDate = new Date(aValue).getTime();
         const bDate = new Date(bValue).getTime();
+        if (isNaN(aDate) || isNaN(bDate)) return 0;
         return sortConfig.direction === 'asc' ? aDate - bDate : bDate - aDate;
-      } else {
+      } else if (sortConfig.type === 'number') {
+        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      } else { // string
         if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
         if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
         return 0;
@@ -193,15 +248,19 @@ const fetchEventDetails = async (eventId) => {
 
   const renderSortIcon = (key, currentConfig) => {
     if (currentConfig.key !== key) return <FaSort className="tw-ml-1 tw-text-gray-400" />;
-    return currentConfig.direction === 'asc' 
-      ? <FaSortUp className="tw-ml-1" /> 
+    return currentConfig.direction === 'asc'
+      ? <FaSortUp className="tw-ml-1" />
       : <FaSortDown className="tw-ml-1" />;
   };
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    } catch (e) {
+      return 'N/A';
+    }
   };
 
   const formatDateTime = (dateString) => {
@@ -238,6 +297,8 @@ const fetchEventDetails = async (eventId) => {
         return <FaTimesCircle className="tw-text-red-500" />;
       case 'pending':
         return <FaClock className="tw-text-yellow-500" />;
+      case 'partial_approved':
+        return <FaCheckCircle className="tw-text-blue-500" />;
       default:
         return <FaClock className="tw-text-gray-400" />;
     }
@@ -351,6 +412,10 @@ const fetchEventDetails = async (eventId) => {
                               <th className="tw-px-4 tw-py-2 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
                                 {t('participantsModal.headers.status')}
                               </th>
+                              {/* New column for Comment */}
+                              <th className="tw-px-4 tw-py-2 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
+                                {t('participantsModal.headers.comment')}
+                              </th>
                               <th className="tw-px-4 tw-py-2 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
                                 {t('participantsModal.headers.actions')}
                               </th>
@@ -383,12 +448,25 @@ const fetchEventDetails = async (eventId) => {
                                     {user.bookingInfo?.status || 'pending'}
                                   </div>
                                 </td>
+                                {/* New column data for Comment */}
+                                <td className="tw-px-4 tw-py-2 tw-whitespace-nowrap">
+                                  <div className="tw-flex tw-items-center tw-gap-2 dark:tw-text-white">
+                                    <span className="tw-truncate tw-max-w-[150px]">
+                                      {user.bookingInfo?.comment || t('participantsModal.noComment')}
+                                    </span>
+                                    <button
+                                      onClick={() => openEditModal(user)}
+                                      className="tw-text-blue-500 hover:tw-text-blue-700 transition"
+                                    >
+                                      <FaPencilAlt />
+                                    </button>
+                                  </div>
+                                </td>
                                 <td className="tw-px-4 tw-py-2 tw-whitespace-nowrap">
                                   <button
                                     onClick={() => handleDeleteBooking(
                                       user.bookingInfo?.bookingId,
-                                      selectedEvent._id,
-                                      user.userName
+                                      selectedEvent._id
                                     )}
                                     className="tw-px-3 tw-py-1 tw-bg-red-600 hover:tw-bg-red-700 tw-text-white tw-rounded-lg tw-transition tw-duration-200 tw-flex tw-items-center tw-gap-1"
                                     disabled={deletingId === user.bookingInfo?.bookingId}
@@ -428,6 +506,70 @@ const fetchEventDetails = async (eventId) => {
                   {t('participantsModal.closeButton')}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Edit Booking Modal */}
+      {editingBooking && (
+        <div
+          onClick={() => setEditingBooking(null)}
+          className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50 tw-p-3"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-lg"
+          >
+            <h3 className="tw-text-xl tw-font-bold tw-mb-4 dark:tw-text-white">{t('editModal.title')}</h3>
+            <div className="tw-mb-4">
+              <label htmlFor="status" className="tw-block tw-text-gray-700 dark:tw-text-gray-300 tw-font-medium tw-mb-1">
+                {t('editModal.statusLabel')}
+              </label>
+              <select
+                id="status"
+                value={editStatus}
+                onChange={(e) => setEditStatus(e.target.value)}
+                className="tw-w-full tw-p-2 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-bg-gray-50 dark:tw-bg-gray-700 dark:tw-text-white"
+              >
+                <option value="approved">{t('editModal.statusOptions.approved')}</option>
+                <option value="partial_approved">{t('editModal.statusOptions.partialApproved')}</option>
+              </select>
+            </div>
+            <div className="tw-mb-6">
+              <label htmlFor="comment" className="tw-block tw-text-gray-700 dark:tw-text-gray-300 tw-font-medium tw-mb-1">
+                {t('editModal.commentLabel')}
+              </label>
+              <textarea
+                id="comment"
+                rows="4"
+                value={editComment}
+                onChange={(e) => setEditComment(e.target.value)}
+                className="tw-w-full tw-p-2 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-bg-gray-50 dark:tw-bg-gray-700 dark:tw-text-white"
+                placeholder={t('editModal.commentPlaceholder')}
+              ></textarea>
+            </div>
+            <div className="tw-flex tw-justify-end tw-gap-2">
+              <button
+                onClick={() => setEditingBooking(null)}
+                className="tw-px-4 tw-py-2 tw-bg-gray-300 dark:tw-bg-gray-700 hover:tw-bg-gray-400 dark:hover:tw-bg-gray-600 tw-text-black dark:tw-text-white tw-rounded-md"
+              >
+                {t('editModal.cancelButton')}
+              </button>
+              <button
+                onClick={() => handleUpdateBooking(selectedEvent._id)}
+                className="tw-px-4 tw-py-2 tw-bg-blue-600 hover:tw-bg-blue-700 tw-text-white tw-rounded-md tw-flex tw-items-center tw-gap-2"
+                disabled={isUpdating}
+              >
+                {isUpdating ? (
+                  <>
+                    <span className="tw-inline-block tw-h-4 tw-w-4 tw-border-2 tw-border-white tw-border-t-transparent tw-rounded-full tw-animate-spin"></span>
+                    {t('editModal.saving')}
+                  </>
+                ) : (
+                  t('editModal.saveButton')
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -474,7 +616,7 @@ const fetchEventDetails = async (eventId) => {
               <table className="tw-min-w-full tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
                 <thead className="tw-bg-gray-50 dark:tw-bg-gray-700">
                   <tr>
-                    <th 
+                    <th
                       className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
                       onClick={() => handleSort('eventName', 'string')}
                     >
@@ -483,7 +625,7 @@ const fetchEventDetails = async (eventId) => {
                         {renderSortIcon('eventName', sortConfig)}
                       </div>
                     </th>
-                    <th 
+                    <th
                       className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
                       onClick={() => handleSort('date', 'date')}
                     >
@@ -495,7 +637,7 @@ const fetchEventDetails = async (eventId) => {
                     <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider">
                       {t('tableHeaders.capacity')}
                     </th>
-                    <th 
+                    <th
                       className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 dark:tw-text-gray-300 tw-uppercase tw-tracking-wider tw-cursor-pointer"
                       onClick={() => handleSort('reservedCount', 'number')}
                     >
@@ -541,14 +683,14 @@ const fetchEventDetails = async (eventId) => {
                           getAvailabilityStatus(event) === 'full'
                             ? 'tw-bg-red-100 tw-text-red-800 dark:tw-bg-red-900 dark:tw-text-red-200'
                             : getAvailabilityStatus(event) === 'limited'
-                            ? 'tw-bg-yellow-100 tw-text-yellow-800 dark:tw-bg-yellow-900 dark:tw-text-yellow-200'
-                            : 'tw-bg-green-100 tw-text-green-800 dark:tw-bg-green-900 dark:tw-text-green-200'
+                              ? 'tw-bg-yellow-100 tw-text-yellow-800 dark:tw-bg-yellow-900 dark:tw-text-yellow-200'
+                              : 'tw-bg-green-100 tw-text-green-800 dark:tw-bg-green-900 dark:tw-text-green-200'
                         }`}>
                           {getAvailabilityStatus(event) === 'full'
                             ? t('status.fullyBooked')
                             : getAvailabilityStatus(event) === 'limited'
-                            ? t('status.limitedSpots')
-                            : t('status.available')}
+                              ? t('status.limitedSpots')
+                              : t('status.available')}
                         </span>
                       </td>
                       <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">

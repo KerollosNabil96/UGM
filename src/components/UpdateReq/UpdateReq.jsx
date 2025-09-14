@@ -317,11 +317,6 @@
 
 
 
-
-
-
-
-
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './UpdateReq.module.css';
 import { useTranslation } from 'react-i18next';
@@ -331,7 +326,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export default function UpdateReq() {
   const [isActive, setIsActive] = useState(false);
-  const [actionType, setActionType] = useState(null); 
+  const [actionType, setActionType] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [bookingRequests, setBookingRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -420,7 +415,6 @@ export default function UpdateReq() {
         const errorData = await response.json().catch(() => null);
         const errorMessage = errorData?.message || `Failed to update status to ${status}`;
         
-        // Show toast notification for no available seats
         if (errorMessage.includes('no available seats') || errorMessage.includes('Failed to update status to approved')) {
           toast.error('No available seats for this trip', {
             position: 'top-center',
@@ -441,7 +435,6 @@ export default function UpdateReq() {
       setPaidAmount('');
       setComment('');
       
-      // Show success toast
       toast.success(`Booking ${status} successfully`, {
         position: 'top-center',
         style: {
@@ -506,9 +499,9 @@ export default function UpdateReq() {
               {actionType === 'approve' ? (
                 <i className="fa-solid fa-circle-check tw-text-green-500 tw-me-2"></i>
               ) : actionType === 'partial' ? (
-                <i className="fa-solid fa-circle-dollar tw-text-blue-500 tw-me-2"></i>
+                <i className="fa-solid fa-percent tw-text-blue-500 tw-me-2"></i>
               ) : (
-                <i className="fa-solid fa-circle-xmark tw-text-red-500 tw-me-2"></i>
+                <i className="fa-solid fa-ban tw-text-red-500 tw-me-2"></i>
               )}
               {actionType === 'approve' 
                 ? t('updateRequest.popups.approve.title') 
@@ -683,7 +676,7 @@ export default function UpdateReq() {
                               setIsActive(true);
                               setActionType('approve');
                             }} 
-                            className="fa-solid fa-check tw-text-green-500 tw-text-lg tw-mx-2 tw-cursor-pointer hover:tw-opacity-80"
+                            className="fa-solid fa-circle-check tw-text-green-500 tw-text-xl tw-mx-2 tw-cursor-pointer hover:tw-scale-110 tw-transition-transform"
                             title="Approve Full Payment"
                           ></i>
                           <i 
@@ -692,7 +685,7 @@ export default function UpdateReq() {
                               setIsActive(true);
                               setActionType('partial');
                             }} 
-                            className="fa-solid fa-dollar-sign tw-text-blue-500 tw-text-lg tw-mx-2 tw-cursor-pointer hover:tw-opacity-80"
+                            className="fa-solid fa-percent tw-text-blue-500 tw-text-xl tw-mx-2 tw-cursor-pointer hover:tw-scale-110 tw-transition-transform"
                             title="Partial Payment"
                           ></i>
                           <i 
@@ -701,7 +694,7 @@ export default function UpdateReq() {
                               setIsActive(true);
                               setActionType('reject');
                             }} 
-                            className="fa-solid fa-xmark tw-text-red-500 tw-text-lg tw-mx-2 tw-cursor-pointer hover:tw-opacity-80"
+                            className="fa-solid fa-ban tw-text-red-500 tw-text-xl tw-mx-2 tw-cursor-pointer hover:tw-scale-110 tw-transition-transform"
                             title="Reject"
                           ></i>
                         </td>
