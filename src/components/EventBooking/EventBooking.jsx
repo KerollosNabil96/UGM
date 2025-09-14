@@ -1,7 +1,11 @@
+
+
 // import React, { useEffect, useState, useContext } from 'react';
 // import { useParams, useNavigate } from 'react-router-dom';
 // import { toast } from 'react-hot-toast';
 // import axios from 'axios';
+// import Spinner from '../Spinner/Spinner';
+
 // import {
 //   FaWallet,
 //   FaPaperPlane,
@@ -28,8 +32,10 @@
 //   const [screenshot, setScreenshot] = useState(null);
 //   const [sending, setSending] = useState(false);
 //   const [loading, setLoading] = useState(true);
+//   const [admins, setAdmins] = useState([]);
+//   const [fetchingAdmins, setFetchingAdmins] = useState(false);
+//   const [wallet, setWallet] = useState(0); // تم التعديل هنا
 
-//   const wallet = parseFloat(localStorage.getItem('wallet')) || 0;
 //   const token = localStorage.getItem('token');
 //   const Id = localStorage.getItem('Id');
 //   const userName = localStorage.getItem('userName');
@@ -52,10 +58,28 @@
 //     }
 //   }, [Id, navigate, t]);
 
+//   const fetchWalletBalance = async () => {
+//     try {
+//       const response = await axios.get(
+//         'https://ugmproject.vercel.app/api/v1/user/getMyWalletBalance',
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`
+//           }
+//         }
+//       );
+//       setWallet(parseFloat(response.data.balance) || 0);
+//     } catch (err) {
+//       console.error('Error fetching wallet balance:', err);
+//       setWallet(0);
+//     }
+//   };
+
 //   const fetchEvent = async () => {
 //     if (!Id) return;
 
 //     try {
+//       setLoading(true);
 //       const res = await axios.get(
 //         `https://ugmproject.vercel.app/api/v1/event/getEventById/${id}`,
 //         {
@@ -65,13 +89,46 @@
 //       setEvent(res.data.event);
 //     } catch (err) {
 //       toast.error(t('eventBooking.fetchError'));
+//     }
+//   };
+
+//   const fetchAdmins = async () => {
+//     try {
+//       setFetchingAdmins(true);
+//       const res = await axios.get(
+//         'https://ugmproject.vercel.app/api/v1/user/gitAllAdmins',
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+      
+//       const adminsData = res.data?.admins || res.data?.users || [];
+//       if (Array.isArray(adminsData)) {
+//         setAdmins(adminsData);
+//       } else {
+//         console.error('Invalid admins data format:', adminsData);
+//         toast.error(t('eventBooking.adminDataError'));
+//       }
+//     } catch (err) {
+//       console.error('Error fetching admins:', err);
+//       toast.error(t('eventBooking.adminFetchError'));
+//       setAdmins([]);
 //     } finally {
-//       setLoading(false);
+//       setFetchingAdmins(false);
 //     }
 //   };
 
 //   useEffect(() => {
-//     fetchEvent();
+//     const fetchData = async () => {
+//       await fetchEvent();
+//       await fetchAdmins();
+//       await fetchWalletBalance(); // جلب رصيد المحفظة
+//       setLoading(false);
+//     };
+    
+//     fetchData();
 //   }, [id]);
 
 //   const handleWalletBooking = async () => {
@@ -88,20 +145,6 @@
 //     }
 
 //     try {
-//       // 1. Update wallet
-//       const walletResponse = await axios.put(
-//         `https://ugmproject.vercel.app/api/v1/user/updateWallet/${Id}`,
-//         {
-//           amount: price,
-//           operation: 'remove',
-//           description: `Booking for event: ${event.eventName}`,
-//         },
-//         {
-//           headers: { Authorization: `Bearer ${token}` },
-//         }
-//       );
-
-//       // 2. Create booking
 //       const bookingData = {
 //         eventId: event._id,
 //         eventName: event.eventName,
@@ -109,7 +152,7 @@
 //         userName,
 //       };
 
-//       const bookingResponse = await axios.post(
+//       const response = await axios.post(
 //         'https://ugmproject.vercel.app/api/v1/booking/bookingByWallet',
 //         bookingData,
 //         {
@@ -120,12 +163,8 @@
 //         }
 //       );
 
-//       // Log the response from the booking API
-//       console.log('Booking API Response:', bookingResponse.data);
-
-//       // 3. Update local wallet balance
 //       const newWalletBalance = wallet - price;
-//       localStorage.setItem('wallet', newWalletBalance.toString());
+//       setWallet(newWalletBalance);
 
 //       toast.success(t('eventBooking.walletSuccess'));
 //       navigate('/events');
@@ -134,6 +173,7 @@
 //       toast.error(err.response?.data?.err || t('eventBooking.bookingError'));
 //     }
 //   };
+
 
 //   const handleUpload = (e) => {
 //     const file = e.target.files[0];
@@ -158,67 +198,110 @@
 //     setSending(true);
 
 //     try {
-//       const formData = {
-//         eventId: event._id,
-//         userId: Id,
-//         userName,
-//         eventName: event.eventName,
-//         price: event.price,
-//         paymentMethod: 'proof',
-//         responsiblePerson: responsible,
-//         status: 'pending',
-//         screenshot: screenshot.name,
-//       };
+//       const selectedAdmin = admins.find(admin => admin.userName === responsible);
+      
+//       if (!selectedAdmin) {
+//         toast.error(t('eventBooking.adminNotFound'));
+//         return;
+//       }
 
-//       console.log('Proof submission data:', formData);
+//       const formData = new FormData();
+//       formData.append('eventId', event._id);
+//       formData.append('userId', Id);
+//       formData.append('userName', userName);
+//       formData.append('eventName', event.eventName);
+//       formData.append('price', event.price);
+//       formData.append('paymentMethod', 'proof');
+//       formData.append('responsiblePerson', responsible);
+//       formData.append('adminId', selectedAdmin._id);
+//       formData.append('status', 'pending');
+//       formData.append('screenshot', screenshot);
 
-//       toast.success(t('eventBooking.proofSuccess'));
+//       const response = await axios.post(
+//         'https://ugmproject.vercel.app/api/v1/booking/bookingByProof',
+//         formData,
+//         {
+//           headers: {
+//             'Authorization': `Bearer ${token}`,
+//             'Content-Type': 'multipart/form-data',
+//           },
+//         }
+//       );
+
+//       toast.success(response.data.message, {
+//         duration: 5000,
+//         style: {
+//           background: '#10B981',
+//           color: '#FFFFFF',
+//           fontSize: '16px',
+//           padding: '16px',
+//           borderRadius: '8px',
+//         },
+//       });
+
 //       navigate('/events');
 //     } catch (err) {
 //       console.error('Proof Submission Error:', err.response?.data);
-//       toast.error(err.response?.data?.message || t('eventBooking.bookingError'));
+      
+//       if (err.response?.data?.err === 'You have already booked this event') {
+//         toast.error(err.response.data.err, {
+//           duration: 5000,
+//           style: {
+//             background: '#EF4444',
+//             color: '#FFFFFF',
+//             fontSize: '16px',
+//             padding: '16px',
+//             borderRadius: '8px',
+//           },
+//         });
+//       } else {
+//         toast.error(err.response?.data?.message || t('eventBooking.bookingError'), {
+//           duration: 5000,
+//           style: {
+//             background: '#EF4444',
+//             color: '#FFFFFF',
+//             fontSize: '16px',
+//             padding: '16px',
+//             borderRadius: '8px',
+//           },
+//         });
+//       }
 //     } finally {
 //       setSending(false);
 //     }
 //   };
 
+//   const handleBack = () => {
+//     navigate(-1);
+//   };
+
 //   if (loading) {
 //     return (
-//       <div
-//         className={`${
-//           darkMode ? 'tw-dark' : ''
-//         } tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800 tw-z-50`}
-//       >
-//         <div className="tw-w-12 tw-h-12 tw-border-4 tw-border-blue-500 tw-border-t-transparent tw-rounded-full tw-animate-spin"></div>
+//       <div className={`${darkMode ? 'tw-dark' : ''}`}>
+//         <div className="container-fluid dark:tw-bg-gray-800" style={{ minHeight: '80vh' }}>
+//           <div className="container">
+//             <motion.div
+//               initial={{ opacity: 0 }}
+//               animate={{ opacity: 1 }}
+//               transition={{ duration: 0.5 }}
+//               className="tw-py-10 tw-flex tw-flex-col tw-items-center tw-justify-center"
+//               style={{ minHeight: '70vh' }}
+//             >
+//               <Spinner />
+//             </motion.div>
+//           </div>
+//         </div>
 //       </div>
 //     );
 //   }
 
 //   if (!event) {
 //     return (
-//       <div
-//         className={`${
-//           darkMode ? 'tw-dark' : ''
-//         } tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-white dark:tw-bg-gray-800`}
-//       >
-//         <div className="tw-text-center">
-//           <p className="tw-text-lg tw-text-gray-700 dark:tw-text-gray-300">
-//             {t('eventBooking.eventNotFound')}
-//           </p>
-//           <button
-//             onClick={() => navigate('/events')}
-//             className="tw-mt-4 tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-lg hover:tw-bg-blue-700"
-//           >
-//             {t('eventBooking.backToEvents')}
-//           </button>
-//         </div>
+//       <div className="tw-text-center tw-mt-20 tw-text-red-600 tw-font-bold tw-text-xl">
+//         {t('eventBooking.eventNotFound')}
 //       </div>
 //     );
 //   }
-
-//   const handleBack = () => {
-//     navigate(-1);
-//   };
 
 //   return (
 //     <div className={`${darkMode ? 'tw-dark' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -477,16 +560,29 @@
 //                         <span className="tw-text-lg tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 tw-mb-2 tw-block">
 //                           {t('eventBooking.selectResponsible')}
 //                         </span>
-//                         <select
-//                           value={responsible}
-//                           onChange={(e) => setResponsible(e.target.value)}
-//                           className="tw-w-full dark:tw-text-white tw-px-4 tw-py-3 tw-rounded-lg tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-800 focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
-//                         >
-//                           <option value="">{t('eventBooking.selectOption')}</option>
-//                           <option value="Beshoy Gerges">Beshoy Gerges</option>
-//                           <option value="Rafayl Zaher">Rafayl Zaher</option>
-//                           <option value="Mina Adel">Mina Adel</option>
-//                         </select>
+//                         {fetchingAdmins ? (
+//                           <div className="tw-flex tw-items-center tw-justify-center tw-py-4">
+//                             <Spinner size="small" />
+//                           </div>
+//                         ) : (
+//                           <select
+//                             value={responsible}
+//                             onChange={(e) => setResponsible(e.target.value)}
+//                             className="tw-w-full dark:tw-text-white tw-px-4 tw-py-3 tw-rounded-lg tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-800 focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
+//                             disabled={admins.length === 0}
+//                           >
+//                             <option value="">{t('eventBooking.selectOption')}</option>
+//                             {admins.length > 0 ? (
+//                               admins.map((admin) => (
+//                                 <option key={admin._id} value={admin.userName}>
+//                                   {admin.userName} ({admin.role})
+//                                 </option>
+//                               ))
+//                             ) : (
+//                               <option disabled>{t('eventBooking.noAdminsAvailable')}</option>
+//                             )}
+//                           </select>
+//                         )}
 //                       </label>
 
 //                       <div className="tw-p-4 tw-bg-gray-50 dark:tw-bg-gray-700 tw-rounded-lg">
@@ -505,9 +601,9 @@
 //                   <div className="tw-sticky tw-bottom-0 tw-left-0 tw-right-0 tw-bg-white dark:tw-bg-gray-800 tw-p-4 tw-border-t dark:tw-border-gray-700">
 //                     <button
 //                       onClick={handleSubmitProof}
-//                       disabled={sending || !screenshot || !responsible}
+//                       disabled={sending || !screenshot || !responsible || admins.length === 0}
 //                       className={`tw-w-full tw-py-3 tw-rounded-xl tw-font-semibold tw-text-white tw-transition tw-flex tw-items-center tw-justify-center tw-gap-2 ${
-//                         !sending && screenshot && responsible
+//                         !sending && screenshot && responsible && admins.length > 0
 //                           ? 'tw-bg-green-600 hover:tw-bg-green-700 dark:tw-bg-green-700 dark:hover:tw-bg-green-800'
 //                           : 'tw-bg-gray-400 dark:tw-bg-gray-600 tw-cursor-not-allowed'
 //                       }`}
@@ -559,6 +655,14 @@
 
 
 
+
+
+
+
+
+
+
+
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -593,7 +697,7 @@ export default function EventBooking() {
   const [loading, setLoading] = useState(true);
   const [admins, setAdmins] = useState([]);
   const [fetchingAdmins, setFetchingAdmins] = useState(false);
-  const [wallet, setWallet] = useState(0); // تم التعديل هنا
+  const [wallet, setWallet] = useState(0);
 
   const token = localStorage.getItem('token');
   const Id = localStorage.getItem('Id');
@@ -683,7 +787,7 @@ export default function EventBooking() {
     const fetchData = async () => {
       await fetchEvent();
       await fetchAdmins();
-      await fetchWalletBalance(); // جلب رصيد المحفظة
+      await fetchWalletBalance();
       setLoading(false);
     };
     
@@ -707,7 +811,7 @@ export default function EventBooking() {
       const bookingData = {
         eventId: event._id,
         eventName: event.eventName,
-        price: price.toString(),
+        totalAmount: price.toString(), // Changed from price to totalAmount
         userName,
       };
 
@@ -732,7 +836,6 @@ export default function EventBooking() {
       toast.error(err.response?.data?.err || t('eventBooking.bookingError'));
     }
   };
-
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
@@ -769,7 +872,7 @@ export default function EventBooking() {
       formData.append('userId', Id);
       formData.append('userName', userName);
       formData.append('eventName', event.eventName);
-      formData.append('price', event.price);
+      formData.append('totalAmount', event.price); // Changed from price to totalAmount
       formData.append('paymentMethod', 'proof');
       formData.append('responsiblePerson', responsible);
       formData.append('adminId', selectedAdmin._id);
