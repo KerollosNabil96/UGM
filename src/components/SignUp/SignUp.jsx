@@ -81,14 +81,14 @@ export default function SignUp() {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        // إنشاء كائن البيانات المرسلة مع تضمين الحقول الجديدة
         const requestData = {
           firstName: values.firstName,
           secName: values.secName,
           familyName: values.familyName,
           email: values.email,
           phone: values.phone,
-          password: values.password
+          password: values.password,
+          rePassword: values.rePassword
         };
 
         const { data } = await axios.post(
