@@ -8,7 +8,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-
 export default function SignUp() {
   const { darkMode } = useContext(darkModeContext);
   const { t } = useTranslation("signUp");
@@ -20,10 +19,25 @@ export default function SignUp() {
   const validate = values => {
     const errors = {};
 
-    if (!values.userName) {
-      errors.userName = t('signUp.name.errors.required');
-    } else if (values.userName.length < 3 || values.userName.length > 15) {
-      errors.userName = t('signUp.name.errors.length');
+    // First Name validation
+    if (!values.firstName) {
+      errors.firstName = t('signUp.firstName.errors.required');
+    } else if (values.firstName.length < 2 || values.firstName.length > 10) {
+      errors.firstName = t('signUp.firstName.errors.length');
+    }
+
+    // Second Name validation
+    if (!values.secName) {
+      errors.secName = t('signUp.secName.errors.required');
+    } else if (values.secName.length < 2 || values.secName.length > 10) {
+      errors.secName = t('signUp.secName.errors.length');
+    }
+
+    // Family Name validation
+    if (!values.familyName) {
+      errors.familyName = t('signUp.familyName.errors.required');
+    } else if (values.familyName.length < 2 || values.familyName.length > 10) {
+      errors.familyName = t('signUp.familyName.errors.length');
     }
 
     if (!values.email) {
@@ -55,7 +69,9 @@ export default function SignUp() {
 
   const formik = useFormik({
     initialValues: {
-      userName: '',
+      firstName: '',
+      secName: '',
+      familyName: '',
       email: '',
       phone: '',
       password: '',
@@ -65,9 +81,19 @@ export default function SignUp() {
     onSubmit: async (values) => {
       setLoading(true);
       try {
+        // إنشاء كائن البيانات المرسلة مع تضمين الحقول الجديدة
+        const requestData = {
+          firstName: values.firstName,
+          secName: values.secName,
+          familyName: values.familyName,
+          email: values.email,
+          phone: values.phone,
+          password: values.password
+        };
+
         const { data } = await axios.post(
           'https://ugmproject.vercel.app/api/v1/user/signup',
-          values,
+          requestData,
           {
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
@@ -84,8 +110,6 @@ export default function SignUp() {
           toast.error('This phone number is already registered. Please use a different one.');
         } else if (errorMessage.includes('email_1 dup key')) {
           toast.error('This email is already registered. Please use a different one.');
-        } else if (errorMessage.includes('userName_1 dup key')) {
-          toast.error('This username is already taken. Please choose another one.');
         } else {
           toast.error(errorMessage);
         }
@@ -106,7 +130,6 @@ export default function SignUp() {
           >
             <div className="row w-75 mx-auto">
               <div className="col-12 col-lg-6 px-0">
-
                 <div className={`${styles['bg-image']}`}>
                   <div className={`${styles['layer']}`}>
                     <p className='mainColor fs-2 fw-bolder d-flex justify-content-center align-items-center dark:tw-text-indigo-600 h-100'>
@@ -117,13 +140,29 @@ export default function SignUp() {
               </div>
               <div className="col-lg-6 tw-bg-gray-100 dark:tw-bg-gray-900 rounded-3 py-3">
                 <form onSubmit={formik.handleSubmit}>
-                  {/* Username */}
-                  <label htmlFor="userName" className='mt-3 dark:tw-text-white'>{t('signUp.name.label')}</label>
-                  <input type="text" name="userName" id="userName" className="w-100 form-control mt-3"
-                    placeholder={t('signUp.name.placeholder')} onChange={formik.handleChange}
-                    onBlur={formik.handleBlur} value={formik.values.userName} />
-                  {formik.touched.userName && formik.errors.userName &&
-                    <div className="text-danger w-75" role="alert">{formik.errors.userName}</div>}
+                  {/* First Name */}
+                  <label htmlFor="firstName" className='mt-3 dark:tw-text-white'>{t('signUp.firstName.label')}</label>
+                  <input type="text" name="firstName" id="firstName" className="w-100 form-control mt-3"
+                    placeholder={t('signUp.firstName.placeholder')} onChange={formik.handleChange}
+                    onBlur={formik.handleBlur} value={formik.values.firstName} />
+                  {formik.touched.firstName && formik.errors.firstName &&
+                    <div className="text-danger w-75" role="alert">{formik.errors.firstName}</div>}
+
+                  {/* Second Name */}
+                  <label htmlFor="secName" className='mt-3 dark:tw-text-white'>{t('signUp.secName.label')}</label>
+                  <input type="text" name="secName" id="secName" className="w-100 form-control mt-3"
+                    placeholder={t('signUp.secName.placeholder')} onChange={formik.handleChange}
+                    onBlur={formik.handleBlur} value={formik.values.secName} />
+                  {formik.touched.secName && formik.errors.secName &&
+                    <div className="text-danger w-75" role="alert">{formik.errors.secName}</div>}
+
+                  {/* Family Name */}
+                  <label htmlFor="familyName" className='mt-3 dark:tw-text-white'>{t('signUp.familyName.label')}</label>
+                  <input type="text" name="familyName" id="familyName" className="w-100 form-control mt-3"
+                    placeholder={t('signUp.familyName.placeholder')} onChange={formik.handleChange}
+                    onBlur={formik.handleBlur} value={formik.values.familyName} />
+                  {formik.touched.familyName && formik.errors.familyName &&
+                    <div className="text-danger w-75" role="alert">{formik.errors.familyName}</div>}
 
                   {/* Email */}
                   <label htmlFor="email" className='mt-3 dark:tw-text-white'>{t('signUp.email.label')}</label>
@@ -150,12 +189,20 @@ export default function SignUp() {
                     <div className="text-danger w-75" role="alert">{formik.errors.password}</div>}
 
                   {/* RePassword */}
-                  <label htmlFor="rePassword" className='mt-3 dark:tw-text-white'>{t('signUp.rePassword.label')}</label>
-                  <input type="password" name="rePassword" id="rePassword" className="w-100 form-control mt-3"
-                    placeholder={t('signUp.rePassword.placeholder')} onChange={formik.handleChange}
-                    onBlur={formik.handleBlur} value={formik.values.rePassword} />
-                  {formik.touched.rePassword && formik.errors.rePassword &&
-                    <div className="text-danger w-75" role="alert">{formik.errors.rePassword}</div>}
+                 <label htmlFor="rePassword" className='mt-3 dark:tw-text-white'>{t('signUp.rePassword.label')}</label>
+<input
+    type="password"
+    name="rePassword" 
+    id="rePassword"
+    className="w-100 form-control mt-3"
+    placeholder={t('signUp.rePassword.placeholder')}
+    onChange={formik.handleChange}
+    onBlur={formik.handleBlur}
+    value={formik.values.rePassword}
+/>
+{formik.touched.rePassword && formik.errors.rePassword && (
+    <div className="text-danger w-75" role="alert">{formik.errors.rePassword}</div>
+)}
 
                   {/* Submit */}
                   <button type="submit" disabled={!(formik.dirty && formik.isValid) || loading}

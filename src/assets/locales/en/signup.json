@@ -1,47 +1,63 @@
 {
-    "signUp": {
-      "title": "Sign Up",
-      "welcome": "UGM Family",
-      "name": {
-        "label": "Name:",
-        "placeholder": "Enter your name.",
-        "errors": {
-          "required": "Name is required",
-          "length": "Name must be between 3 and 15 characters"
-        }
-      },
-      "email": {
-        "label": "Email:",
-        "placeholder": "Enter your email.",
-        "errors": {
-          "required": "Email is required",
-          "invalid": "Invalid email address"
-        }
-      },
-      "phone": {
-        "label": "Phone No.:",
-        "placeholder": "Enter your phone number.",
-        "errors": {
-          "required": "Phone is required",
-          "invalid": "Invalid phone number"
-        }
-      },
-      "password": {
-        "label": "Password:",
-        "placeholder": "Enter your password.",
-        "errors": {
-          "required": "Password is required",
-          "invalid": "Password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character"
-        }
-      },
-      "rePassword": {
-        "label": "Confirm Password:",
-        "placeholder": "Confirm your password.",
-        "errors": {
-          "required": "Password confirmation is required",
-          "mismatch": "Passwords do not match"
-        }
-      },
-      "submit": "Register"
-    }
+  "signUp": {
+    "title": "Sign Up",
+    "welcome": "UGM Family",
+    "firstName": {
+      "label": "First Name:",
+      "placeholder": "Enter your first name.",
+      "errors": {
+        "required": "First name is required",
+        "length": "First name must be between 2 and 10 characters"
+      }
+    },
+    "secName": {
+      "label": "Second Name:",
+      "placeholder": "Enter your second name.",
+      "errors": {
+        "required": "Second name is required",
+        "length": "Second name must be between 2 and 10 characters"
+      }
+    },
+    "familyName": {
+      "label": "Family Name:",
+      "placeholder": "Enter your family name.",
+      "errors": {
+        "required": "Family name is required",
+        "length": "Family name must be between 2 and 10 characters"
+      }
+    },
+    "email": {
+      "label": "Email:",
+      "placeholder": "Enter your email.",
+      "errors": {
+        "required": "Email is required",
+        "invalid": "Invalid email address"
+      }
+    },
+    "phone": {
+      "label": "Phone No.:",
+      "placeholder": "Enter your phone number.",
+      "errors": {
+        "required": "Phone is required",
+        "invalid": "Invalid phone number"
+      }
+    },
+    "password": {
+      "label": "Password:",
+      "placeholder": "Enter your password.",
+      "errors": {
+        "required": "Password is required",
+        "invalid": "Password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character"
+      }
+    },
+    "rePassword": {
+      "label": "Confirm Password:",
+      "placeholder": "Confirm your password.",
+      "errors": {
+        "required": "Password confirmation is required",
+        "mismatch": "Passwords do not match"
+      }
+    },
+    "submit": "Register"
   }
+}
