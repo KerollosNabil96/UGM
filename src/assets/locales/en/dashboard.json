@@ -5,6 +5,10 @@
       "updateRequests": "Update Requests",
       "messages" : "messages",
       "walletManagment" : "Wallet managment" , 
-      "tripList" : "Trip list" 
+      "tripList" : "Trip list" ,
+      "meetings" : " Create Meeting ",
+      "meetingsManager" : "Meetings Manager"
+
+
     }
   }

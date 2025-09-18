@@ -5,6 +5,8 @@
       "updateRequests": "طلبات التحديث",
       "messages": "الرسائل" , 
       "walletManagment" : "إدارة المحفظة" , 
-      "tripList": "قائمة الرحلات"
+      "tripList": "قائمة الرحلات" , 
+      "meetings" : " إنشاء اجتماع",
+      "meetingsManager" : "اداره الاجتماعات"
     }
   }

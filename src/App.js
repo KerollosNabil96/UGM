@@ -40,6 +40,8 @@ import FAQs from './components/FAQs/FAQs';
 import EventBooking from './components/EventBooking/EventBooking';
 import RedirectIfAuthenticated from './components/RedirectIfAuthenticated/RedirectIfAuthenticated';
 import ResetPassword from './components/ResetPassword/ResetPassword';
+import Meetings from './components/Meetings/Meetings';
+import MeetingsManager from './components/MeetingManager/MeetingManager';
 
 function App() {
   
@@ -149,6 +151,8 @@ function App() {
 },
             { path: 'wallet-managment', element: <WalletManagement /> },
             { path: 'trip-list', element: <TripsList /> },
+            { path: 'meetings', element: <Meetings /> },
+            { path: 'meetings-manager', element: <MeetingsManager /> },
           ],
         },
         {

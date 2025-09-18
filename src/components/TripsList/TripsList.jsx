@@ -718,3 +718,7 @@ export default function TripsList() {
     </div>
   );
 }
+
+
+
+

@@ -47,14 +47,25 @@ export default function Dashboard() {
                 </li>
                 <li className="nav-item">
                   <NavLink
-  to="trip-list"
-  className={({ isActive }) =>
-    `nav-link text-white d-flex align-items-center ${isActive ? 'active' : ''}`
-  }
->
-  <i className="fa-solid fa-wallet me-1"></i>
-  <span>{t('dashboard.tripList')}</span>
-</NavLink>
+                    to="trip-list"
+                    className={({ isActive }) =>
+                      `nav-link text-white d-flex align-items-center ${isActive ? 'active' : ''}`
+                    }
+                  >
+                    <i className="fa-solid fa-wallet me-1"></i>
+                    <span>{t('dashboard.tripList')}</span>
+                  </NavLink>
+                </li>
+                {/* إضافة رابط الاجتماعات */}
+                <li className="nav-item">
+                  <NavLink className="nav-link active text-white" to="meetings">
+                    <i className="fa-solid fa-video me-1"></i> {t('dashboard.meetings')}
+                  </NavLink>
+                </li>
+                 <li className="nav-item">
+                  <NavLink className="nav-link active text-white" to="meetings-manager">
+                    <i className="fa-solid fa-video me-1"></i> {t('dashboard.meetingsManager')}
+                  </NavLink>
                 </li>
               </ul>
             </div>
@@ -107,6 +118,17 @@ export default function Dashboard() {
               <li className="nav-item">
                 <NavLink className="nav-link active text-white" to="trip-list">
                   <i className="fa-solid fa-route me-1"></i> <span>{t('dashboard.tripList')}</span>
+                </NavLink>
+              </li>
+              {/* إضافة رابط الاجتماعات في الشريط الجانبي */}
+              <li className="nav-item">
+                <NavLink className="nav-link active text-white" to="meetings">
+                  <i className="fa-solid fa-video me-1"></i> {t('dashboard.meetings')}
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link active text-white" to="meetings-manager">
+                  <i className="fa-solid fa-video me-1"></i> {t('dashboard.meetingsManager')}
                 </NavLink>
               </li>
             </ul>
