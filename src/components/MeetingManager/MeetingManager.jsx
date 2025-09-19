@@ -680,18 +680,16 @@ import * as XLSX from 'xlsx';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
-// A simple spinner component, assuming it exists elsewhere.
-const Spinner = () => <div className="tw-animate-spin tw-rounded-full tw-h-5 tw-w-5 tw-border-t-2 tw-border-b-2 tw-border-white"></div>;
+import Spinner from '../Spinner/Spinner';
 
 const darkModeContext = createContext({
   darkMode: false,
 });
 
 const FullPageSpinner = () => (
-  <div className="tw-flex tw-justify-center tw-items-center tw-min-h-[80vh]">
-    <div className="tw-animate-spin tw-rounded-full tw-h-16 tw-w-16 tw-border-t-4 tw-border-b-4 tw-border-blue-500"></div>
-  </div>
+    <div className="tw-flex tw-justify-center tw-items-center tw-min-h-[80vh]">
+        <Spinner />
+    </div>
 );
 
 const MeetingsManager = () => {
