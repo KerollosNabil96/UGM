@@ -1,10 +1,10 @@
 // import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 // import { motion } from 'framer-motion';
-// import { FaEye, FaQrcode, FaUsers, FaCalendarAlt, FaArrowLeft, FaCheckCircle, FaTimesCircle, FaSearch, FaSortAmountDown, FaSortAmountUpAlt } from 'react-icons/fa';
+// import { FaEye, FaQrcode, FaUsers, FaCalendarAlt, FaArrowLeft, FaCheckCircle, FaTimesCircle, FaSearch, FaSortAmountDown, FaSortAmountUpAlt, FaFileExcel } from 'react-icons/fa';
+// import * as XLSX from 'xlsx'; // Import the xlsx library
 // import { Html5QrcodeScanner } from 'html5-qrcode';
-// import Spinner from '../Spinner/Spinner'; // استيراد مكون Spinner المخصص
+// import Spinner from '../Spinner/Spinner';
 
-// // Mock context to make the code self-contained.
 // const darkModeContext = createContext({
 //   darkMode: false,
 // });
@@ -12,7 +12,7 @@
 // // A spinner for loading the entire page/view
 // const FullPageSpinner = () => (
 //   <div className="tw-flex tw-justify-center tw-items-center tw-min-h-[80vh]">
-//     <Spinner /> {/* استخدام Spinner المخصص */}
+//     <Spinner />
 //   </div>
 // );
 
@@ -23,46 +23,28 @@
 //   const [attendanceData, setAttendanceData] = useState([]);
 //   const [filteredAttendance, setFilteredAttendance] = useState([]);
 //   const [showScanner, setShowScanner] = useState(false);
-
-//   // 1. State for the initial page load
 //   const [loading, setLoading] = useState(true);
-  
-//   // 2. State for the "View" button spinner (stores the loading meeting's ID)
 //   const [viewLoading, setViewLoading] = useState(null);
-  
-//   // State for the attendance list view loading
 //   const [attendanceLoading, setAttendanceLoading] = useState(false);
-
 //   const [scanResult, setScanResult] = useState('');
 //   const [scanError, setScanError] = useState('');
 //   const [scanSuccessData, setScanSuccessData] = useState(null);
 //   const scannerRef = useRef(null);
-  
-//   // Search and filter states for meetings list
 //   const [meetingSearchTerm, setMeetingSearchTerm] = useState('');
-//   const [sortOrder, setSortOrder] = useState('newest'); // 'newest' or 'oldest'
-  
-//   // Search and filter states for attendance
+//   const [sortOrder, setSortOrder] = useState('newest');
 //   const [searchTerm, setSearchTerm] = useState('');
 //   const [massFilter, setMassFilter] = useState('all');
 //   const [statusFilter, setStatusFilter] = useState('all');
 //   const [confessedFilter, setConfessedFilter] = useState('all');
-  
-//   // Pagination states for Attendance
 //   const [currentPage, setCurrentPage] = useState(1);
 //   const [itemsPerPage] = useState(10);
-  
-//   // --- NEW: Pagination states for Meetings List ---
 //   const [meetingsCurrentPage, setMeetingsCurrentPage] = useState(1);
-//   const [meetingsPerPage] = useState(6); // Set to 6 meetings per page
+//   const [meetingsPerPage] = useState(6);
 
-//   // --- NEW: Reset meetings page when search/sort changes ---
 //   useEffect(() => {
-//     setMeetingsCurrentPage(1); // Reset to the first page
+//     setMeetingsCurrentPage(1);
 //   }, [meetingSearchTerm, sortOrder]);
 
-
-//   // Helper function to get the token and add the header
 //   const getAuthHeaders = () => {
 //     const token = localStorage.getItem('token');
 //     return {
@@ -71,26 +53,23 @@
 //     };
 //   };
 
-//   // Fetch all meetings from API on component mount
 //   useEffect(() => {
 //     fetchMeetings();
 //   }, []);
 
-//   // Clean up scanner when component unmounts or scanner closes
 //   useEffect(() => {
 //     return () => {
 //       if (scannerRef.current) {
 //         try {
-//             scannerRef.current.clear();
-//             scannerRef.current = null;
+//           scannerRef.current.clear();
+//           scannerRef.current = null;
 //         } catch(error) {
-//             console.error("Failed to clear scanner on cleanup.", error);
+//           console.error("Failed to clear scanner on cleanup.", error);
 //         }
 //       }
 //     };
 //   }, []);
 
-//   // Apply filters and search for attendance
 //   useEffect(() => {
 //     if (attendanceData.length > 0) {
 //       let filtered = [...attendanceData];
@@ -108,7 +87,6 @@
 //       }
       
 //       if (statusFilter !== 'all') {
-//         // --- FIX: Make status comparison case-insensitive and trim whitespace ---
 //         filtered = filtered.filter(item =>
 //           item.status && item.status.trim().toLowerCase() === statusFilter
 //         );
@@ -121,7 +99,7 @@
 //       }
       
 //       setFilteredAttendance(filtered);
-//       setCurrentPage(1); // Reset to first page when filters change
+//       setCurrentPage(1);
 //     }
 //   }, [attendanceData, searchTerm, massFilter, statusFilter, confessedFilter]);
 
@@ -137,7 +115,6 @@
 //     } catch (error) {
 //       console.error('Error fetching meetings:', error);
 //     } finally {
-//       // Stop the initial loading spinner
 //       setLoading(false);
 //     }
 //   };
@@ -152,7 +129,6 @@
 //       return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
 //     });
 
-//   // --- NEW: Pagination logic for meetings list ---
 //   const indexOfLastMeeting = meetingsCurrentPage * meetingsPerPage;
 //   const indexOfFirstMeeting = indexOfLastMeeting - meetingsPerPage;
 //   const currentMeetings = filteredAndSortedMeetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
@@ -163,17 +139,14 @@
 //   const processScannedData = async (data) => {
 //     try {
 //       const userInfo = JSON.parse(data);
-      
 //       setScanSuccessData({
 //         userName: userInfo.userName,
 //         userId: userInfo.userId,
 //         attendedMass: true,
 //         confessed: false
 //       });
-      
 //       setScanResult(`Scanned: ${userInfo.userName}`);
 //       setScanError('');
-      
 //     } catch (error) {
 //       console.error('Error processing scan:', error);
 //       setScanError('Invalid QR code. Please try again.');
@@ -213,8 +186,8 @@
 //   };
 
 //   const viewAttendance = async (meetingId) => {
-//     setViewLoading(meetingId); // Start loading spinner in the button
-//     setAttendanceLoading(true); // Start loading spinner for the attendance view
+//     setViewLoading(meetingId);
+//     setAttendanceLoading(true);
 //     setSelectedMeeting(meetingId);
     
 //     try {
@@ -233,22 +206,19 @@
 //           status: record.status,
 //           time: record.time ? new Date(record.time) : null
 //         }));
-        
 //         setAttendanceData(formattedAttendance);
 //       } else {
 //         setAttendanceData([]);
 //       }
-
 //     } catch (error) {
 //       console.error('Error fetching attendance:', error);
 //       setAttendanceData([]);
 //     } finally {
-//       setViewLoading(null); // Stop loading spinner in the button
-//       setAttendanceLoading(false); // Stop loading spinner for the attendance view
+//       setViewLoading(null);
+//       setAttendanceLoading(false);
 //     }
 //   };
 
-//   // Pagination logic for Attendance
 //   const indexOfLastItem = currentPage * itemsPerPage;
 //   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 //   const currentItems = filteredAttendance.slice(indexOfFirstItem, indexOfLastItem);
@@ -256,7 +226,6 @@
 
 //   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   
-//   // This is the main check for the initial component load.
 //   if (loading) {
 //     return <FullPageSpinner />;
 //   }
@@ -279,6 +248,8 @@
 //             <AttendanceView
 //               meetingId={selectedMeeting}
 //               attendanceData={currentItems}
+//               // --- MODIFIED: Pass the full filtered list for export ---
+//               fullAttendanceData={filteredAttendance}
 //               meetings={meetings}
 //               onBack={() => { setSelectedMeeting(null); setAttendanceData([]); }}
 //               searchTerm={searchTerm}
@@ -344,20 +315,17 @@
 //           </div>
           
 //           <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6">
-//             {/* --- MODIFIED: Map over currentMeetings --- */}
 //             {currentMeetings.map(meeting => (
 //               <MeetingCard
 //                 key={meeting._id}
 //                 meeting={meeting}
 //                 onScan={() => setShowScanner(meeting._id)}
 //                 onViewAttendance={() => viewAttendance(meeting._id)}
-//                 // Pass the loading state for this specific card
 //                 isLoading={viewLoading === meeting._id}
 //               />
 //             ))}
 //           </div>
           
-//           {/* --- MODIFIED: Use filteredAndSortedMeetings to check if there are any results at all --- */}
 //           {filteredAndSortedMeetings.length === 0 && (
 //             <div className="tw-text-center tw-py-16 tw-rounded-lg tw-bg-white dark:tw-bg-gray-800 tw-mt-6">
 //               <FaCalendarAlt className="tw-mx-auto tw-text-5xl tw-mb-4 tw-text-gray-400 dark:tw-text-gray-500" />
@@ -367,7 +335,6 @@
 //             </div>
 //           )}
 
-//           {/* --- NEW: Pagination controls for meetings list --- */}
 //           {totalMeetingPages > 1 && (
 //             <div className="tw-flex tw-justify-center tw-items-center tw-mt-8 tw-pt-4">
 //               <div className="tw-flex tw-space-x-2">
@@ -404,7 +371,6 @@
 //   );
 // };
 
-// // Meeting Card Component (No Changes)
 // const MeetingCard = ({ meeting, onScan, onViewAttendance, isLoading }) => {
 //   const formattedDate = new Date(meeting.date).toLocaleDateString('en-US', {
 //     year: 'numeric',
@@ -439,7 +405,6 @@
 //           disabled={isLoading}
 //           className="tw-text-gray-800 dark:tw-text-white tw-bg-gray-200 dark:tw-bg-gray-700 hover:tw-bg-gray-300 dark:hover:tw-bg-gray-600 tw-px-4 tw-py-2.5 tw-rounded-lg tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-transition-colors font-semibold disabled:tw-opacity-50"
 //         >
-//           {/* استخدام Spinner المخصص بدلاً من Spinner البسيط */}
 //           {isLoading ? <Spinner /> : <FaEye />}
 //           {isLoading ? 'Loading...' : 'View'}
 //         </motion.button>
@@ -448,9 +413,10 @@
 //   );
 // };
 
-// // Attendance View Component (No Changes)
+// // --- MODIFIED: AttendanceView Component ---
 // const AttendanceView = ({
-//     meetingId, attendanceData, meetings, onBack, searchTerm, setSearchTerm, massFilter, setMassFilter, statusFilter, setStatusFilter, confessedFilter, setConfessedFilter, currentPage, totalPages, paginate, totalItems, itemsPerPage, indexOfFirstItem, indexOfLastItem
+//     // Add `fullAttendanceData` to the props
+//     meetingId, attendanceData, fullAttendanceData, meetings, onBack, searchTerm, setSearchTerm, massFilter, setMassFilter, statusFilter, setStatusFilter, confessedFilter, setConfessedFilter, currentPage, totalPages, paginate, totalItems, itemsPerPage, indexOfFirstItem, indexOfLastItem
 //   }) => {
 //     const meeting = meetings.find(m => m._id === meetingId) || {};
 //     const formattedDate = new Date(meeting.date).toLocaleDateString('en-US', {
@@ -462,6 +428,36 @@
 //       return new Date(time).toLocaleTimeString('en-US', {
 //         hour: '2-digit', minute: '2-digit', hour12: true
 //       });
+//     };
+
+//     // --- NEW: Function to handle the export to Excel ---
+//     const handleExport = () => {
+//         if (!fullAttendanceData || fullAttendanceData.length === 0) {
+//             alert("No data to export.");
+//             return;
+//         }
+
+//         // 1. Format the data to be more human-readable for the Excel file
+//         const dataToExport = fullAttendanceData.map(attendee => ({
+//             "Name": attendee.userName,
+//             "Status": attendee.status,
+//             "Attended Mass": attendee.attendedMass ? 'Yes' : 'No',
+//             "Confessed": attendee.confessed ? 'Yes' : 'No',
+//             "Time": formatTime(attendee.time, attendee.status)
+//         }));
+
+//         // 2. Create a worksheet from the formatted data
+//         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+
+//         // 3. Create a new workbook
+//         const workbook = XLSX.utils.book_new();
+
+//         // 4. Append the worksheet to the workbook with a name
+//         XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
+
+//         // 5. Create a dynamic file name and trigger the download
+//         const fileName = `${meeting.title.replace(/[^a-zA-Z0-9]/g, '_')}_Attendance.xlsx`;
+//         XLSX.writeFile(workbook, fileName);
 //     };
   
 //     return (
@@ -476,12 +472,22 @@
 //             <h2 className="tw-text-2xl tw-font-bold tw-text-gray-800 dark:tw-text-white">{meeting.title}</h2>
 //             <p className="tw-mt-1 tw-text-gray-600 dark:tw-text-gray-400">{formattedDate}</p>
 //           </div>
-//           <button
-//             onClick={onBack}
-//             className="tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-gap-2 tw-transition-colors tw-bg-gray-100 hover:tw-bg-gray-200 tw-text-gray-700 dark:tw-bg-gray-700 dark:hover:tw-bg-gray-600 dark:tw-text-white"
-//           >
-//             <FaArrowLeft /> Back
-//           </button>
+//           {/* --- MODIFIED: Added a container for buttons --- */}
+//           <div className="tw-flex tw-gap-3">
+//              {/* --- NEW: The Export button --- */}
+//              <button
+//                 onClick={handleExport}
+//                 className="tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-gap-2 tw-transition-colors tw-bg-green-500 hover:tw-bg-green-600 tw-text-white font-semibold"
+//                 >
+//                 <FaFileExcel /> Export
+//             </button>
+//             <button
+//               onClick={onBack}
+//               className="tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-gap-2 tw-transition-colors tw-bg-gray-100 hover:tw-bg-gray-200 tw-text-gray-700 dark:tw-bg-gray-700 dark:hover:tw-bg-gray-600 dark:tw-text-white"
+//             >
+//               <FaArrowLeft /> Back
+//             </button>
+//           </div>
 //         </div>
         
 //         <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-4 tw-mb-6 tw-flex-shrink-0">
@@ -656,23 +662,35 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { motion } from 'framer-motion';
-// --- NEW: Import the Excel icon and the library ---
-import { FaEye, FaQrcode, FaUsers, FaCalendarAlt, FaArrowLeft, FaCheckCircle, FaTimesCircle, FaSearch, FaSortAmountDown, FaSortAmountUpAlt, FaFileExcel } from 'react-icons/fa';
-import * as XLSX from 'xlsx'; // Import the xlsx library
+import { FaEye, FaQrcode, FaUsers, FaCalendarAlt, FaArrowLeft, FaCheckCircle, FaTimesCircle, FaSearch, FaSortAmountDown, FaSortAmountUpAlt, FaFileExcel, FaWallet } from 'react-icons/fa';
+import * as XLSX from 'xlsx';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import Spinner from '../Spinner/Spinner';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
-// Mock context to make the code self-contained.
+// A simple spinner component, assuming it exists elsewhere.
+const Spinner = () => <div className="tw-animate-spin tw-rounded-full tw-h-5 tw-w-5 tw-border-t-2 tw-border-b-2 tw-border-white"></div>;
+
 const darkModeContext = createContext({
   darkMode: false,
 });
 
-// A spinner for loading the entire page/view
 const FullPageSpinner = () => (
   <div className="tw-flex tw-justify-center tw-items-center tw-min-h-[80vh]">
-    <Spinner />
+    <div className="tw-animate-spin tw-rounded-full tw-h-16 tw-w-16 tw-border-t-4 tw-border-b-4 tw-border-blue-500"></div>
   </div>
 );
 
@@ -689,6 +707,10 @@ const MeetingsManager = () => {
   const [scanResult, setScanResult] = useState('');
   const [scanError, setScanError] = useState('');
   const [scanSuccessData, setScanSuccessData] = useState(null);
+  const [showDeductModal, setShowDeductModal] = useState(false);
+  const [deductAmount, setDeductAmount] = useState('');
+  const [deductDescription, setDeductDescription] = useState('');
+  const [processingDeduction, setProcessingDeduction] = useState(false);
   const scannerRef = useRef(null);
   const [meetingSearchTerm, setMeetingSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
@@ -718,13 +740,14 @@ const MeetingsManager = () => {
   }, []);
 
   useEffect(() => {
+    // This cleanup effect handles the scanner when the main component unmounts.
     return () => {
       if (scannerRef.current) {
         try {
           scannerRef.current.clear();
           scannerRef.current = null;
         } catch(error) {
-          console.error("Failed to clear scanner on cleanup.", error);
+          console.error("Failed to clear scanner on main component cleanup.", error);
         }
       }
     };
@@ -779,6 +802,46 @@ const MeetingsManager = () => {
     }
   };
 
+  const handleDeductFromWallet = async () => {
+    if (!scanSuccessData || !deductAmount || isNaN(deductAmount) || parseFloat(deductAmount) <= 0) {
+      toast.error('Please enter a valid amount to deduct.');
+      return;
+    }
+
+    setProcessingDeduction(true);
+    const token = localStorage.getItem('token');
+
+    try {
+      await axios.put(
+        `https://ugmproject.vercel.app/api/v1/user/updateWallet/${scanSuccessData.userId}`,
+        {
+          amount: parseFloat(deductAmount),
+          operation: 'remove',
+          description: deductDescription || 'Deduction after meeting attendance',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success('Amount deducted from wallet successfully.');
+      setDeductAmount('');
+      setDeductDescription('');
+      setShowDeductModal(false);
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.err ||
+        'Deduction failed.';
+      toast.error(errorMessage);
+      console.error(error);
+    } finally {
+      setProcessingDeduction(false);
+    }
+  };
+
   const filteredAndSortedMeetings = meetings
     .filter(meeting =>
       meeting.title.toLowerCase().includes(meetingSearchTerm.toLowerCase())
@@ -815,6 +878,7 @@ const MeetingsManager = () => {
 
   const confirmAttendance = async (attendedMass, confessed) => {
     try {
+      // Note: 'showScanner' holds the meetingId when the scanner is active
       const response = await fetch(`https://ugmproject.vercel.app/api/v1/attendanceMeeting/markAttendance/${showScanner}`, {
         method: 'PATCH',
         headers: getAuthHeaders(),
@@ -827,21 +891,23 @@ const MeetingsManager = () => {
       });
 
       if (response.ok) {
+        toast.success('Attendance confirmed successfully!');
         setScanSuccessData(null);
         setScanResult('');
-        setTimeout(() => {
-          setShowScanner(false);
-          if (scannerRef.current) {
-            scannerRef.current.clear();
-            scannerRef.current = null;
-          }
-        }, 1000);
+        // Directly set showScanner to false. The QRScanner component's cleanup
+        // effect will handle clearing the scanner instance gracefully.
+        setShowScanner(false);
       } else {
-        setScanError('Failed to mark attendance. Please try again.');
+        const errorData = await response.json();
+        const errorMessage = errorData.message || 'Failed to mark attendance. Please try again.';
+        setScanError(errorMessage);
+        toast.error(errorMessage);
       }
     } catch (error) {
       console.error('Error confirming attendance:', error);
-      setScanError('Error confirming attendance. Please try again.');
+      const errorMessage = 'An error occurred while confirming attendance.';
+      setScanError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
@@ -908,7 +974,6 @@ const MeetingsManager = () => {
             <AttendanceView
               meetingId={selectedMeeting}
               attendanceData={currentItems}
-              // --- MODIFIED: Pass the full filtered list for export ---
               fullAttendanceData={filteredAttendance}
               meetings={meetings}
               onBack={() => { setSelectedMeeting(null); setAttendanceData([]); }}
@@ -933,14 +998,11 @@ const MeetingsManager = () => {
         <QRScanner
           onScan={processScannedData}
           onClose={() => {
+            // Let the component's own cleanup handle .clear()
             setShowScanner(false);
             setScanResult('');
             setScanError('');
             setScanSuccessData(null);
-            if (scannerRef.current) {
-              scannerRef.current.clear();
-              scannerRef.current = null;
-            }
           }}
           scanResult={scanResult}
           scanError={scanError}
@@ -948,6 +1010,7 @@ const MeetingsManager = () => {
           scanSuccessData={scanSuccessData}
           onConfirm={confirmAttendance}
           setScanSuccessData={setScanSuccessData}
+          onDeduct={() => setShowDeductModal(true)}
         />
       ) : (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -1027,6 +1090,64 @@ const MeetingsManager = () => {
 
         </motion.div>
       )}
+
+      {/* Deduct from Wallet Modal */}
+      {showDeductModal && scanSuccessData && (
+        <div
+          onClick={() => setShowDeductModal(false)}
+          className="tw-fixed tw-inset-0 tw-flex tw-justify-center tw-items-center tw-z-[9999] tw-bg-black/60"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-md tw-mx-4"
+          >
+            <h4 className="tw-mb-4 tw-font-semibold tw-text-lg">
+              <FaWallet className="tw-text-blue-500 dark:tw-text-indigo-400 tw-inline tw-mr-2" />
+              Deduct from {scanSuccessData.userName}'s Wallet
+            </h4>
+            <div className="tw-mb-4">
+              <label className="tw-block tw-mb-1">Amount</label>
+              <input
+                type="number"
+                value={deductAmount}
+                onChange={(e) => setDeductAmount(e.target.value)}
+                className="tw-w-full tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-3 tw-py-2"
+              />
+            </div>
+            <div className="tw-mb-4">
+              <label className="tw-block tw-mb-1">Description (Optional)</label>
+              <input
+                type="text"
+                value={deductDescription}
+                onChange={(e) => setDeductDescription(e.target.value)}
+                className="tw-w-full tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-3 tw-py-2"
+              />
+            </div>
+            <div className="tw-flex tw-justify-end tw-gap-2">
+              <button
+                onClick={() => setShowDeductModal(false)}
+                className="tw-border tw-border-gray-400 tw-text-gray-600 dark:tw-text-gray-300 tw-rounded-md tw-px-4 tw-py-2 hover:tw-bg-gray-200 dark:hover:tw-bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeductFromWallet}
+                disabled={processingDeduction}
+                className="tw-text-white tw-rounded-md tw-px-4 tw-py-2 tw-flex tw-items-center tw-justify-center tw-min-w-[140px] bg-main hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700 disabled:tw-opacity-50"
+              >
+                {processingDeduction ? (
+                  <>
+                    <span className="tw-animate-spin tw-rounded-full tw-h-4 tw-w-4 tw-border-t-2 tw-border-b-2 tw-border-white tw-mr-2"></span>
+                    Processing...
+                  </>
+                ) : (
+                  'Confirm Deduction'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -1073,9 +1194,7 @@ const MeetingCard = ({ meeting, onScan, onViewAttendance, isLoading }) => {
   );
 };
 
-// --- MODIFIED: AttendanceView Component ---
 const AttendanceView = ({
-    // Add `fullAttendanceData` to the props
     meetingId, attendanceData, fullAttendanceData, meetings, onBack, searchTerm, setSearchTerm, massFilter, setMassFilter, statusFilter, setStatusFilter, confessedFilter, setConfessedFilter, currentPage, totalPages, paginate, totalItems, itemsPerPage, indexOfFirstItem, indexOfLastItem
   }) => {
     const meeting = meetings.find(m => m._id === meetingId) || {};
@@ -1090,14 +1209,12 @@ const AttendanceView = ({
       });
     };
 
-    // --- NEW: Function to handle the export to Excel ---
     const handleExport = () => {
         if (!fullAttendanceData || fullAttendanceData.length === 0) {
-            alert("No data to export.");
+            toast.error("No data available to export.");
             return;
         }
 
-        // 1. Format the data to be more human-readable for the Excel file
         const dataToExport = fullAttendanceData.map(attendee => ({
             "Name": attendee.userName,
             "Status": attendee.status,
@@ -1106,16 +1223,9 @@ const AttendanceView = ({
             "Time": formatTime(attendee.time, attendee.status)
         }));
 
-        // 2. Create a worksheet from the formatted data
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-
-        // 3. Create a new workbook
         const workbook = XLSX.utils.book_new();
-
-        // 4. Append the worksheet to the workbook with a name
         XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
-
-        // 5. Create a dynamic file name and trigger the download
         const fileName = `${meeting.title.replace(/[^a-zA-Z0-9]/g, '_')}_Attendance.xlsx`;
         XLSX.writeFile(workbook, fileName);
     };
@@ -1132,9 +1242,7 @@ const AttendanceView = ({
             <h2 className="tw-text-2xl tw-font-bold tw-text-gray-800 dark:tw-text-white">{meeting.title}</h2>
             <p className="tw-mt-1 tw-text-gray-600 dark:tw-text-gray-400">{formattedDate}</p>
           </div>
-          {/* --- MODIFIED: Added a container for buttons --- */}
           <div className="tw-flex tw-gap-3">
-             {/* --- NEW: The Export button --- */}
              <button
                 onClick={handleExport}
                 className="tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-gap-2 tw-transition-colors tw-bg-green-500 hover:tw-bg-green-600 tw-text-white font-semibold"
@@ -1260,25 +1368,40 @@ const AttendanceView = ({
     );
   };
   
-  // QRScanner Component (No Changes)
-  const QRScanner = ({ onScan, onClose, scanResult, scanError, scannerRef, scanSuccessData, onConfirm, setScanSuccessData }) => {
+  const QRScanner = ({ onScan, onClose, scanResult, scanError, scannerRef, scanSuccessData, onConfirm, setScanSuccessData, onDeduct }) => {
     useEffect(() => {
-      if (!scanSuccessData) {
-        if (scannerRef.current && scannerRef.current.isScanning) { return; }
-        const scanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: { width: 250, height: 250 }, supportedScanTypes: [] }, false);
-        scanner.render((decodedText) => { scanner.pause(); onScan(decodedText); }, (error) => {});
+        // This effect initializes the scanner and sets up a cleanup function.
+        // It runs only once on mount, thanks to the empty dependency array [].
+        const scanner = new Html5QrcodeScanner(
+            "qr-reader", 
+            { fps: 10, qrbox: { width: 250, height: 250 }, supportedScanTypes: [] }, 
+            /* verbose= */ false
+        );
+
+        const handleScanSuccess = (decodedText) => {
+            scanner.pause();
+            onScan(decodedText);
+        };
+
+        scanner.render(handleScanSuccess, (error) => { /* Optional: handle scan error */ });
         scannerRef.current = scanner;
-      }
-      return () => {
-        if (scannerRef.current) {
-          scannerRef.current.clear().catch(error => { console.error("Failed to clear html5-qrcode-scanner.", error); });
-        }
-      };
-    }, [onScan, scanSuccessData]);
+
+        return () => {
+            // This cleanup function is crucial. It's called when the component unmounts.
+            if (scannerRef.current) {
+                scannerRef.current.clear().catch(error => {
+                    console.error("Failed to clear html5-qrcode-scanner.", error);
+                });
+                scannerRef.current = null;
+            }
+        };
+    }, []); // Empty dependency array ensures this runs only once.
   
     const handleCancel = () => {
       setScanSuccessData(null);
-      if(scannerRef.current) { scannerRef.current.resume(); }
+      if(scannerRef.current) { 
+        scannerRef.current.resume().catch(err => console.error("Failed to resume scanner.", err));
+      }
     }
   
     return (
@@ -1304,13 +1427,21 @@ const AttendanceView = ({
                   <label className="tw-flex tw-items-center tw-text-gray-700 dark:tw-text-gray-300"><input type="checkbox" checked={scanSuccessData.confessed} onChange={(e) => setScanSuccessData({ ...scanSuccessData, confessed: e.target.checked })} className="tw-mr-2 tw-h-4 tw-w-4 tw-rounded tw-border-gray-300 tw-text-indigo-600 focus:tw-ring-indigo-500" />Confessed</label>
                 </div>
               </div>
-              <div className="tw-flex tw-gap-2">
-                <button onClick={() => onConfirm(scanSuccessData.attendedMass, scanSuccessData.confessed)} className="tw-flex-1 tw-text-white tw-px-4 tw-py-2 tw-rounded-lg tw-transition-colors bg-main hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700">Confirm Attendance</button>
-                <button onClick={handleCancel} className="tw-flex-1 tw-text-gray-800 dark:tw-text-white tw-bg-gray-200 hover:tw-bg-gray-300 dark:tw-bg-gray-600 dark:hover:tw-bg-gray-700 tw-px-4 tw-py-2 tw-rounded-lg tw-transition-colors">Scan Again</button>
+              <div className="tw-flex tw-flex-col tw-gap-2">
+                <div className="tw-flex tw-gap-2">
+                  <button onClick={() => onConfirm(scanSuccessData.attendedMass, scanSuccessData.confessed)} className="tw-flex-1 tw-text-white tw-px-4 tw-py-2 tw-rounded-lg tw-transition-colors bg-main hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700">Confirm Attendance</button>
+                  <button onClick={handleCancel} className="tw-flex-1 tw-text-gray-800 dark:tw-text-white tw-bg-gray-200 hover:tw-bg-gray-300 dark:tw-bg-gray-600 dark:hover:tw-bg-gray-700 tw-px-4 tw-py-2 tw-rounded-lg tw-transition-colors">Scan Again</button>
+                </div>
+                <button 
+                  onClick={onDeduct}
+                  className="tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-white tw-px-4 tw-py-2 tw-rounded-lg tw-transition-colors bg-main hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700"
+                >
+                  <FaWallet /> Deduct from Wallet
+                </button>
               </div>
             </div>
           )}
-          <button onClick={onClose} className="tw-w-full tw-text-white tw-px-4 tw-py-2.5 tw-rounded-lg tw-transition-colors tw-bg-red-500 hover:tw-bg-red-600 dark:tw-bg-red-600 dark:hover:tw-bg-red-700 mt-4">Close Scanner</button>
+          <button onClick={onClose} className="tw-w-full tw-text-white tw-px-4 tw-py-2.5 tw-rounded-lg tw-transition-colors tw-bg-gray-500 hover:tw-bg-gray-600 dark:tw-bg-gray-600 dark:hover:tw-bg-gray-700 mt-4">Close Scanner</button>
         </motion.div>
       </motion.div>
     );
