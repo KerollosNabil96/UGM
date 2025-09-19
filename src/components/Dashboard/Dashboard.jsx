@@ -123,12 +123,13 @@ export default function Dashboard() {
               {/* إضافة رابط الاجتماعات في الشريط الجانبي */}
               <li className="nav-item">
                 <NavLink className="nav-link active text-white" to="meetings">
-                  <i className="fa-solid fa-video me-1"></i> {t('dashboard.meetings')}
+                <i className="fa-solid fa-calendar-days me-1"></i>{t('dashboard.meetings')}
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link active text-white" to="meetings-manager">
-                  <i className="fa-solid fa-video me-1"></i> {t('dashboard.meetingsManager')}
+                  <i className="fa-solid fa-clipboard-check me-1"></i>
+ {t('dashboard.meetingsManager')}
                 </NavLink>
               </li>
             </ul>
