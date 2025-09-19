@@ -14,7 +14,10 @@ const Meetings = () => {
       .max(100, 'Meeting title is too long (max 100 characters)')
       .required('Meeting title is required'),
     date: Yup.date()
-      .min(new Date(), 'You cannot choose a past date')
+      .min(
+        new Date(new Date().setHours(0, 0, 0, 0)), 
+        'You cannot choose a past date'
+      )
       .required('Meeting date is required'),
   });
 
@@ -38,8 +41,7 @@ const Meetings = () => {
 
         if (response.ok) {
           toast.success('Meeting created successfully!');
-          resetForm();
-          setTimeout(() => window.location.reload(), 1500);
+          resetForm(); // إعادة تعيين النموذج فقط دون إعادة تحميل الصفحة
         } else {
           const errorData = await response.json();
           toast.error(errorData.message || 'Failed to create meeting');
