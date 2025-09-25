@@ -124,10 +124,8 @@ export default function BirthdayList() {
   const formatPhoneNumber = (phone) => {
     if (!phone) return 'No phone number';
     
-    // تنظيف الرقم
     const cleanPhone = phone.replace(/\D/g, '');
     
-    // تنسيق الرقم للعرض مع كود مصر
     if (cleanPhone.startsWith('0') && cleanPhone.length === 11) {
       return `+20 ${cleanPhone.substring(1, 4)} ${cleanPhone.substring(4, 7)} ${cleanPhone.substring(7)}`;
     } else if (cleanPhone.startsWith('20') && cleanPhone.length === 12) {
@@ -139,48 +137,37 @@ export default function BirthdayList() {
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
   };
 
-  // دالة فتح محادثة واتساب - معدلة ومحسنة
   const openWhatsApp = (phoneNumber, userName) => {
     if (!phoneNumber) {
       alert('No phone number available for this user');
       return;
     }
 
-    // تنظيف رقم الهاتف من أي رموز غير رقمية
     const cleanPhone = phoneNumber.replace(/\D/g, '');
     
-    // إضافة كود مصر (+20) إذا كان الرقم يبدأ بـ 0 أو 1 ولم يكن به كود دولة
     let formattedPhone = cleanPhone;
     
     if (cleanPhone.startsWith('0')) {
-      // إذا بدأ بـ 0، نزيل الـ 0 ونضيف 20
       formattedPhone = '20' + cleanPhone.substring(1);
     } else if (cleanPhone.startsWith('1') && cleanPhone.length === 11) {
-      // إذا بدأ بـ 1 وطوله 11 رقم (مثل 01211772068) نضيف 20
       formattedPhone = '20' + cleanPhone;
     } else if (!cleanPhone.startsWith('20') && cleanPhone.length === 10) {
-      // إذا كان طوله 10 أرقام بدون كود دولة
       formattedPhone = '20' + cleanPhone;
     }
     
-    // التأكد من أن الرقم يبدأ بـ 20 (كود مصر) وليس به رموز غير رقمية
     if (!formattedPhone.startsWith('20')) {
       formattedPhone = '20' + formattedPhone;
     }
     
-    // تنظيف نهائي من أي رموز غير رقمية
     formattedPhone = formattedPhone.replace(/\D/g, '');
 
-    // التأكد من أن الرقم يبدأ بـ 20 وليس له أصفار زائدة
     if (formattedPhone.startsWith('200')) {
       formattedPhone = '20' + formattedPhone.substring(3);
     }
 
-    // رسالة تهنئة مخصصة
-const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! 💖
+    const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! 💖
 ربنا يفرّح قلبك وعقبال 100 سنة 🥳🎂🎁`;
     
-    // إنشاء رابط واتساب
     const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
     
     console.log('Original phone:', phoneNumber);
@@ -188,7 +175,6 @@ const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! �
     console.log('Formatted phone:', formattedPhone);
     console.log('WhatsApp URL:', whatsappUrl);
     
-    // فتح الرابط في نافذة جديدة
     window.open(whatsappUrl, '_blank');
   };
 
@@ -216,7 +202,7 @@ const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! �
 
   if (loading) {
     return (
-      <div className={`tw-flex tw-items-center tw-justify-center tw-p-4 ${darkMode ? 'tw-bg-gray-900' : 'tw-bg-gradient-to-br tw-from-purple-50 tw-to-blue-50'}`} style={{ height: '80vh' }}>
+      <div className={`tw-flex tw-items-center tw-justify-center tw-p-4 ${darkMode ? 'tw-bg-gray-900' : 'tw-bg-gradient-to-br tw-from-purple-50 tw-to-blue-50'}`} style={{ minHeight: '80vh' }}>
         <Spinner />
       </div>
     );
@@ -246,7 +232,7 @@ const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! �
   }
 
   return (
-    <div className={`tw-p-4 md:tw-p-8 ${darkMode ? 'tw-bg-gray-900' : 'tw-bg-gradient-to-br tw-from-purple-50 tw-to-blue-50'}`} style={{ height: '80vh', maxHeight: '80vh', overflow: 'hidden' }}>
+    <div className={`tw-p-4 md:tw-p-8 ${darkMode ? 'tw-bg-gray-900' : 'tw-bg-gradient-to-br tw-from-purple-50 tw-to-blue-50'}`} style={{ minHeight: '80vh' }}>
       <div className="tw-max-w-6xl tw-mx-auto tw-h-full tw-flex tw-flex-col">
         {/* Header */}
         <motion.div
@@ -284,8 +270,8 @@ const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! �
           </div>
         </motion.div>
 
-        {/* Content Area with Fixed Height */}
-        <div className="tw-flex-1 tw-overflow-hidden">
+        {/* Content Area */}
+        <div className="tw-flex-1">
           <AnimatePresence mode="wait">
             {birthdays.length === 0 ? (
               <motion.div
@@ -320,7 +306,7 @@ const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! �
                 className="tw-h-full tw-flex tw-flex-col"
               >
                 {/* Birthday Cards Grid */}
-                <div className="tw-grid tw-gap-4 md:tw-gap-6 md:tw-grid-cols-2 lg:tw-grid-cols-3  tw-overflow-y-auto tw-pb-4">
+                <div className="tw-grid tw-gap-4 md:tw-gap-6 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-pb-4">
                   {currentBirthdays.map((user, index) => (
                     <motion.div
                       key={user._id || user.id || index}
