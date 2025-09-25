@@ -177,7 +177,8 @@ export default function BirthdayList() {
     }
 
     // رسالة تهنئة مخصصة
-    const message = `🎉 Happy Birthday ${userName}! 🎂\n\nWishing you a wonderful day filled with joy and happiness! May all your dreams come true! 🥳`;
+const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! 💖
+ربنا يفرّح قلبك وعقبال 100 سنة 🥳🎂🎁`;
     
     // إنشاء رابط واتساب
     const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
