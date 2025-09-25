@@ -123,34 +123,69 @@ export default function BirthdayList() {
 
   const formatPhoneNumber = (phone) => {
     if (!phone) return 'No phone number';
+    
+    // تنظيف الرقم
+    const cleanPhone = phone.replace(/\D/g, '');
+    
+    // تنسيق الرقم للعرض مع كود مصر
+    if (cleanPhone.startsWith('0') && cleanPhone.length === 11) {
+      return `+20 ${cleanPhone.substring(1, 4)} ${cleanPhone.substring(4, 7)} ${cleanPhone.substring(7)}`;
+    } else if (cleanPhone.startsWith('20') && cleanPhone.length === 12) {
+      return `+${cleanPhone.substring(0, 2)} ${cleanPhone.substring(2, 5)} ${cleanPhone.substring(5, 8)} ${cleanPhone.substring(8)}`;
+    } else if (cleanPhone.length === 10) {
+      return `+20 ${cleanPhone.substring(0, 3)} ${cleanPhone.substring(3, 6)} ${cleanPhone.substring(6)}`;
+    }
+    
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
   };
 
-  // دالة فتح محادثة واتساب
+  // دالة فتح محادثة واتساب - معدلة ومحسنة
   const openWhatsApp = (phoneNumber, userName) => {
     if (!phoneNumber) {
       alert('No phone number available for this user');
       return;
     }
 
-    // 1. تنظيف الرقم من أي رموز غير رقمية
-    let cleanPhone = phoneNumber.replace(/\D/g, '');
+    // تنظيف رقم الهاتف من أي رموز غير رقمية
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
     
-    // 2. التحقق من الرقم وإضافة كود الدولة لمصر
-    // إذا كان الرقم يبدأ بـ "0", يتم إزالته وإضافة "20"
+    // إضافة كود مصر (+20) إذا كان الرقم يبدأ بـ 0 أو 1 ولم يكن به كود دولة
+    let formattedPhone = cleanPhone;
+    
     if (cleanPhone.startsWith('0')) {
-      cleanPhone = `20${cleanPhone.slice(1)}`;
-    } 
-    // التأكد من أن الرقم لا يبدأ بالفعل بكود الدولة قبل إضافته
-    else if (!cleanPhone.startsWith('20')) {
-      cleanPhone = `20${cleanPhone}`;
+      // إذا بدأ بـ 0، نزيل الـ 0 ونضيف 20
+      formattedPhone = '20' + cleanPhone.substring(1);
+    } else if (cleanPhone.startsWith('1') && cleanPhone.length === 11) {
+      // إذا بدأ بـ 1 وطوله 11 رقم (مثل 01211772068) نضيف 20
+      formattedPhone = '20' + cleanPhone;
+    } else if (!cleanPhone.startsWith('20') && cleanPhone.length === 10) {
+      // إذا كان طوله 10 أرقام بدون كود دولة
+      formattedPhone = '20' + cleanPhone;
+    }
+    
+    // التأكد من أن الرقم يبدأ بـ 20 (كود مصر) وليس به رموز غير رقمية
+    if (!formattedPhone.startsWith('20')) {
+      formattedPhone = '20' + formattedPhone;
+    }
+    
+    // تنظيف نهائي من أي رموز غير رقمية
+    formattedPhone = formattedPhone.replace(/\D/g, '');
+
+    // التأكد من أن الرقم يبدأ بـ 20 وليس له أصفار زائدة
+    if (formattedPhone.startsWith('200')) {
+      formattedPhone = '20' + formattedPhone.substring(3);
     }
 
     // رسالة تهنئة مخصصة
     const message = `🎉 Happy Birthday ${userName}! 🎂\n\nWishing you a wonderful day filled with joy and happiness! May all your dreams come true! 🥳`;
     
     // إنشاء رابط واتساب
-    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+    
+    console.log('Original phone:', phoneNumber);
+    console.log('Cleaned phone:', cleanPhone);
+    console.log('Formatted phone:', formattedPhone);
+    console.log('WhatsApp URL:', whatsappUrl);
     
     // فتح الرابط في نافذة جديدة
     window.open(whatsappUrl, '_blank');

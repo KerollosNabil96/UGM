@@ -67,6 +67,11 @@ export default function Dashboard() {
                     <i className="fa-solid fa-video me-1"></i> {t('dashboard.meetingsManager')}
                   </NavLink>
                 </li>
+                 <li className="nav-item">
+                  <NavLink className="nav-link active text-white" to="birthday-list">
+                    <i className="fa-solid fa-video me-1"></i> {t('dashboard.birthdayDays')}
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </div>
