@@ -661,8 +661,6 @@
 
 
 
-
-
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -701,7 +699,12 @@ export default function EventBooking() {
 
   const token = localStorage.getItem('token');
   const Id = localStorage.getItem('Id');
-  const userName = localStorage.getItem('userName');
+  
+  // الحقول الجديدة المطلوبة بدلاً من userName
+  const firstName = localStorage.getItem('firstName') || '';
+  const secName = localStorage.getItem('secName') || '';
+  const familyName = localStorage.getItem('familyName') || '';
+  const birthDate = localStorage.getItem('birthDate') || '';
 
   const displayFileName = (name) => {
     if (name.length > 24) {
@@ -811,8 +814,12 @@ export default function EventBooking() {
       const bookingData = {
         eventId: event._id,
         eventName: event.eventName,
-        totalAmount: price.toString(), // Changed from price to totalAmount
-        userName,
+        totalAmount: price.toString(),
+        // استخدام الحقول الجديدة بدلاً من userName
+        firstName,
+        secName,
+        familyName,
+        birthDate
       };
 
       const response = await axios.post(
@@ -870,14 +877,19 @@ export default function EventBooking() {
       const formData = new FormData();
       formData.append('eventId', event._id);
       formData.append('userId', Id);
-      formData.append('userName', userName);
       formData.append('eventName', event.eventName);
-      formData.append('totalAmount', event.price); // Changed from price to totalAmount
+      formData.append('totalAmount', event.price);
       formData.append('paymentMethod', 'proof');
       formData.append('responsiblePerson', responsible);
       formData.append('adminId', selectedAdmin._id);
       formData.append('status', 'pending');
       formData.append('screenshot', screenshot);
+      
+      // إضافة الحقول الجديدة المطلوبة
+      formData.append('firstName', firstName);
+      formData.append('secName', secName);
+      formData.append('familyName', familyName);
+      formData.append('birthDate', birthDate);
 
       const response = await axios.post(
         'https://ugmproject.vercel.app/api/v1/booking/bookingByProof',
@@ -1029,8 +1041,15 @@ export default function EventBooking() {
               <FaUser className="tw-text-blue-600 dark:tw-text-blue-300" />
             </div>
             <div>
-              <h3 className="tw-font-medium tw-text-gray-800 dark:tw-text-gray-200">{userName}</h3>
+              <h3 className="tw-font-medium tw-text-gray-800 dark:tw-text-gray-200">
+                {firstName} {secName} {familyName}
+              </h3>
               <p className="tw-text-sm tw-text-gray-600 dark:tw-text-gray-100">ID: {Id}</p>
+              {birthDate && (
+                <p className="tw-text-sm tw-text-gray-600 dark:tw-text-gray-100">
+                  {t('eventBooking.birthDate')}: {birthDate}
+                </p>
+              )}
             </div>
           </div>
 
@@ -1250,11 +1269,12 @@ export default function EventBooking() {
                       <div className="tw-p-4 tw-bg-gray-50 dark:tw-bg-gray-700 tw-rounded-lg">
                         <h4 className="tw-font-medium tw-mb-2 dark:tw-text-white">{t('eventBooking.yourInformation')}</h4>
                         <p className="tw-text-sm dark:tw-text-white">
-                          <span className="tw-font-medium dark:tw-text-white">ID:</span>  {Id}
+                          <span className="tw-font-medium dark:tw-text-white">ID:</span> {Id}
                         </p>
                         <p className="tw-text-sm dark:tw-text-white">
-                          <span className="tw-font-medium dark:tw-text-white">{t('eventBooking.name')}:</span> {userName}
+                          <span className="tw-font-medium dark:tw-text-white">{t('eventBooking.name')}:</span>{firstName} {secName} {familyName}
                         </p>
+                      
                       </div>
                     </div>
                   </div>
