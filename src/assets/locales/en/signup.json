@@ -42,6 +42,15 @@
         "invalid": "Invalid phone number"
       }
     },
+    "birthDate": {
+      "label": "Birth Date:",
+      "placeholder": "Select your birth date",
+      "errors": {
+        "required": "Birth date is required",
+        "tooYoung": "You must be at least 13 years old",
+        "tooOld": "Invalid age entered"
+      }
+    },
     "password": {
       "label": "Password:",
       "placeholder": "Enter your password.",

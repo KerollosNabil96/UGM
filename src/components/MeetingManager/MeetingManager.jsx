@@ -304,7 +304,7 @@ const MeetingsManager = () => {
           }
           
           return {
-            _id: record._id || Date.now().toString() + Math.random().toString(), // ID افتراضي إذا لم يكن موجودًا
+            _id: record._id || Date.now().toString() + Math.random().toString(), 
             userId: userId,
             userName: record.userName || userName,
             attendedMass: record.attendedMass || false,

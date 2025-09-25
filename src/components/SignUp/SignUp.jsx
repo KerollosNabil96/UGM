@@ -40,28 +40,50 @@ export default function SignUp() {
       errors.familyName = t('signUp.familyName.errors.length');
     }
 
+    // Email validation
     if (!values.email) {
       errors.email = t('signUp.email.errors.required');
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
       errors.email = t('signUp.email.errors.invalid');
     }
 
+    // Password validation
     if (!values.password) {
       errors.password = t('signUp.password.errors.required');
     } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(values.password)) {
       errors.password = t('signUp.password.errors.invalid');
     }
 
+    // RePassword validation
     if (!values.rePassword) {
       errors.rePassword = t('signUp.rePassword.errors.required');
     } else if (values.rePassword !== values.password) {
       errors.rePassword = t('signUp.rePassword.errors.mismatch');
     }
 
+    // Phone validation
     if (!values.phone) {
       errors.phone = t('signUp.phone.errors.required');
     } else if (!/^01[0125][0-9]{8}$/.test(values.phone)) {
       errors.phone = t('signUp.phone.errors.invalid');
+    }
+
+    // Birth Date validation
+    if (!values.birthDate) {
+      errors.birthDate = t('signUp.birthDate.errors.required');
+    } else {
+      const birthDate = new Date(values.birthDate);
+      const today = new Date();
+      const minDate = new Date();
+      minDate.setFullYear(today.getFullYear() - 100); // 100 years ago
+      const maxDate = new Date();
+      maxDate.setFullYear(today.getFullYear() - 13); // At least 13 years old
+
+      if (birthDate < minDate) {
+        errors.birthDate = t('signUp.birthDate.errors.tooOld');
+      } else if (birthDate > maxDate) {
+        errors.birthDate = t('signUp.birthDate.errors.tooYoung');
+      }
     }
 
     return errors;
@@ -76,6 +98,7 @@ export default function SignUp() {
       phone: '',
       password: '',
       rePassword: '',
+      birthDate: '',
     },
     validate,
     onSubmit: async (values) => {
@@ -88,7 +111,8 @@ export default function SignUp() {
           email: values.email,
           phone: values.phone,
           password: values.password,
-          rePassword: values.rePassword
+          rePassword: values.rePassword,
+          birthDate: values.birthDate
         };
 
         const { data } = await axios.post(
@@ -180,6 +204,13 @@ export default function SignUp() {
                   {formik.touched.phone && formik.errors.phone &&
                     <div className="text-danger w-75" role="alert">{formik.errors.phone}</div>}
 
+                  {/* Birth Date */}
+                  <label htmlFor="birthDate" className='mt-3 dark:tw-text-white'>{t('signUp.birthDate.label')}</label>
+                  <input type="date" name="birthDate" id="birthDate" className="w-100 form-control mt-3"
+                    onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.birthDate} />
+                  {formik.touched.birthDate && formik.errors.birthDate &&
+                    <div className="text-danger w-75" role="alert">{formik.errors.birthDate}</div>}
+
                   {/* Password */}
                   <label htmlFor="password" className='mt-3 dark:tw-text-white'>{t('signUp.password.label')}</label>
                   <input type="password" name="password" id="password" className="w-100 form-control mt-3"
@@ -189,20 +220,20 @@ export default function SignUp() {
                     <div className="text-danger w-75" role="alert">{formik.errors.password}</div>}
 
                   {/* RePassword */}
-                 <label htmlFor="rePassword" className='mt-3 dark:tw-text-white'>{t('signUp.rePassword.label')}</label>
-<input
-    type="password"
-    name="rePassword" 
-    id="rePassword"
-    className="w-100 form-control mt-3"
-    placeholder={t('signUp.rePassword.placeholder')}
-    onChange={formik.handleChange}
-    onBlur={formik.handleBlur}
-    value={formik.values.rePassword}
-/>
-{formik.touched.rePassword && formik.errors.rePassword && (
-    <div className="text-danger w-75" role="alert">{formik.errors.rePassword}</div>
-)}
+                  <label htmlFor="rePassword" className='mt-3 dark:tw-text-white'>{t('signUp.rePassword.label')}</label>
+                  <input
+                    type="password"
+                    name="rePassword" 
+                    id="rePassword"
+                    className="w-100 form-control mt-3"
+                    placeholder={t('signUp.rePassword.placeholder')}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.rePassword}
+                  />
+                  {formik.touched.rePassword && formik.errors.rePassword && (
+                    <div className="text-danger w-75" role="alert">{formik.errors.rePassword}</div>
+                  )}
 
                   {/* Submit */}
                   <button type="submit" disabled={!(formik.dirty && formik.isValid) || loading}
