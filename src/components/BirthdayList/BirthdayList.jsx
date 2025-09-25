@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaBirthdayCake, FaUser, FaPhone, FaCalendarAlt, FaExclamationCircle, FaSync, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaBirthdayCake, FaUser, FaPhone, FaCalendarAlt, FaExclamationCircle, FaSync, FaChevronLeft, FaChevronRight, FaWhatsapp } from 'react-icons/fa';
 import { darkModeContext } from '../../Context/DarkModeContext';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
@@ -124,6 +124,36 @@ export default function BirthdayList() {
   const formatPhoneNumber = (phone) => {
     if (!phone) return 'No phone number';
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+  };
+
+  // دالة فتح محادثة واتساب
+  const openWhatsApp = (phoneNumber, userName) => {
+    if (!phoneNumber) {
+      alert('No phone number available for this user');
+      return;
+    }
+
+    // 1. تنظيف الرقم من أي رموز غير رقمية
+    let cleanPhone = phoneNumber.replace(/\D/g, '');
+    
+    // 2. التحقق من الرقم وإضافة كود الدولة لمصر
+    // إذا كان الرقم يبدأ بـ "0", يتم إزالته وإضافة "20"
+    if (cleanPhone.startsWith('0')) {
+      cleanPhone = `20${cleanPhone.slice(1)}`;
+    } 
+    // التأكد من أن الرقم لا يبدأ بالفعل بكود الدولة قبل إضافته
+    else if (!cleanPhone.startsWith('20')) {
+      cleanPhone = `20${cleanPhone}`;
+    }
+
+    // رسالة تهنئة مخصصة
+    const message = `🎉 Happy Birthday ${userName}! 🎂\n\nWishing you a wonderful day filled with joy and happiness! May all your dreams come true! 🥳`;
+    
+    // إنشاء رابط واتساب
+    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    
+    // فتح الرابط في نافذة جديدة
+    window.open(whatsappUrl, '_blank');
   };
 
   // Pagination logic
@@ -331,6 +361,26 @@ export default function BirthdayList() {
                             </div>
                           </div>
                         </div>
+
+                        {/* WhatsApp Button */}
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => openWhatsApp(user.phone, getUserFullName(user))}
+                          disabled={!user.phone}
+                          className={`tw-w-full tw-mt-3 tw-py-2 tw-px-4 tw-rounded-lg tw-flex tw-items-center tw-justify-center tw-gap-2 tw-transition-all tw-duration-200 ${
+                            user.phone
+                              ? darkMode
+                                ? 'tw-bg-green-700 hover:tw-bg-green-600 tw-text-white'
+                                : 'tw-bg-green-500 hover:tw-bg-green-600 tw-text-white'
+                              : darkMode
+                                ? 'tw-bg-gray-700 tw-text-gray-400 tw-cursor-not-allowed'
+                                : 'tw-bg-gray-300 tw-text-gray-500 tw-cursor-not-allowed'
+                          }`}
+                        >
+                          <FaWhatsapp className="tw-text-lg" />
+                          <span className="tw-font-medium">Send WhatsApp</span>
+                        </motion.button>
 
                         {/* Celebration Badge */}
                         <motion.div
