@@ -42,6 +42,7 @@ import RedirectIfAuthenticated from './components/RedirectIfAuthenticated/Redire
 import ResetPassword from './components/ResetPassword/ResetPassword';
 import Meetings from './components/Meetings/Meetings';
 import MeetingsManager from './components/MeetingManager/MeetingManager';
+import BirthdayList from './components/BirthdayList/BirthdayList';
 
 function App() {
   
@@ -153,6 +154,7 @@ function App() {
             { path: 'trip-list', element: <TripsList /> },
             { path: 'meetings', element: <Meetings /> },
             { path: 'meetings-manager', element: <MeetingsManager /> },
+            { path: 'birthday-list', element: <BirthdayList /> },
           ],
         },
         {

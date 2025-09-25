@@ -7,8 +7,8 @@
       "walletManagment" : "Wallet managment" , 
       "tripList" : "Trip list" ,
       "meetings" : " Create Meeting ",
-      "meetingsManager" : "Meetings Manager"
-
+      "meetingsManager" : "Meetings Manager",
+      "birthdayDays" : "Birthday List"
 
     }
   }

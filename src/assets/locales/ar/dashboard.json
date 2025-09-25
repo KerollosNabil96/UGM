@@ -7,6 +7,8 @@
       "walletManagment" : "إدارة المحفظة" , 
       "tripList": "قائمة الرحلات" , 
       "meetings" : " إنشاء اجتماع",
-      "meetingsManager" : "اداره الاجتماعات"
+      "meetingsManager" : "اداره الاجتماعات",
+      "birthdayDays" : "اعياد الميلاد"
+
     }
   }

@@ -120,7 +120,6 @@ export default function Dashboard() {
                   <i className="fa-solid fa-route me-1"></i> <span>{t('dashboard.tripList')}</span>
                 </NavLink>
               </li>
-              {/* إضافة رابط الاجتماعات في الشريط الجانبي */}
               <li className="nav-item">
                 <NavLink className="nav-link active text-white" to="meetings">
                 <i className="fa-solid fa-calendar-days me-1"></i>{t('dashboard.meetings')}
@@ -130,6 +129,12 @@ export default function Dashboard() {
                 <NavLink className="nav-link active text-white" to="meetings-manager">
                   <i className="fa-solid fa-clipboard-check me-1"></i>
  {t('dashboard.meetingsManager')}
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link active text-white" to="birthday-list">
+                  <i className="fa-solid fa-clipboard-check me-1"></i>
+ {t('dashboard.birthdayDays')}
                 </NavLink>
               </li>
             </ul>

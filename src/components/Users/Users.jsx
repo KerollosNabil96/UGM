@@ -47,7 +47,6 @@ export default function Users() {
             (user) => !adminUsers.find((admin) => admin._id === user._id)
           ),
         ];
-
         setUsers(allUsers);
       } else {
         const nonAdmins = usersResponse.data.users.filter((user) => user.role !== 'Admin');
