@@ -693,6 +693,183 @@ const MeetingCard = ({ meeting, onScan, onViewAttendance, onDelete, isLoading, i
   );
 };
 
+// const AttendanceView = ({
+//     meetingId, attendanceData, fullAttendanceData, meetings, onBack, searchTerm, setSearchTerm, massFilter, setMassFilter, statusFilter, setStatusFilter, confessedFilter, setConfessedFilter, currentPage, totalPages, paginate, totalItems, itemsPerPage, indexOfFirstItem, indexOfLastItem
+//   }) => {
+//     const meeting = meetings.find(m => m._id === meetingId) || {};
+//     const formattedDate = new Date(meeting.date).toLocaleDateString('en-US', {
+//       year: 'numeric', month: 'long', day: 'numeric'
+//     });
+  
+//     const formatTime = (time, status) => {
+//       if (!time) return status === 'present' ? 'N/A' : 'Absent';
+//       return new Date(time).toLocaleTimeString('en-US', {
+//         hour: '2-digit', minute: '2-digit', hour12: true
+//       });
+//     };
+
+//     const handleExport = () => {
+//         if (!fullAttendanceData || fullAttendanceData.length === 0) {
+//             toast.error("No data available to export.");
+//             return;
+//         }
+
+//         const dataToExport = fullAttendanceData.map(attendee => ({
+//             "Name": attendee.userName,
+//             "Status": attendee.status,
+//             "Attended Mass": attendee.attendedMass ? 'Yes' : 'No',
+//             "Confessed": attendee.confessed ? 'Yes' : 'No',
+//             "Time": formatTime(attendee.time, attendee.status)
+//         }));
+
+//         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+//         const workbook = XLSX.utils.book_new();
+//         XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
+//         const fileName = `${meeting.title.replace(/[^a-zA-Z0-9]/g, '_')}_Attendance.xlsx`;
+//         XLSX.writeFile(workbook, fileName);
+//     };
+  
+//     return (
+//       <motion.div
+//         initial={{ opacity: 0, y: 20 }}
+//         animate={{ opacity: 1, y: 0 }}
+//         className="tw-rounded-xl tw-shadow-lg tw-p-4 sm:tw-p-6 tw-bg-white dark:tw-bg-gray-800 tw-border tw-border-gray-200 dark:tw-border-gray-700"
+//         style={{ height: '85vh', display: 'flex', flexDirection: 'column' }}
+//       >
+//         <div className="tw-flex tw-flex-col sm:tw-flex-row tw-items-start sm:tw-items-center tw-justify-between tw-mb-6 tw-flex-shrink-0 tw-gap-4">
+//           <div>
+//             <h2 className="tw-text-2xl tw-font-bold tw-text-gray-800 dark:tw-text-white">{meeting.title}</h2>
+//             <p className="tw-mt-1 tw-text-gray-600 dark:tw-text-gray-400">{formattedDate}</p>
+//           </div>
+//           <div className="tw-flex tw-gap-3 tw-w-full sm:tw-w-auto">
+//              <button
+//                 onClick={handleExport}
+//                 className="tw-flex-1 sm:tw-flex-none tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-justify-center tw-gap-2 tw-transition-colors tw-bg-green-500 hover:tw-bg-green-600 tw-text-white font-semibold"
+//                 >
+//                 <FaFileExcel /> Export
+//             </button>
+//             <button
+//                 onClick={onBack}
+//                 className="tw-flex-1 sm:tw-flex-none tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-justify-center tw-gap-2 tw-transition-colors tw-bg-gray-100 hover:tw-bg-gray-200 tw-text-gray-700 dark:tw-bg-gray-700 dark:hover:tw-bg-gray-600 dark:tw-text-white"
+//                 >
+//                 <FaArrowLeft /> Back
+//             </button>
+//           </div>
+//         </div>
+        
+//         <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-4 tw-mb-6 tw-flex-shrink-0">
+//           <div className="tw-relative">
+//             <div className="tw-absolute tw-inset-y-0 tw-left-0 tw-pl-3 tw-flex tw-items-center tw-pointer-events-none">
+//               <FaSearch className="tw-text-gray-400" />
+//             </div>
+//             <input
+//               type="text"
+//               placeholder="Search by name..."
+//               value={searchTerm}
+//               onChange={(e) => setSearchTerm(e.target.value)}
+//               className="tw-pl-10 tw-w-full tw-p-2.5 tw-border tw-rounded-lg focus:tw-ring-2 focus:tw-border-transparent tw-bg-gray-50 tw-border-gray-200 tw-text-gray-900 tw-placeholder-gray-500 focus:tw-ring-main dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-text-white dark:tw-placeholder-gray-400 dark:focus:tw-ring-indigo-500"
+//             />
+//           </div>
+          
+//           <select
+//             value={statusFilter}
+//             onChange={(e) => setStatusFilter(e.target.value)}
+//             className="tw-p-2.5 tw-border tw-rounded-lg focus:tw-ring-2 focus:tw-border-transparent tw-bg-gray-50 tw-border-gray-200 tw-text-gray-900 focus:tw-ring-main dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-text-white dark:focus:tw-ring-indigo-500"
+//           >
+//             <option value="all">All Status</option>
+//             <option value="present">Present</option>
+//             <option value="absent">Absent</option>
+//           </select>
+          
+//           <select
+//             value={massFilter}
+//             onChange={(e) => setMassFilter(e.target.value)}
+//             className="tw-p-2.5 tw-border tw-rounded-lg focus:tw-ring-2 focus:tw-border-transparent tw-bg-gray-50 tw-border-gray-200 tw-text-gray-900 focus:tw-ring-main dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-text-white dark:focus:tw-ring-indigo-500"
+//           >
+//             <option value="all">All Mass Attendance</option>
+//             <option value="true">Attended Mass</option>
+//             <option value="false">Didn't Attend Mass</option>
+//           </select>
+          
+//           <select
+//             value={confessedFilter}
+//             onChange={(e) => setConfessedFilter(e.target.value)}
+//             className="tw-p-2.5 tw-border tw-rounded-lg focus:tw-ring-2 focus:tw-border-transparent tw-bg-gray-50 tw-border-gray-200 tw-text-gray-900 focus:tw-ring-main dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-text-white dark:focus:tw-ring-indigo-500"
+//           >
+//             <option value="all">All Confession Status</option>
+//             <option value="true">Confessed</option>
+//             <option value="false">Didn't Confess</option>
+//           </select>
+//         </div>
+        
+//         {/* === MAIN FIX: Added overflow-auto to allow horizontal scrolling on small screens === */}
+//         <div className="tw-flex-grow tw-overflow-auto">
+//           {attendanceData.length > 0 ? (
+//             <table className="tw-min-w-full tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
+//               <thead className="tw-bg-gray-50 dark:tw-bg-gray-700 tw-sticky tw-top-0">
+//                 <tr>
+//                   <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-uppercase tw-tracking-wider tw-text-gray-500 dark:tw-text-gray-300">User Name</th>
+//                   <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-uppercase tw-tracking-wider tw-text-gray-500 dark:tw-text-gray-300">Status</th>
+//                   <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-uppercase tw-tracking-wider tw-text-gray-500 dark:tw-text-gray-300">Attended Mass</th>
+//                   <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-uppercase tw-tracking-wider tw-text-gray-500 dark:tw-text-gray-300">Confessed</th>
+//                   <th className="tw-px-4 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-uppercase tw-tracking-wider tw-text-gray-500 dark:tw-text-gray-300">Time</th>
+//                 </tr>
+//               </thead>
+//               <tbody className="tw-bg-white tw-divide-y tw-divide-gray-200 dark:tw-bg-gray-800 dark:tw-divide-gray-700">
+//                 {attendanceData.map((attendee, index) => (
+//                   <tr key={index} className="hover:tw-bg-gray-50 dark:hover:tw-bg-gray-700">
+//                     <td className="tw-px-4 tw-py-4 tw-whitespace-nowrap tw-text-gray-900 dark:tw-text-white">{attendee.userName}</td>
+//                     <td className="tw-px-4 tw-py-4 tw-whitespace-nowrap">
+//                      <span className={`tw-inline-flex tw-items-center tw-px-2.5 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-medium ${attendee.status && attendee.status.trim().toLowerCase() === 'present' ? 'tw-bg-green-100 tw-text-green-800 dark:tw-bg-green-900 dark:tw-text-green-300' : 'tw-bg-red-100 tw-text-red-800 dark:tw-bg-red-900 dark:tw-text-red-300'}`}>
+//                         {attendee.status && attendee.status.trim().toLowerCase() === 'present' ? <FaCheckCircle className="tw-mr-1" /> : <FaTimesCircle className="tw-mr-1" />}
+//                         {attendee.status || 'N/A'}
+//                       </span>
+//                     </td>
+//                     <td className="tw-px-4 tw-py-4 tw-whitespace-nowrap">
+//                       {attendee.attendedMass ? (
+//                         <span className="tw-inline-flex tw-items-center tw-px-2.5 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-medium tw-bg-green-100 tw-text-green-800 dark:tw-bg-green-900 dark:tw-text-green-300"><FaCheckCircle className="tw-mr-1" /> Yes</span>
+//                       ) : (
+//                         <span className="tw-inline-flex tw-items-center tw-px-2.5 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-medium tw-bg-red-100 tw-text-red-800 dark:tw-bg-red-900 dark:tw-text-red-300"><FaTimesCircle className="tw-mr-1" /> No</span>
+//                       )}
+//                     </td>
+//                     <td className="tw-px-4 tw-py-4 tw-whitespace-nowrap">
+//                       {attendee.confessed ? (
+//                         <span className="tw-inline-flex tw-items-center tw-px-2.5 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-medium tw-bg-green-100 tw-text-green-800 dark:tw-bg-green-900 dark:tw-text-green-300"><FaCheckCircle className="tw-mr-1" /> Yes</span>
+//                       ) : (
+//                         <span className="tw-inline-flex tw-items-center tw-px-2.5 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-medium tw-bg-red-100 tw-text-red-800 dark:tw-bg-red-900 dark:tw-text-red-300"><FaTimesCircle className="tw-mr-1" /> No</span>
+//                       )}
+//                     </td>
+//                     <td className="tw-px-4 tw-py-4 tw-whitespace-nowrap tw-text-gray-500 dark:tw-text-gray-300">{formatTime(attendee.time, attendee.status)}</td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           ) : (
+//             <div className="tw-text-center tw-py-12 tw-rounded-lg tw-bg-gray-50 dark:tw-bg-gray-700">
+//               <FaUsers className="tw-mx-auto tw-text-4xl tw-mb-4 tw-text-gray-400 dark:tw-text-gray-500" />
+//               <p className="tw-text-gray-500 dark:tw-text-gray-400">No attendance data available for this meeting.</p>
+//             </div>
+//           )}
+//         </div>
+        
+//         {totalPages > 1 && (
+//           <div className="tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-items-center tw-mt-4 tw-pt-4 tw-border-t tw-border-gray-200 dark:tw-border-gray-700 tw-flex-shrink-0 tw-gap-4">
+//             <div className="tw-text-sm tw-text-gray-700 dark:tw-text-gray-400">
+//               Showing <span className="tw-font-medium">{indexOfFirstItem + 1}</span> to <span className="tw-font-medium">{indexOfLastItem > totalItems ? totalItems : indexOfLastItem}</span> of <span className="tw-font-medium">{totalItems}</span> results
+//             </div>
+//             <div className="tw-flex tw-items-center tw-space-x-2">
+//               <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className={`tw-px-3 tw-py-1 tw-rounded-md ${currentPage === 1 ? 'tw-bg-gray-200 tw-text-gray-500 dark:tw-bg-gray-700 dark:tw-text-gray-500' : 'bg-main tw-text-white hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700'}`}>Previous</button>
+//               <span className="tw-text-sm tw-text-gray-700 dark:tw-text-gray-400">
+//                 Page {currentPage} of {totalPages}
+//               </span>
+//               <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className={`tw-px-3 tw-py-1 tw-rounded-md ${currentPage === totalPages ? 'tw-bg-gray-200 tw-text-gray-500 dark:tw-bg-gray-700 dark:tw-text-gray-500' : 'bg-main tw-text-white hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700'}`}>Next</button>
+//             </div>
+//           </div>
+//         )}
+//       </motion.div>
+//     );
+//   };
+  
 const AttendanceView = ({
     meetingId, attendanceData, fullAttendanceData, meetings, onBack, searchTerm, setSearchTerm, massFilter, setMassFilter, statusFilter, setStatusFilter, confessedFilter, setConfessedFilter, currentPage, totalPages, paginate, totalItems, itemsPerPage, indexOfFirstItem, indexOfLastItem
   }) => {
@@ -733,8 +910,8 @@ const AttendanceView = ({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="tw-rounded-xl tw-shadow-lg tw-p-4 sm:tw-p-6 tw-bg-white dark:tw-bg-gray-800 tw-border tw-border-gray-200 dark:tw-border-gray-700"
-        style={{ height: '85vh', display: 'flex', flexDirection: 'column' }}
+        /* === FIX: ارتفاع مرن على الموبايل، ارتفاع ثابت على الشاشات الكبيرة === */
+        className="tw-rounded-xl tw-shadow-lg tw-p-4 sm:tw-p-6 tw-bg-white dark:tw-bg-gray-800 tw-border tw-border-gray-200 dark:tw-border-gray-700 tw-flex tw-flex-col tw-max-h-[90vh] md:tw-max-h-[80vh]"
       >
         <div className="tw-flex tw-flex-col sm:tw-flex-row tw-items-start sm:tw-items-center tw-justify-between tw-mb-6 tw-flex-shrink-0 tw-gap-4">
           <div>
@@ -802,7 +979,6 @@ const AttendanceView = ({
           </select>
         </div>
         
-        {/* === MAIN FIX: Added overflow-auto to allow horizontal scrolling on small screens === */}
         <div className="tw-flex-grow tw-overflow-auto">
           {attendanceData.length > 0 ? (
             <table className="tw-min-w-full tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
