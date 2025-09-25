@@ -1045,11 +1045,7 @@ export default function EventBooking() {
                 {firstName} {secName} {familyName}
               </h3>
               <p className="tw-text-sm tw-text-gray-600 dark:tw-text-gray-100">ID: {Id}</p>
-              {birthDate && (
-                <p className="tw-text-sm tw-text-gray-600 dark:tw-text-gray-100">
-                  {t('eventBooking.birthDate')}: {birthDate}
-                </p>
-              )}
+              
             </div>
           </div>
 
