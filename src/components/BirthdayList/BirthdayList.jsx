@@ -165,8 +165,8 @@ export default function BirthdayList() {
       formattedPhone = '20' + formattedPhone.substring(3);
     }
 
-    const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! 💖
-ربنا يفرّح قلبك وعقبال 100 سنة 🥳🎂🎁`;
+    const message = `🎉 كل سنة وانت طيب يا حبيبي ${userName}! 
+ربنا يفرّح قلبك وعقبال 100 سنة`;
     
     const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
     

@@ -276,57 +276,54 @@ const MeetingsManager = () => {
   };
 
   const viewAttendance = async (meetingId) => {
-  setViewLoading(meetingId);
-  setAttendanceLoading(true);
-  setSelectedMeeting(meetingId);
-  
-  try {
-    const response = await fetch(`https://ugmproject.vercel.app/api/v1/attendanceMeeting/getMeetingById/${meetingId}`, {
-      headers: getAuthHeaders()
-    });
-    const data = await response.json();
+    setViewLoading(meetingId);
+    setAttendanceLoading(true);
+    setSelectedMeeting(meetingId);
     
-    if (data.meeting && data.meeting.records) {
-      // تصفية السجلات الفارغة ومعالجة البيانات بشكل آمن
-      const formattedAttendance = data.meeting.records
-        .filter(record => record && record.user) // تصفية السجلات الفارغة
-        .map(record => {
-          // معالجة آمنة للبيانات
-          let userName = 'N/A';
-          let userId = '';
-          
-          if (typeof record.user === 'object' && record.user !== null) {
-            userName = record.user.userName || 'N/A';
-            userId = record.user._id || '';
-          } else if (typeof record.user === 'string') {
-            userId = record.user;
-            // يمكنك إضافة استدعاء API هنا للحصول على اسم المستخدم إذا لزم الأمر
-          }
-          
-          return {
-            _id: record._id || Date.now().toString() + Math.random().toString(), 
-            userId: userId,
-            userName: record.userName || userName,
-            attendedMass: record.attendedMass || false,
-            confessed: record.confessed || false,
-            status: record.status || 'absent',
-            time: record.time ? new Date(record.time) : null
-          };
-        });
+    try {
+      const response = await fetch(`https://ugmproject.vercel.app/api/v1/attendanceMeeting/getMeetingById/${meetingId}`, {
+        headers: getAuthHeaders()
+      });
+      const data = await response.json();
       
-      setAttendanceData(formattedAttendance);
-    } else {
+      if (data.meeting && data.meeting.records) {
+        const formattedAttendance = data.meeting.records
+          .filter(record => record && record.user) // تصفية السجلات الفارغة
+          .map(record => {
+            let userName = 'N/A';
+            let userId = '';
+            
+            if (typeof record.user === 'object' && record.user !== null) {
+              userName = record.user.userName || 'N/A';
+              userId = record.user._id || '';
+            } else if (typeof record.user === 'string') {
+              userId = record.user;
+            }
+            
+            return {
+              _id: record._id || Date.now().toString() + Math.random().toString(), 
+              userId: userId,
+              userName: record.userName || userName,
+              attendedMass: record.attendedMass || false,
+              confessed: record.confessed || false,
+              status: record.status || 'absent',
+              time: record.time ? new Date(record.time) : null
+            };
+          });
+        
+        setAttendanceData(formattedAttendance);
+      } else {
+        setAttendanceData([]);
+      }
+    } catch (error) {
+      console.error('Error fetching attendance:', error);
+      toast.error('Failed to load attendance data');
       setAttendanceData([]);
+    } finally {
+      setViewLoading(null);
+      setAttendanceLoading(false);
     }
-  } catch (error) {
-    console.error('Error fetching attendance:', error);
-    toast.error('Failed to load attendance data');
-    setAttendanceData([]);
-  } finally {
-    setViewLoading(null);
-    setAttendanceLoading(false);
-  }
-};
+  };
 
   const handleScanClick = (meeting) => {
     if (isPastMeeting(meeting.date)) {
@@ -348,291 +345,291 @@ const MeetingsManager = () => {
   }
 
   return (
-  <div className={`tw-container tw-mx-auto tw-p-4 tw-max-w-7xl tw-min-h-[80vh] tw-bg-gray-50 dark:tw-bg-gray-900 tw-text-gray-900 dark:tw-text-white`}>
-    {!selectedMeeting && !showScanner && (
-      <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="tw-text-3xl tw-font-bold tw-mb-8 tw-flex tw-items-center tw-text-gray-800 dark:tw-text-gray-100"
-      >
-        <FaCalendarAlt className="tw-mr-3 tw-text-blue-500 dark:tw-text-indigo-400" /> Meeting Attendance
-      </motion.h1>
-    )}
+    <div className={`tw-container tw-mx-auto tw-p-4 tw-max-w-7xl tw-min-h-[80vh] tw-bg-gray-50 dark:tw-bg-gray-900 tw-text-gray-900 dark:tw-text-white`}>
+      {!selectedMeeting && !showScanner && (
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="tw-text-3xl tw-font-bold tw-mb-8 tw-flex tw-items-center tw-text-gray-800 dark:tw-text-gray-100"
+        >
+          <FaCalendarAlt className="tw-mr-3 tw-text-blue-500 dark:tw-text-indigo-400" /> Meeting Attendance
+        </motion.h1>
+      )}
 
-    {selectedMeeting ? (
-      attendanceLoading ? (
-        <FullPageSpinner />
-      ) : (
-        <AttendanceView
-          meetingId={selectedMeeting}
-          attendanceData={currentItems}
-          fullAttendanceData={filteredAttendance}
-          meetings={meetings}
-          onBack={() => {
-            setSelectedMeeting(null);
-            setAttendanceData([]);
+      {selectedMeeting ? (
+        attendanceLoading ? (
+          <FullPageSpinner />
+        ) : (
+          <AttendanceView
+            meetingId={selectedMeeting}
+            attendanceData={currentItems}
+            fullAttendanceData={filteredAttendance}
+            meetings={meetings}
+            onBack={() => {
+              setSelectedMeeting(null);
+              setAttendanceData([]);
+            }}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            massFilter={massFilter}
+            setMassFilter={setMassFilter}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            confessedFilter={confessedFilter}
+            setConfessedFilter={setConfessedFilter}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            paginate={paginate}
+            totalItems={filteredAttendance.length}
+            itemsPerPage={itemsPerPage}
+            indexOfFirstItem={indexOfFirstItem}
+            indexOfLastItem={indexOfLastItem}
+          />
+        )
+      ) : showScanner ? (
+        <QRScanner
+          onScan={processScannedData}
+          onClose={() => {
+            // Let the component's own cleanup handle .clear()
+            setShowScanner(false);
+            setScanResult('');
+            setScanError('');
+            setScanSuccessData(null);
           }}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          massFilter={massFilter}
-          setMassFilter={setMassFilter}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          confessedFilter={confessedFilter}
-          setConfessedFilter={setConfessedFilter}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          paginate={paginate}
-          totalItems={filteredAttendance.length}
-          itemsPerPage={itemsPerPage}
-          indexOfFirstItem={indexOfFirstItem}
-          indexOfLastItem={indexOfLastItem}
+          scanResult={scanResult}
+          scanError={scanError}
+          scannerRef={scannerRef}
+          scanSuccessData={scanSuccessData}
+          onConfirm={confirmAttendance}
+          setScanSuccessData={setScanSuccessData}
+          onDeduct={() => setShowDeductModal(true)}
         />
-      )
-    ) : showScanner ? (
-      <QRScanner
-        onScan={processScannedData}
-        onClose={() => {
-          // Let the component's own cleanup handle .clear()
-          setShowScanner(false);
-          setScanResult('');
-          setScanError('');
-          setScanSuccessData(null);
-        }}
-        scanResult={scanResult}
-        scanError={scanError}
-        scannerRef={scannerRef}
-        scanSuccessData={scanSuccessData}
-        onConfirm={confirmAttendance}
-        setScanSuccessData={setScanSuccessData}
-        onDeduct={() => setShowDeductModal(true)}
-      />
-    ) : (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <div className="tw-flex tw-flex-col sm:tw-flex-row tw-items-center tw-justify-between tw-gap-4 tw-mb-8 tw-p-4 tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow-sm">
-          <div className="tw-relative tw-w-full sm:tw-w-auto sm:tw-flex-grow">
-            <div className="tw-absolute tw-inset-y-0 tw-left-0 tw-pl-3 tw-flex tw-items-center tw-pointer-events-none">
-              <FaSearch className="tw-text-gray-400" />
+      ) : (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <div className="tw-flex tw-flex-col sm:tw-flex-row tw-items-center tw-justify-between tw-gap-4 tw-mb-8 tw-p-4 tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow-sm">
+            <div className="tw-relative tw-w-full sm:tw-w-auto sm:tw-flex-grow">
+              <div className="tw-absolute tw-inset-y-0 tw-left-0 tw-pl-3 tw-flex tw-items-center tw-pointer-events-none">
+                <FaSearch className="tw-text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search by meeting name..."
+                value={meetingSearchTerm}
+                onChange={(e) => setMeetingSearchTerm(e.target.value)}
+                className="tw-pl-10 tw-w-full tw-p-2.5 tw-border tw-rounded-lg focus:tw-ring-2 tw-border-transparent tw-bg-gray-100 dark:tw-bg-gray-700 tw-border-gray-200 dark:tw-border-gray-600 tw-text-gray-900 dark:tw-text-white tw-placeholder-gray-500 dark:tw-placeholder-gray-400 focus:tw-ring-main dark:focus:tw-ring-indigo-500"
+              />
             </div>
-            <input
-              type="text"
-              placeholder="Search by meeting name..."
-              value={meetingSearchTerm}
-              onChange={(e) => setMeetingSearchTerm(e.target.value)}
-              className="tw-pl-10 tw-w-full tw-p-2.5 tw-border tw-rounded-lg focus:tw-ring-2 tw-border-transparent tw-bg-gray-100 dark:tw-bg-gray-700 tw-border-gray-200 dark:tw-border-gray-600 tw-text-gray-900 dark:tw-text-white tw-placeholder-gray-500 dark:tw-placeholder-gray-400 focus:tw-ring-main dark:focus:tw-ring-indigo-500"
-            />
+
+            <button
+              onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
+              className="tw-w-full sm:tw-w-auto tw-p-2.5 tw-border tw-rounded-lg tw-flex tw-items-center tw-justify-center tw-gap-2 focus:tw-ring-2 focus:tw-border-transparent tw-bg-gray-100 dark:tw-bg-gray-700 tw-border-gray-200 dark:tw-border-gray-600 tw-text-gray-900 dark:tw-text-white focus:tw-ring-main dark:focus:tw-ring-indigo-500 tw-transition-colors hover:tw-bg-gray-200 dark:hover:tw-bg-gray-600"
+            >
+              {sortOrder === 'newest' ? <FaSortAmountDown /> : <FaSortAmountUpAlt />}
+              <span>{sortOrder === 'newest' ? 'Newest First' : 'Oldest First'}</span>
+            </button>
           </div>
 
-          <button
-            onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
-            className="tw-w-full sm:tw-w-auto tw-p-2.5 tw-border tw-rounded-lg tw-flex tw-items-center tw-justify-center tw-gap-2 focus:tw-ring-2 focus:tw-border-transparent tw-bg-gray-100 dark:tw-bg-gray-700 tw-border-gray-200 dark:tw-border-gray-600 tw-text-gray-900 dark:tw-text-white focus:tw-ring-main dark:focus:tw-ring-indigo-500 tw-transition-colors hover:tw-bg-gray-200 dark:hover:tw-bg-gray-600"
-          >
-            {sortOrder === 'newest' ? <FaSortAmountDown /> : <FaSortAmountUpAlt />}
-            <span>{sortOrder === 'newest' ? 'Newest First' : 'Oldest First'}</span>
-          </button>
-        </div>
-
-        <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6">
-          {currentMeetings.map((meeting) => (
-            <MeetingCard
-              key={meeting._id}
-              meeting={meeting}
-              onScan={() => handleScanClick(meeting)}
-              onViewAttendance={() => viewAttendance(meeting._id)}
-              onDelete={() => {
-                setMeetingToDelete(meeting);
-                setShowDeleteModal(true);
-              }}
-              isLoading={viewLoading === meeting._id}
-              isPastMeeting={isPastMeeting(meeting.date)}
-            />
-          ))}
-        </div>
-
-        {filteredAndSortedMeetings.length === 0 && (
-          <div className="tw-text-center tw-py-16 tw-rounded-lg tw-bg-white dark:tw-bg-gray-800 tw-mt-6">
-            <FaCalendarAlt className="tw-mx-auto tw-text-5xl tw-mb-4 tw-text-gray-400 dark:tw-text-gray-500" />
-            <p className="tw-text-lg tw-text-gray-500 dark:tw-text-gray-400">
-              {meetingSearchTerm ? 'No meetings found matching your search.' : 'No meetings available.'}
-            </p>
+          <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6">
+            {currentMeetings.map((meeting) => (
+              <MeetingCard
+                key={meeting._id}
+                meeting={meeting}
+                onScan={() => handleScanClick(meeting)}
+                onViewAttendance={() => viewAttendance(meeting._id)}
+                onDelete={() => {
+                  setMeetingToDelete(meeting);
+                  setShowDeleteModal(true);
+                }}
+                isLoading={viewLoading === meeting._id}
+                isPastMeeting={isPastMeeting(meeting.date)}
+              />
+            ))}
           </div>
-        )}
 
-        {totalMeetingPages > 1 && (
-          <div className="tw-flex tw-justify-center tw-items-center tw-mt-8 tw-pt-4">
-            <div className="tw-flex tw-space-x-2">
-              <button
-                onClick={() => paginateMeetings(meetingsCurrentPage - 1)}
-                disabled={meetingsCurrentPage === 1}
-                className={`tw-px-4 tw-py-2 tw-rounded-md tw-font-semibold tw-transition-colors ${
-                  meetingsCurrentPage === 1
-                    ? 'tw-bg-gray-200 tw-text-gray-500 dark:tw-bg-gray-700 dark:tw-text-gray-500'
-                    : 'bg-main tw-text-white hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700'
-                }`}
-              >
-                Previous
-              </button>
-              {Array.from({ length: totalMeetingPages }, (_, i) => i + 1).map((page) => (
+          {filteredAndSortedMeetings.length === 0 && (
+            <div className="tw-text-center tw-py-16 tw-rounded-lg tw-bg-white dark:tw-bg-gray-800 tw-mt-6">
+              <FaCalendarAlt className="tw-mx-auto tw-text-5xl tw-mb-4 tw-text-gray-400 dark:tw-text-gray-500" />
+              <p className="tw-text-lg tw-text-gray-500 dark:tw-text-gray-400">
+                {meetingSearchTerm ? 'No meetings found matching your search.' : 'No meetings available.'}
+              </p>
+            </div>
+          )}
+
+          {totalMeetingPages > 1 && (
+            <div className="tw-flex tw-justify-center tw-items-center tw-mt-8 tw-pt-4">
+              <div className="tw-flex tw-space-x-2">
                 <button
-                  key={page}
-                  onClick={() => paginateMeetings(page)}
+                  onClick={() => paginateMeetings(meetingsCurrentPage - 1)}
+                  disabled={meetingsCurrentPage === 1}
                   className={`tw-px-4 tw-py-2 tw-rounded-md tw-font-semibold tw-transition-colors ${
-                    meetingsCurrentPage === page
-                      ? 'bg-main tw-text-white dark:tw-bg-indigo-600'
-                      : 'tw-bg-gray-200 tw-text-gray-700 hover:tw-bg-gray-300 dark:tw-bg-gray-700 dark:tw-text-gray-300 dark:hover:tw-bg-gray-600'
+                    meetingsCurrentPage === 1
+                      ? 'tw-bg-gray-200 tw-text-gray-500 dark:tw-bg-gray-700 dark:tw-text-gray-500'
+                      : 'bg-main tw-text-white hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700'
                   }`}
                 >
-                  {page}
+                  Previous
                 </button>
-              ))}
+                {Array.from({ length: totalMeetingPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => paginateMeetings(page)}
+                    className={`tw-px-4 tw-py-2 tw-rounded-md tw-font-semibold tw-transition-colors ${
+                      meetingsCurrentPage === page
+                        ? 'bg-main tw-text-white dark:tw-bg-indigo-600'
+                        : 'tw-bg-gray-200 tw-text-gray-700 hover:tw-bg-gray-300 dark:tw-bg-gray-700 dark:tw-text-gray-300 dark:hover:tw-bg-gray-600'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  onClick={() => paginateMeetings(meetingsCurrentPage + 1)}
+                  disabled={meetingsCurrentPage === totalMeetingPages}
+                  className={`tw-px-4 tw-py-2 tw-rounded-md tw-font-semibold tw-transition-colors ${
+                    meetingsCurrentPage === totalMeetingPages
+                      ? 'tw-bg-gray-200 tw-text-gray-500 dark:tw-bg-gray-700 dark:tw-text-gray-500'
+                      : 'bg-main tw-text-white hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700'
+                  }`}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      )}
+
+      {/* Delete Meeting Confirmation Modal */}
+      {showDeleteModal && meetingToDelete && (
+        <div
+          onClick={() => setShowDeleteModal(false)}
+          className="tw-fixed tw-inset-0 tw-flex tw-justify-center tw-items-center tw-z-[9999] tw-bg-black/60"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-md tw-mx-4"
+          >
+            <h4 className="tw-mb-4 tw-font-semibold tw-text-lg">
+              <FaTrash className="tw-text-red-500 tw-inline tw-mr-2" />
+              Delete Meeting
+            </h4>
+            <p className="tw-mb-6">
+              Are you sure you want to delete the meeting <strong>"{meetingToDelete.title}"</strong>? This action cannot be undone.
+            </p>
+            <div className="tw-flex tw-justify-end tw-gap-2">
               <button
-                onClick={() => paginateMeetings(meetingsCurrentPage + 1)}
-                disabled={meetingsCurrentPage === totalMeetingPages}
-                className={`tw-px-4 tw-py-2 tw-rounded-md tw-font-semibold tw-transition-colors ${
-                  meetingsCurrentPage === totalMeetingPages
-                    ? 'tw-bg-gray-200 tw-text-gray-500 dark:tw-bg-gray-700 dark:tw-text-gray-500'
-                    : 'bg-main tw-text-white hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700'
-                }`}
+                onClick={() => setShowDeleteModal(false)}
+                className="tw-border tw-border-gray-400 tw-text-gray-600 dark:tw-text-gray-300 tw-rounded-md tw-px-4 tw-py-2 hover:tw-bg-gray-200 dark:hover:tw-bg-gray-700"
               >
-                Next
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteMeeting}
+                disabled={deleting}
+                className="tw-bg-red-500 hover:tw-bg-red-600 tw-text-white tw-rounded-md tw-px-4 tw-py-2 tw-flex tw-items-center tw-justify-center tw-min-w-[100px] disabled:tw-opacity-50"
+              >
+                {deleting ? (
+                  <>
+                    <span className="tw-animate-spin tw-rounded-full tw-h-4 tw-w-4 tw-border-t-2 tw-border-b-2 tw-border-white tw-mr-2"></span>
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete'
+                )}
               </button>
             </div>
           </div>
-        )}
-      </motion.div>
-    )}
+        </div>
+      )}
 
-    {/* Delete Meeting Confirmation Modal */}
-    {showDeleteModal && meetingToDelete && (
-      <div
-        onClick={() => setShowDeleteModal(false)}
-        className="tw-fixed tw-inset-0 tw-flex tw-justify-center tw-items-center tw-z-[9999] tw-bg-black/60"
-      >
+      {/* Past Meeting Alert Modal */}
+      {showPastMeetingAlert && (
         <div
-          onClick={(e) => e.stopPropagation()}
-          className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-md tw-mx-4"
+          onClick={() => setShowPastMeetingAlert(false)}
+          className="tw-fixed tw-inset-0 tw-flex tw-justify-center tw-items-center tw-z-[9999] tw-bg-black/60"
         >
-          <h4 className="tw-mb-4 tw-font-semibold tw-text-lg">
-            <FaTrash className="tw-text-red-500 tw-inline tw-mr-2" />
-            Delete Meeting
-          </h4>
-          <p className="tw-mb-6">
-            Are you sure you want to delete the meeting <strong>"{meetingToDelete.title}"</strong>? This action cannot be undone.
-          </p>
-          <div className="tw-flex tw-justify-end tw-gap-2">
-            <button
-              onClick={() => setShowDeleteModal(false)}
-              className="tw-border tw-border-gray-400 tw-text-gray-600 dark:tw-text-gray-300 tw-rounded-md tw-px-4 tw-py-2 hover:tw-bg-gray-200 dark:hover:tw-bg-gray-700"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleDeleteMeeting}
-              disabled={deleting}
-              className="tw-bg-red-500 hover:tw-bg-red-600 tw-text-white tw-rounded-md tw-px-4 tw-py-2 tw-flex tw-items-center tw-justify-center tw-min-w-[100px] disabled:tw-opacity-50"
-            >
-              {deleting ? (
-                <>
-                  <span className="tw-animate-spin tw-rounded-full tw-h-4 tw-w-4 tw-border-t-2 tw-border-b-2 tw-border-white tw-mr-2"></span>
-                  Deleting...
-                </>
-              ) : (
-                'Delete'
-              )}
-            </button>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-md tw-mx-4"
+          >
+            <h4 className="tw-mb-4 tw-font-semibold tw-text-lg tw-flex tw-items-center">
+              <FaExclamationTriangle className="tw-text-yellow-500 tw-inline tw-mr-2" />
+              Cannot Scan Attendance
+            </h4>
+            <p className="tw-mb-6">
+              This meeting is in the past. You cannot scan attendance for past meetings.
+            </p>
+            <div className="tw-flex tw-justify-end">
+              <button
+                onClick={() => setShowPastMeetingAlert(false)}
+                className="tw-bg-main hover:tw-bg-main-dark tw-text-white tw-rounded-md tw-px-4 tw-py-2 tw-transition-colors dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700"
+              >
+                OK
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
-    {/* Past Meeting Alert Modal */}
-    {showPastMeetingAlert && (
-      <div
-        onClick={() => setShowPastMeetingAlert(false)}
-        className="tw-fixed tw-inset-0 tw-flex tw-justify-center tw-items-center tw-z-[9999] tw-bg-black/60"
-      >
+      {/* Deduct from Wallet Modal */}
+      {showDeductModal && scanSuccessData && (
         <div
-          onClick={(e) => e.stopPropagation()}
-          className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-md tw-mx-4"
+          onClick={() => setShowDeductModal(false)}
+          className="tw-fixed tw-inset-0 tw-flex tw-justify-center tw-items-center tw-z-[9999] tw-bg-black/60"
         >
-          <h4 className="tw-mb-4 tw-font-semibold tw-text-lg tw-flex tw-items-center">
-            <FaExclamationTriangle className="tw-text-yellow-500 tw-inline tw-mr-2" />
-            Cannot Scan Attendance
-          </h4>
-          <p className="tw-mb-6">
-            This meeting is in the past. You cannot scan attendance for past meetings.
-          </p>
-          <div className="tw-flex tw-justify-end">
-            <button
-              onClick={() => setShowPastMeetingAlert(false)}
-              className="tw-bg-main hover:tw-bg-main-dark tw-text-white tw-rounded-md tw-px-4 tw-py-2 tw-transition-colors dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700"
-            >
-              OK
-            </button>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-md tw-mx-4"
+          >
+            <h4 className="tw-mb-4 tw-font-semibold tw-text-lg">
+              <FaWallet className="tw-text-blue-500 dark:tw-text-indigo-400 tw-inline tw-mr-2" />
+              Deduct from {scanSuccessData.userName}'s Wallet
+            </h4>
+            <div className="tw-mb-4">
+              <label className="tw-block tw-mb-1">Amount</label>
+              <input
+                type="number"
+                value={deductAmount}
+                onChange={(e) => setDeductAmount(e.target.value)}
+                className="tw-w-full tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-3 tw-py-2"
+              />
+            </div>
+            <div className="tw-mb-4">
+              <label className="tw-block tw-mb-1">Description (Optional)</label>
+              <input
+                type="text"
+                value={deductDescription}
+                onChange={(e) => setDeductDescription(e.target.value)}
+                className="tw-w-full tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-3 tw-py-2"
+              />
+            </div>
+            <div className="tw-flex tw-justify-end tw-gap-2">
+              <button
+                onClick={() => setShowDeductModal(false)}
+                className="tw-border tw-border-gray-400 tw-text-gray-600 dark:tw-text-gray-300 tw-rounded-md tw-px-4 tw-py-2 hover:tw-bg-gray-200 dark:hover:tw-bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeductFromWallet}
+                disabled={processingDeduction}
+                className="tw-text-white tw-rounded-md tw-px-4 tw-py-2 tw-flex tw-items-center tw-justify-center tw-min-w-[140px] bg-main hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700 disabled:tw-opacity-50"
+              >
+                {processingDeduction ? (
+                  <>
+                    <span className="tw-animate-spin tw-rounded-full tw-h-4 tw-w-4 tw-border-t-2 tw-border-b-2 tw-border-white tw-mr-2"></span>
+                    Processing...
+                  </>
+                ) : (
+                  'Confirm Deduction'
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    )}
-
-    {/* Deduct from Wallet Modal */}
-    {showDeductModal && scanSuccessData && (
-      <div
-        onClick={() => setShowDeductModal(false)}
-        className="tw-fixed tw-inset-0 tw-flex tw-justify-center tw-items-center tw-z-[9999] tw-bg-black/60"
-      >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="tw-bg-white dark:tw-bg-gray-900 tw-text-black dark:tw-text-white tw-p-6 tw-rounded-2xl tw-w-full tw-max-w-md tw-mx-4"
-        >
-          <h4 className="tw-mb-4 tw-font-semibold tw-text-lg">
-            <FaWallet className="tw-text-blue-500 dark:tw-text-indigo-400 tw-inline tw-mr-2" />
-            Deduct from {scanSuccessData.userName}'s Wallet
-          </h4>
-          <div className="tw-mb-4">
-            <label className="tw-block tw-mb-1">Amount</label>
-            <input
-              type="number"
-              value={deductAmount}
-              onChange={(e) => setDeductAmount(e.target.value)}
-              className="tw-w-full tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-3 tw-py-2"
-            />
-          </div>
-          <div className="tw-mb-4">
-            <label className="tw-block tw-mb-1">Description (Optional)</label>
-            <input
-              type="text"
-              value={deductDescription}
-              onChange={(e) => setDeductDescription(e.target.value)}
-              className="tw-w-full tw-bg-white dark:tw-bg-gray-800 tw-text-black dark:tw-text-white tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-px-3 tw-py-2"
-            />
-          </div>
-          <div className="tw-flex tw-justify-end tw-gap-2">
-            <button
-              onClick={() => setShowDeductModal(false)}
-              className="tw-border tw-border-gray-400 tw-text-gray-600 dark:tw-text-gray-300 tw-rounded-md tw-px-4 tw-py-2 hover:tw-bg-gray-200 dark:hover:tw-bg-gray-700"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleDeductFromWallet}
-              disabled={processingDeduction}
-              className="tw-text-white tw-rounded-md tw-px-4 tw-py-2 tw-flex tw-items-center tw-justify-center tw-min-w-[140px] bg-main hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700 disabled:tw-opacity-50"
-            >
-              {processingDeduction ? (
-                <>
-                  <span className="tw-animate-spin tw-rounded-full tw-h-4 tw-w-4 tw-border-t-2 tw-border-b-2 tw-border-white tw-mr-2"></span>
-                  Processing...
-                </>
-              ) : (
-                'Confirm Deduction'
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    )}
-  </div>
-);
+      )}
+    </div>
+  );
 };
 
 const MeetingCard = ({ meeting, onScan, onViewAttendance, onDelete, isLoading, isPastMeeting }) => {
@@ -736,26 +733,26 @@ const AttendanceView = ({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="tw-rounded-xl tw-shadow-lg tw-p-6 tw-bg-white dark:tw-bg-gray-800 tw-border tw-border-gray-200 dark:tw-border-gray-700"
-        style={{ height: '80vh', display: 'flex', flexDirection: 'column' }}
+        className="tw-rounded-xl tw-shadow-lg tw-p-4 sm:tw-p-6 tw-bg-white dark:tw-bg-gray-800 tw-border tw-border-gray-200 dark:tw-border-gray-700"
+        style={{ height: '85vh', display: 'flex', flexDirection: 'column' }}
       >
-        <div className="tw-flex tw-items-center tw-justify-between tw-mb-6 tw-flex-shrink-0">
+        <div className="tw-flex tw-flex-col sm:tw-flex-row tw-items-start sm:tw-items-center tw-justify-between tw-mb-6 tw-flex-shrink-0 tw-gap-4">
           <div>
             <h2 className="tw-text-2xl tw-font-bold tw-text-gray-800 dark:tw-text-white">{meeting.title}</h2>
             <p className="tw-mt-1 tw-text-gray-600 dark:tw-text-gray-400">{formattedDate}</p>
           </div>
-          <div className="tw-flex tw-gap-3">
+          <div className="tw-flex tw-gap-3 tw-w-full sm:tw-w-auto">
              <button
                 onClick={handleExport}
-                className="tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-gap-2 tw-transition-colors tw-bg-green-500 hover:tw-bg-green-600 tw-text-white font-semibold"
+                className="tw-flex-1 sm:tw-flex-none tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-justify-center tw-gap-2 tw-transition-colors tw-bg-green-500 hover:tw-bg-green-600 tw-text-white font-semibold"
                 >
                 <FaFileExcel /> Export
             </button>
             <button
-              onClick={onBack}
-              className="tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-gap-2 tw-transition-colors tw-bg-gray-100 hover:tw-bg-gray-200 tw-text-gray-700 dark:tw-bg-gray-700 dark:hover:tw-bg-gray-600 dark:tw-text-white"
-            >
-              <FaArrowLeft /> Back
+                onClick={onBack}
+                className="tw-flex-1 sm:tw-flex-none tw-px-4 tw-py-2 tw-rounded-lg tw-flex tw-items-center tw-justify-center tw-gap-2 tw-transition-colors tw-bg-gray-100 hover:tw-bg-gray-200 tw-text-gray-700 dark:tw-bg-gray-700 dark:hover:tw-bg-gray-600 dark:tw-text-white"
+                >
+                <FaArrowLeft /> Back
             </button>
           </div>
         </div>
@@ -805,7 +802,8 @@ const AttendanceView = ({
           </select>
         </div>
         
-        <div className="tw-overflow-y-auto tw-flex-grow">
+        {/* === MAIN FIX: Added overflow-auto to allow horizontal scrolling on small screens === */}
+        <div className="tw-flex-grow tw-overflow-auto">
           {attendanceData.length > 0 ? (
             <table className="tw-min-w-full tw-divide-y tw-divide-gray-200 dark:tw-divide-gray-700">
               <thead className="tw-bg-gray-50 dark:tw-bg-gray-700 tw-sticky tw-top-0">
@@ -855,13 +853,15 @@ const AttendanceView = ({
         </div>
         
         {totalPages > 1 && (
-          <div className="tw-flex tw-justify-between tw-items-center tw-mt-4 tw-pt-4 tw-border-t tw-border-gray-200 dark:tw-border-gray-700 tw-flex-shrink-0">
+          <div className="tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-items-center tw-mt-4 tw-pt-4 tw-border-t tw-border-gray-200 dark:tw-border-gray-700 tw-flex-shrink-0 tw-gap-4">
             <div className="tw-text-sm tw-text-gray-700 dark:tw-text-gray-400">
               Showing <span className="tw-font-medium">{indexOfFirstItem + 1}</span> to <span className="tw-font-medium">{indexOfLastItem > totalItems ? totalItems : indexOfLastItem}</span> of <span className="tw-font-medium">{totalItems}</span> results
             </div>
-            <div className="tw-flex tw-space-x-2">
+            <div className="tw-flex tw-items-center tw-space-x-2">
               <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className={`tw-px-3 tw-py-1 tw-rounded-md ${currentPage === 1 ? 'tw-bg-gray-200 tw-text-gray-500 dark:tw-bg-gray-700 dark:tw-text-gray-500' : 'bg-main tw-text-white hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700'}`}>Previous</button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (<button key={page} onClick={() => paginate(page)} className={`tw-px-3 tw-py-1 tw-rounded-md ${currentPage === page ? 'bg-main tw-text-white dark:tw-bg-indigo-600' : 'tw-bg-gray-200 tw-text-gray-700 hover:tw-bg-gray-300 dark:tw-bg-gray-700 dark:tw-text-gray-300 dark:hover:tw-bg-gray-600'}`}>{page}</button>))}
+              <span className="tw-text-sm tw-text-gray-700 dark:tw-text-gray-400">
+                Page {currentPage} of {totalPages}
+              </span>
               <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className={`tw-px-3 tw-py-1 tw-rounded-md ${currentPage === totalPages ? 'tw-bg-gray-200 tw-text-gray-500 dark:tw-bg-gray-700 dark:tw-text-gray-500' : 'bg-main tw-text-white hover:tw-bg-main-dark dark:tw-bg-indigo-600 dark:hover:tw-bg-indigo-700'}`}>Next</button>
             </div>
           </div>
@@ -950,10 +950,6 @@ const AttendanceView = ({
   };
 
 export default MeetingsManager;
-
-
-
-
 
 
 
