@@ -16,7 +16,7 @@ export default function About() {
 
         <div className="tw-relative tw-w-full tw-h-[400px] tw-rounded-b-3xl tw-overflow-hidden">
           <img
-            src="https://i.postimg.cc/4x6Sbt1Q/470229909-10225273510937048-1813529456201161110-n.jpg"
+            src="/banner.jpg"
             alt="About Banner"
   className="tw-w-full tw-h-full tw-object-cover tw-object-[50%_70%]"
           />

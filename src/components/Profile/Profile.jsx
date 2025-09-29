@@ -627,6 +627,7 @@ export default function Profile() {
           },
         }
       );
+      console.log(response.data.walletHistory)
       setWalletHistory(response.data.walletHistory || []);
     } catch (err) {
       console.error('Error fetching wallet history:', err);
