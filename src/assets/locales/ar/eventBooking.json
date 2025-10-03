@@ -38,6 +38,96 @@
     "userIdMissing": "يجب تسجيل الدخول أولاً",
     "eventNotFound": "لم يتم العثور على الحدث",
     "backToEvents": "العودة إلى الفعاليات",
-    "bookingError": "حدث خطأ أثناء محاولة الحجز"
+    "bookingError": "حدث خطأ أثناء محاولة الحجز",
+    
+    "adminDataError": "خطأ في بيانات المسؤولين",
+    "adminFetchError": "فشل في تحميل بيانات المسؤولين",
+    "adminNotFound": "لم يتم العثور على المسؤول المحدد",
+    "noAdminsAvailable": "لا توجد مسؤولين متاحين",
+    "defaultResponsible": "مسؤول الدفع الافتراضي",
+    "responsibleNotFound": "لم يتم العثور على المسؤول المحدد",
+    
+    "paymentInstructions": "تعليمات الدفع",
+    "clickLinkToPay": "اضغط على الرابط لإرسال المبلغ إلى:",
+    "openInstapay": "فتح رابط الإنستاباي",
+    "scanQRCode": "مسح QR Code",
+    "scanToPay": "مسح الكود للدفع عبر الإنستاباي",
+    
+    "proofSubmissionSuccess": "تم إرسال إثبات الدفع بنجاح، جاري المراجعة",
+    "proofSubmissionError": "فشل في إرسال إثبات الدفع",
+    "alreadyBooked": "لقد قمت بالحجز على هذا الحدث مسبقاً",
+    
+    "paymentConfirmation": "تأكيد عملية الدفع",
+    "paymentAmount": "مبلغ الدفع",
+    "paymentMethod": "طريقة الدفع",
+    "paymentProof": "إثبات الدفع",
+    "paymentStatus": "حالة الدفع",
+    "pendingApproval": "في انتظار الموافقة",
+    "approved": "تمت الموافقة",
+    "rejected": "مرفوض",
+    
+    "uploadingFile": "جاري رفع الملف...",
+    "fileUploadSuccess": "تم رفع الملف بنجاح",
+    "fileUploadError": "فشل في رفع الملف",
+    
+    "bookingConfirmation": "تأكيد الحجز",
+    "bookingDetails": "تفاصيل الحجز",
+    "bookingDate": "تاريخ الحجز",
+    "bookingStatus": "حالة الحجز",
+    "bookingReference": "رقم المرجع",
+    
+    "contactAdmin": "الاتصال بالمسؤول",
+    "needHelp": "تحتاج مساعدة؟",
+    "supportContact": "اتصل بالدعم الفني",
+    
+    "termsAgreement": "بالضغط على تأكيد الحجز، فإنك توافق على الشروط والأحكام",
+    "refundPolicy": "سياسة الاسترجاع",
+    "cancellationPolicy": "سياسة الإلغاء",
+    
+    "securityNote": "ملاحظة أمنية: لا تشارك معلومات الدفع مع أي شخص",
+    "confidentialInfo": "جميع معلوماتك محفوظة بسرية تامة",
+    
+    "successMessage": "تمت العملية بنجاح",
+    "errorMessage": "حدث خطأ ما",
+    "warningMessage": "تحذير",
+    "infoMessage": "معلومة",
+    
+    "loadingData": "جاري تحميل البيانات...",
+    "processingRequest": "جاري معالجة الطلب...",
+    "pleaseWait": "يرجى الانتظار...",
+    
+    "nextStep": "الخطوة التالية",
+    "previousStep": "الخطوة السابقة",
+    "completeBooking": "إتمام الحجز",
+    
+    "paymentOptions": "خيارات الدفع",
+    "choosePaymentMethod": "اختر طريقة الدفع",
+    "securePayment": "دفع آمن",
+    "encryptedConnection": "اتصال مشفر",
+    
+    "totalAmount": "المبلغ الإجمالي",
+    "discount": "الخصم",
+    "finalAmount": "المبلغ النهائي",
+    "taxes": "الضرائب",
+    
+    "personalInfo": "المعلومات الشخصية",
+    "contactInfo": "معلومات الاتصال",
+    "emergencyContact": "جهة اتصال الطوارئ",
+    
+    "eventDetails": "تفاصيل الحدث",
+    "eventLocation": "موقع الحدث",
+    "eventDate": "تاريخ الحدث",
+    "eventTime": "وقت الحدث",
+    "eventDuration": "مدة الحدث",
+    
+    "capacity": "السعة",
+    "availableSpots": "الأماكن المتاحة",
+    "bookedSpots": "الأماكن المحجوزة",
+    "waitingList": "قائمة الانتظار",
+    
+    "requirements": "المتطلبات",
+    "whatToBring": "ما يجب إحضاره",
+    "restrictions": "القيود",
+    "notes": "ملاحظات"
   }
 }

@@ -38,6 +38,96 @@
     "userIdMissing": "You must be logged in to proceed",
     "eventNotFound": "Event not found",
     "backToEvents": "Back to Events",
-    "bookingError": "An error occurred while completing the booking"
+    "bookingError": "An error occurred while completing the booking",
+    
+    "adminDataError": "Error in admin data",
+    "adminFetchError": "Failed to load admin data",
+    "adminNotFound": "Selected admin not found",
+    "noAdminsAvailable": "No admins available",
+    "defaultResponsible": "Default Payment Responsible",
+    "responsibleNotFound": "Responsible person not found",
+    
+    "paymentInstructions": "Payment Instructions",
+    "clickLinkToPay": "Click the link to send money to:",
+    "openInstapay": "Open Instapay Link",
+    "scanQRCode": "Scan QR Code",
+    "scanToPay": "Scan to pay via Instapay",
+    
+    "proofSubmissionSuccess": "Payment proof submitted successfully, under review",
+    "proofSubmissionError": "Failed to submit payment proof",
+    "alreadyBooked": "You have already booked this event",
+    
+    "paymentConfirmation": "Payment Confirmation",
+    "paymentAmount": "Payment Amount",
+    "paymentMethod": "Payment Method",
+    "paymentProof": "Payment Proof",
+    "paymentStatus": "Payment Status",
+    "pendingApproval": "Pending Approval",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    
+    "uploadingFile": "Uploading file...",
+    "fileUploadSuccess": "File uploaded successfully",
+    "fileUploadError": "Failed to upload file",
+    
+    "bookingConfirmation": "Booking Confirmation",
+    "bookingDetails": "Booking Details",
+    "bookingDate": "Booking Date",
+    "bookingStatus": "Booking Status",
+    "bookingReference": "Reference Number",
+    
+    "contactAdmin": "Contact Admin",
+    "needHelp": "Need Help?",
+    "supportContact": "Contact Support",
+    
+    "termsAgreement": "By confirming booking, you agree to the terms and conditions",
+    "refundPolicy": "Refund Policy",
+    "cancellationPolicy": "Cancellation Policy",
+    
+    "securityNote": "Security Note: Do not share payment information with anyone",
+    "confidentialInfo": "All your information is kept confidential",
+    
+    "successMessage": "Operation completed successfully",
+    "errorMessage": "An error occurred",
+    "warningMessage": "Warning",
+    "infoMessage": "Information",
+    
+    "loadingData": "Loading data...",
+    "processingRequest": "Processing request...",
+    "pleaseWait": "Please wait...",
+    
+    "nextStep": "Next Step",
+    "previousStep": "Previous Step",
+    "completeBooking": "Complete Booking",
+    
+    "paymentOptions": "Payment Options",
+    "choosePaymentMethod": "Choose Payment Method",
+    "securePayment": "Secure Payment",
+    "encryptedConnection": "Encrypted Connection",
+    
+    "totalAmount": "Total Amount",
+    "discount": "Discount",
+    "finalAmount": "Final Amount",
+    "taxes": "Taxes",
+    
+    "personalInfo": "Personal Information",
+    "contactInfo": "Contact Information",
+    "emergencyContact": "Emergency Contact",
+    
+    "eventDetails": "Event Details",
+    "eventLocation": "Event Location",
+    "eventDate": "Event Date",
+    "eventTime": "Event Time",
+    "eventDuration": "Event Duration",
+    
+    "capacity": "Capacity",
+    "availableSpots": "Available Spots",
+    "bookedSpots": "Booked Spots",
+    "waitingList": "Waiting List",
+    
+    "requirements": "Requirements",
+    "whatToBring": "What to Bring",
+    "restrictions": "Restrictions",
+    "notes": "Notes"
   }
 }

@@ -81,12 +81,10 @@ export default function Layout() {
 
     window.addEventListener('storage', handleStorageChange);
 
-    // فحص دوري كل 10 ثوان (كحماية احتياطية)
     const interval = setInterval(() => {
       checkToken();
     }, 10000);
 
-    // عند عودة المستخدم للتبويب
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         checkToken();
@@ -102,7 +100,6 @@ export default function Layout() {
     };
   }, [navigate, logout, lastValidToken]);
 
-  // التحقق عند تغيير المسار
   useEffect(() => {
     checkToken();
   }, [location.pathname]);
