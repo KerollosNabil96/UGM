@@ -49,7 +49,7 @@ export default function EventBooking() {
 
   // رابط الإنستاباي و QR Code
   const instapayLink = "https://ipn.eg/S/vip2222/instapay/1nJIAd";
-  const qrCodeImage = "/qr.JPG"; // ضع مسار الصورة هنا
+  const qrCodeImage = "/qr.jpg"; // ضع مسار الصورة هنا
 
   const displayFileName = (name) => {
     if (name.length > 24) {
